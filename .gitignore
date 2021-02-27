@@ -5,6 +5,7 @@
 *.log
 
 # BlueJ files
+*.bluej
 *.ctxt
 
 # Mobile Tools for Java (J2ME)
@@ -22,10 +23,18 @@
 # PDF Files #
 *.pdf
 
+# UML Files
+*.uml
+
 # Intellij
 .idea/
 *.iml
 *.iws
+
+# Eclipse
+.settings/
+.classpath
+.project
 
 # Maven
 log/
