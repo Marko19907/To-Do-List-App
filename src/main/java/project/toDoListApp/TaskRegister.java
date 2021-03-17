@@ -1,16 +1,66 @@
 package project.toDoListApp;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * Class TaskRegister represents a register that can hold Tasks
+ * It is responsible for adding, removing and returning a list of the tasks
+ */
 public class TaskRegister
 {
-    private final HashSet<Task> tasks;
+    private final ArrayList<Task> tasks;
 
     /**
      * Constructor for a task register
      */
     public TaskRegister()
     {
-        this.tasks = new HashSet<>();
+        this.tasks = new ArrayList<>();
+    }
+
+    /**
+     * Adds a given task to the tasks list
+     * @param task The task to add,
+     *             can not be null
+     */
+    public void addTask(Task task)
+    {
+        if (task != null) {
+            this.tasks.add(task);
+        }
+    }
+
+    /**
+     * Returns a List of all the tasks present in the register
+     * @return A List of all the tasks present in the register
+     */
+    public List<Task> getAllTasks()
+    {
+        return new ArrayList<>(this.tasks);
+    }
+
+    /**
+     * Removes a given task from the register
+     * @param task The task to remove,
+     *             can not be null
+     * @return True if the given task was successfully removed, false otherwise
+     */
+    public boolean removeTask(Task task)
+    {
+        // Guard condition
+        if (task == null) {
+            return false;
+        }
+        return this.tasks.remove(task);
+    }
+
+    /**
+     * Returns the number of tasks in the register
+     * @return The number of tasks in the register
+     */
+    public int getNumberOfTasks()
+    {
+        return this.tasks.size();
     }
 }
