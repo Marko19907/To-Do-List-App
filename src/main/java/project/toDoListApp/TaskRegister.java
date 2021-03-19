@@ -1,6 +1,7 @@
 package project.toDoListApp;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -9,14 +10,14 @@ import java.util.List;
  */
 public class TaskRegister
 {
-    private final ArrayList<Task> tasks;
+    private final HashSet<Task> tasks;
 
     /**
      * Constructor for a task register
      */
     public TaskRegister()
     {
-        this.tasks = new ArrayList<>();
+        this.tasks = new HashSet<>();
     }
 
     /**
@@ -33,7 +34,7 @@ public class TaskRegister
 
     /**
      * Returns a List of all the tasks present in the register
-     * @return A List of all the tasks present in the register
+     * @return A List of all the tasks present in the register in a random order
      */
     public List<Task> getAllTasks()
     {
