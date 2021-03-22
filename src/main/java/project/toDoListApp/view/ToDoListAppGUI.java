@@ -18,6 +18,9 @@ import javafx.stage.Stage;
 import project.toDoListApp.TaskRegister;
 import project.toDoListApp.controller.Controller;
 
+/**
+ * Class ToDoListAppGUI represents the main window in the application.
+ */
 public class ToDoListAppGUI extends Application
 {
     private final TaskRegister taskRegister;
@@ -98,7 +101,7 @@ public class ToDoListAppGUI extends Application
         MenuItem menuItem4 = new MenuItem("Exit");
         KeyCombination keyCombinationExit = new KeyCodeCombination(KeyCode.Q, KeyCombination.CONTROL_DOWN);
         menuItem4.setAccelerator(keyCombinationExit);
-        menuItem4.setOnAction(e -> System.out.println("Exit test"));
+        menuItem4.setOnAction(e -> this.controller.quit());
 
         fileMenu.getItems().addAll(menuItem1, menuItem2, separator1, menuItem3, separator2, menuItem4);
     }
