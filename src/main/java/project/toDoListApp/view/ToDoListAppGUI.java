@@ -1,4 +1,4 @@
-package project.toDoListApp;
+package project.toDoListApp.view;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -15,13 +15,18 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import project.toDoListApp.TaskRegister;
+import project.toDoListApp.controller.Controller;
+
 public class ToDoListAppGUI extends Application
 {
     private final TaskRegister taskRegister;
+    private final Controller controller;
 
     public ToDoListAppGUI()
     {
         this.taskRegister = new TaskRegister();
+        this.controller = new Controller();
     }
 
     /**
@@ -168,7 +173,7 @@ public class ToDoListAppGUI extends Application
         menuBar.getMenus().add(helpMenu);
 
         MenuItem menuItem1 = new MenuItem("About");
-        menuItem1.setOnAction(e -> System.out.println("About clicked"));
+        menuItem1.setOnAction(e -> this.controller.showAboutDialog());
 
         helpMenu.getItems().add(menuItem1);
     }
