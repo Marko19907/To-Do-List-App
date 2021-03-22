@@ -1,22 +1,33 @@
 package project.toDoListApp.view;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import project.toDoListApp.Task;
 import project.toDoListApp.TaskRegister;
 import project.toDoListApp.controller.Controller;
+
+import java.time.LocalDate;
 
 /**
  * Class ToDoListAppGUI represents the main window in the application.
@@ -24,12 +35,16 @@ import project.toDoListApp.controller.Controller;
 public class ToDoListAppGUI extends Application
 {
     private final TaskRegister taskRegister;
+    private ObservableList<Task> taskListWrapper;
+
     private final Controller controller;
 
     public ToDoListAppGUI()
     {
         this.taskRegister = new TaskRegister();
         this.controller = new Controller();
+
+        this.fillRegisterWithTestTasks();
     }
 
     /**
@@ -44,6 +59,7 @@ public class ToDoListAppGUI extends Application
     {
         BorderPane root = new BorderPane();
         root.setTop(this.setupTopMenu());
+        root.setLeft(this.setupLeft());
 
         stage.setTitle("To-Do List App");
         stage.setMinWidth(300);
@@ -52,6 +68,17 @@ public class ToDoListAppGUI extends Application
         Scene scene = new Scene(root, 600, 400, Color.WHITE);
         stage.setScene(scene);
         stage.show();
+    }
+
+    /**
+     * Adds a few task to the register for testing
+     */
+    private void fillRegisterWithTestTasks()
+    {
+        this.taskRegister.addTask(new Task("Title 1", "Desc 1",
+                "None", LocalDate.parse("2100-12-01")));
+        this.taskRegister.addTask(new Task("Title 2", "Desc 2",
+                "Cooking", LocalDate.parse("3100-12-01")));
     }
 
     /**
@@ -179,5 +206,70 @@ public class ToDoListAppGUI extends Application
         menuItem1.setOnAction(e -> this.controller.showAboutDialog());
 
         helpMenu.getItems().add(menuItem1);
+    }
+
+    /**
+     * Sets up the left node
+     * @return The already set up left node
+     */
+    private VBox setupLeft()
+    {
+        VBox vBox = new VBox();
+
+        TableView<Task> table = this.setupLeftTopTable();
+        VBox buttonBox = this.setupBottomLeftButtons();
+        vBox.getChildren().addAll(table, buttonBox);
+
+        vBox.setPrefWidth(150);
+        VBox.setVgrow(table, Priority.ALWAYS);
+        return vBox;
+    }
+
+    /**
+     * Sets up the left table
+     * @return The already set up left table
+     */
+    private TableView<Task> setupLeftTopTable()
+    {
+        TableView<Task> table = new TableView<>();
+
+        TableColumn<Task, String> titleColumn = new TableColumn<>("Task Title");
+        titleColumn.setMinWidth(150);
+        titleColumn.setCellValueFactory(new PropertyValueFactory<>("taskName"));
+
+        table.setItems(this.getTaskListWrapper());
+        table.getColumns().add(titleColumn);
+
+        return table;
+    }
+
+    /**
+     * Returns an ObservableList that holds the tasks
+     * @return an already set-up ObservableList that holds the tasks
+     */
+    private ObservableList<Task> getTaskListWrapper() {
+        this.taskListWrapper = FXCollections.observableArrayList(this.taskRegister.getAllTasks());
+        return this.taskListWrapper;
+    }
+
+    /**
+     * Sets up a Vbox containing the bottom left buttons
+     * @return an already set-up Vbox containing the bottom left buttons
+     */
+    private VBox setupBottomLeftButtons()
+    {
+        VBox buttonBox = new VBox();
+
+        Button button1 = new Button("New Reminder");
+        button1.setOnAction(e -> System.out.println("New Reminder bottom left button"));
+        button1.setPrefWidth(150);
+
+        Button button2 = new Button("Delete Reminder");
+        button2.setOnAction(e -> System.out.println("Delete Reminder bottom left button"));
+        button2.setPrefWidth(150);
+
+        buttonBox.getChildren().addAll(button1, button2);
+
+        return buttonBox;
     }
 }
