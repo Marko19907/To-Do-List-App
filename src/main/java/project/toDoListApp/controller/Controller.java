@@ -1,6 +1,7 @@
 package project.toDoListApp.controller;
 
 import javafx.application.Platform;
+import javafx.event.Event;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
@@ -34,7 +35,7 @@ public class Controller
     /**
      * Exits the application. A confirmation dialog is displayed before exiting
      */
-    public void quit()
+    public void quit(Event event)
     {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirm close");
@@ -47,6 +48,9 @@ public class Controller
             if (result.get() == ButtonType.OK) {
                 //TODO: Save the app's state to disk before exiting?
                 Platform.exit();
+            }
+            else {
+                event.consume();
             }
         }
     }

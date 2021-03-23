@@ -50,7 +50,8 @@ public class ToDoListAppGUI extends Application
     /**
      * The main method
      */
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         launch();
     }
 
@@ -64,6 +65,7 @@ public class ToDoListAppGUI extends Application
         stage.setTitle("To-Do List App");
         stage.setMinWidth(300);
         stage.setMinHeight(200);
+        stage.setOnCloseRequest(e -> this.controller.quit(e));
 
         Scene scene = new Scene(root, 600, 400, Color.WHITE);
         stage.setScene(scene);
@@ -128,7 +130,7 @@ public class ToDoListAppGUI extends Application
         MenuItem menuItem4 = new MenuItem("Exit");
         KeyCombination keyCombinationExit = new KeyCodeCombination(KeyCode.Q, KeyCombination.CONTROL_DOWN);
         menuItem4.setAccelerator(keyCombinationExit);
-        menuItem4.setOnAction(e -> this.controller.quit());
+        menuItem4.setOnAction(e -> this.controller.quit(e));
 
         fileMenu.getItems().addAll(menuItem1, menuItem2, separator1, menuItem3, separator2, menuItem4);
     }
@@ -247,7 +249,8 @@ public class ToDoListAppGUI extends Application
      * Returns an ObservableList that holds the tasks
      * @return an already set-up ObservableList that holds the tasks
      */
-    private ObservableList<Task> getTaskListWrapper() {
+    private ObservableList<Task> getTaskListWrapper()
+    {
         this.taskListWrapper = FXCollections.observableArrayList(this.taskRegister.getAllTasks());
         return this.taskListWrapper;
     }
