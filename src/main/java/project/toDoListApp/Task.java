@@ -23,6 +23,9 @@ public class Task {
         if (taskName == null || description == null || category == null || dueDate == null) {
             throw new IllegalArgumentException("taskName, description, category or dueDate can not be null!");
         }
+        if (taskName.isBlank()) {
+            throw new IllegalArgumentException("taskName can not be blank!");
+        }
 
         this.taskName = taskName;
         this.description = description;
@@ -47,6 +50,7 @@ public class Task {
      *
      * @param taskName The task name to set,
      *                 can not be blank or null
+     * @throws IllegalArgumentException if the given task name is blank
      */
     public void setTaskName(String taskName) {
         if (taskName != null) {
