@@ -50,9 +50,10 @@ public class Task {
      */
     public void setTaskName(String taskName) {
         if (taskName != null) {
-            if (!taskName.isBlank()) {
-                this.taskName = taskName;
+            if (taskName.isBlank()) {
+                throw new IllegalArgumentException("Task name can not be blank");
             }
+            this.taskName = taskName;
         }
     }
 
