@@ -4,6 +4,9 @@ import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextArea;
+
+import project.toDoListApp.Task;
 
 import java.util.Optional;
 
@@ -13,9 +16,37 @@ import java.util.Optional;
  */
 public class Controller
 {
+    private Task currentTask;
+
     public Controller()
     {
     }
+
+    public void displayTask(Task task, TextArea editor)
+    {
+        if (task != null && editor != null) {
+            this.saveCurrentTaskText(editor);
+
+            this.currentTask = task;
+            editor.setText(task.getDescription());
+        }
+    }
+
+    /**
+     * Saves the text from the given TextArea to the current Task
+     * @param editor The editor to save the text from,
+     *               can not be null
+     */
+    private void saveCurrentTaskText(TextArea editor)
+    {
+        if (this.currentTask != null && editor != null) {
+            this.currentTask.setDescription(editor.getText());
+        }
+    }
+
+    // -----------------------------------------------------------
+    //    DIALOGS
+    // -----------------------------------------------------------
 
     /**
      * Shows the About Dialog
@@ -33,7 +64,7 @@ public class Controller
     }
 
     /**
-     * Exits the application. A confirmation dialog is displayed before exiting
+     * Application exit dialog. A confirmation dialog that is displayed before exiting
      */
     public void quit(Event event)
     {

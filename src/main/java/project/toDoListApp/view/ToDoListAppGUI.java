@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -12,11 +13,14 @@ import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -35,6 +39,7 @@ import java.time.LocalDate;
 public class ToDoListAppGUI extends Application
 {
     private final TaskRegister taskRegister;
+    private final TextArea descriptionTextArea;
     private ObservableList<Task> taskListWrapper;
 
     private final Controller controller;
@@ -43,6 +48,7 @@ public class ToDoListAppGUI extends Application
     {
         this.taskRegister = new TaskRegister();
         this.controller = new Controller();
+        this.descriptionTextArea = new TextArea();
 
         this.fillRegisterWithTestTasks();
     }
@@ -52,7 +58,7 @@ public class ToDoListAppGUI extends Application
      */
     public static void main(String[] args)
     {
-        launch();
+        Application.launch(args);
     }
 
     @Override
@@ -61,6 +67,7 @@ public class ToDoListAppGUI extends Application
         BorderPane root = new BorderPane();
         root.setTop(this.setupTopMenu());
         root.setLeft(this.setupLeft());
+        root.setCenter(this.setupCenter());
 
         stage.setTitle("To-Do List App");
         stage.setMinWidth(300);
@@ -70,6 +77,8 @@ public class ToDoListAppGUI extends Application
         Scene scene = new Scene(root, 600, 400, Color.WHITE);
         stage.setScene(scene);
         stage.show();
+
+        root.requestFocus();
     }
 
     /**
@@ -234,10 +243,23 @@ public class ToDoListAppGUI extends Application
     private TableView<Task> setupLeftTopTable()
     {
         TableView<Task> table = new TableView<>();
+        table.setPlaceholder(new Label("No tasks to display"));
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         TableColumn<Task, String> titleColumn = new TableColumn<>("Task Title");
-        titleColumn.setMinWidth(150);
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("taskName"));
+
+        // set on left click action
+        table.setOnMouseClicked((MouseEvent event) -> {
+            if (event.getButton().equals(MouseButton.PRIMARY)) {
+                //TODO: The view class should not be aware of the model, (e.g., the Task class)
+                int index = table.getSelectionModel().getSelectedIndex();
+                if (index < this.taskListWrapper.size() && index >= 0) {
+                    Task task = table.getItems().get(index);
+                    this.controller.displayTask(task, this.descriptionTextArea);
+                }
+            }
+        });
 
         table.setItems(this.getTaskListWrapper());
         table.getColumns().add(titleColumn);
@@ -274,5 +296,18 @@ public class ToDoListAppGUI extends Application
         buttonBox.getChildren().addAll(button1, button2);
 
         return buttonBox;
+    }
+
+    /**
+     * Sets up the center node
+     * @return The already setup center node
+     */
+    private VBox setupCenter()
+    {
+        VBox vBox = new VBox();
+        this.descriptionTextArea.setPrefHeight(245);
+        vBox.getChildren().add(this.descriptionTextArea);
+        VBox.setVgrow(this.descriptionTextArea, Priority.ALWAYS);
+        return vBox;
     }
 }
