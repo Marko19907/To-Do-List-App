@@ -23,7 +23,7 @@ public class TaskRegister
     /**
      * Adds a given task to the tasks list
      * @param task The task to add,
-     *             can not be null
+     *             can be a duplicate but can not be null
      */
     public void addTask(Task task)
     {

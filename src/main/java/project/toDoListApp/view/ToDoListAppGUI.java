@@ -1,8 +1,6 @@
 package project.toDoListApp.view;
 
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -14,6 +12,7 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
@@ -22,35 +21,29 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import project.toDoListApp.Task;
-import project.toDoListApp.TaskRegister;
 import project.toDoListApp.controller.Controller;
-
-import java.time.LocalDate;
 
 /**
  * Class ToDoListAppGUI represents the main window in the application.
  */
 public class ToDoListAppGUI extends Application
 {
-    private final TaskRegister taskRegister;
-    private final TextArea descriptionTextArea;
-    private ObservableList<Task> taskListWrapper;
-
     private final Controller controller;
+    private final TextArea descriptionTextArea;
+    private final TextField taskTitleTextField;
 
     public ToDoListAppGUI()
     {
-        this.taskRegister = new TaskRegister();
         this.controller = new Controller();
         this.descriptionTextArea = new TextArea();
-
-        this.fillRegisterWithTestTasks();
+        this.taskTitleTextField = new TextField();
     }
 
     /**
@@ -79,17 +72,6 @@ public class ToDoListAppGUI extends Application
         stage.show();
 
         root.requestFocus();
-    }
-
-    /**
-     * Adds a few task to the register for testing
-     */
-    private void fillRegisterWithTestTasks()
-    {
-        this.taskRegister.addTask(new Task("Title 1", "Desc 1",
-                "None", LocalDate.parse("2100-12-01")));
-        this.taskRegister.addTask(new Task("Title 2", "Desc 2",
-                "Cooking", LocalDate.parse("3100-12-01")));
     }
 
     /**
@@ -254,27 +236,19 @@ public class ToDoListAppGUI extends Application
             if (event.getButton().equals(MouseButton.PRIMARY)) {
                 //TODO: The view class should not be aware of the model, (e.g., the Task class)
                 int index = table.getSelectionModel().getSelectedIndex();
-                if (index < this.taskListWrapper.size() && index >= 0) {
+                if (index < this.controller.getTaskListWrapper().size() && index >= 0) {
                     Task task = table.getItems().get(index);
-                    this.controller.displayTask(task, this.descriptionTextArea);
+                    this.controller.displayTask(table, task, this.taskTitleTextField, this.descriptionTextArea);
                 }
             }
         });
 
-        table.setItems(this.getTaskListWrapper());
+        table.setItems(this.controller.getTaskListWrapper());
         table.getColumns().add(titleColumn);
+        //Set a default sort column
+        table.getSortOrder().add(titleColumn);
 
         return table;
-    }
-
-    /**
-     * Returns an ObservableList that holds the tasks
-     * @return an already set-up ObservableList that holds the tasks
-     */
-    private ObservableList<Task> getTaskListWrapper()
-    {
-        this.taskListWrapper = FXCollections.observableArrayList(this.taskRegister.getAllTasks());
-        return this.taskListWrapper;
     }
 
     /**
@@ -300,14 +274,37 @@ public class ToDoListAppGUI extends Application
 
     /**
      * Sets up the center node
-     * @return The already setup center node
+     * @return The already set-up center node
      */
     private VBox setupCenter()
     {
         VBox vBox = new VBox();
-        this.descriptionTextArea.setPrefHeight(245);
-        vBox.getChildren().add(this.descriptionTextArea);
+        this.descriptionTextArea.setWrapText(true);
+
+        HBox hBox = this.setupTopCenterHBox();
+
+        vBox.getChildren().addAll(hBox, this.descriptionTextArea);
         VBox.setVgrow(this.descriptionTextArea, Priority.ALWAYS);
         return vBox;
+    }
+
+    /**
+     * Sets up the top center HBox
+     * @return The already set-up top center HBox
+     */
+    private HBox setupTopCenterHBox()
+    {
+        HBox hBox = new HBox();
+
+        Button setDueDateButton = new Button("Due date:");
+        setDueDateButton.setOnAction(e -> System.out.println("Due date top center button test"));
+        setDueDateButton.setPrefWidth(150);
+        setDueDateButton.setMaxHeight(250);
+
+        HBox.setHgrow(this.taskTitleTextField, Priority.ALWAYS);
+        this.taskTitleTextField.setStyle("-fx-font-size: 18");
+
+        hBox.getChildren().addAll(this.taskTitleTextField, setDueDateButton);
+        return hBox;
     }
 }

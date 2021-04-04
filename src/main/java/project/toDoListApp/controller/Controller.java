@@ -1,13 +1,18 @@
 package project.toDoListApp.controller;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
-
+import javafx.scene.control.TextField;
 import project.toDoListApp.Task;
+import project.toDoListApp.TaskRegister;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 /**
@@ -16,32 +21,85 @@ import java.util.Optional;
  */
 public class Controller
 {
+    private final TaskRegister taskRegister;
+    private final ObservableList<Task> taskListWrapper;
+
     private Task currentTask;
 
     public Controller()
     {
+        this.taskRegister = new TaskRegister();
+        this.taskListWrapper = FXCollections.observableArrayList(this.taskRegister.getAllTasks());
+
+        this.fillRegisterWithTestTasks();
     }
 
-    public void displayTask(Task task, TextArea editor)
+    public void displayTask(TableView<Task> table, Task task, TextField taskTitle, TextArea editor)
     {
-        if (task != null && editor != null) {
-            this.saveCurrentTaskText(editor);
+        if (table != null && task != null && taskTitle != null && editor != null) {
+            this.saveTaskToRegister(taskTitle, editor);
 
             this.currentTask = task;
             editor.setText(task.getDescription());
+            taskTitle.setText(task.getTaskName());
+
+            table.refresh();
+            table.sort();
         }
     }
 
     /**
-     * Saves the text from the given TextArea to the current Task
-     * @param editor The editor to save the text from,
-     *               can not be null
+     * Saves the current task to the register
+     * @param editor    The TextArea to save the text from,
+     *                  can not be null
+     * @param taskTitle The TextField to get the text from,
+     *                  can not be null
      */
-    private void saveCurrentTaskText(TextArea editor)
+    private void saveTaskToRegister(TextField taskTitle, TextArea editor)
     {
-        if (this.currentTask != null && editor != null) {
+        if (this.currentTask != null && taskTitle != null && editor != null) {
+            if (taskTitle.getText().isBlank()) {
+                //TODO: The TextField is blank, the task will throw an exception
+                //Do nothing for now
+            }
+            else {
+                this.currentTask.setTaskName(taskTitle.getText());
+            }
             this.currentTask.setDescription(editor.getText());
+
+            this.taskRegister.addTask(this.currentTask);
+            this.updateObservableList();
         }
+    }
+
+    /**
+     * Updates the observable list of tasks with fresh values from the task register
+     */
+    private void updateObservableList()
+    {
+        this.taskListWrapper.setAll(this.taskRegister.getAllTasks());
+    }
+
+    /**
+     * Adds a few tasks to the register for testing
+     */
+    private void fillRegisterWithTestTasks()
+    {
+        this.taskRegister.addTask(new Task("Title 1", "Desc 1",
+                "None", LocalDate.parse("2100-12-01")));
+        this.taskRegister.addTask(new Task("Title 2", "Desc 2",
+                "Cooking", LocalDate.parse("3100-12-01")));
+
+        this.updateObservableList();
+    }
+
+    /**
+     * Returns an ObservableList that holds the tasks
+     * @return an ObservableList that holds the tasks
+     */
+    public ObservableList<Task> getTaskListWrapper()
+    {
+        return this.taskListWrapper;
     }
 
     // -----------------------------------------------------------
