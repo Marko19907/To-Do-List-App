@@ -15,186 +15,247 @@ import java.util.Optional;
 
 /**
  * Class Controller represents the main controller for the application.
- * It is responsible for handling the events from the GUI
+ * It is responsible for handling the events from the GUI.
  */
-public class Controller
-{
-    private final TaskRegister taskRegister;
-    private final ObservableList<Task> taskListWrapper;
+public class Controller {
+  private final TaskRegister taskRegister;
+  private final ObservableList<Task> taskListWrapper;
 
-    private Task currentTask;
+  private Task currentTask;
 
-    public Controller()
-    {
-        this.taskRegister = new TaskRegister();
-        this.taskListWrapper = FXCollections.observableArrayList(this.taskRegister.getAllTasks());
+  /**
+   * Instantiates the controller.
+   */
+  public Controller() {
+    this.taskRegister = new TaskRegister();
+    this.taskListWrapper = FXCollections.observableArrayList(this.taskRegister.getAllTasks());
 
-        this.fillRegisterWithTestTasks();
+    this.fillRegisterWithTestTasks();
+  }
+
+  /**
+   * Add Comment here.
+   *
+   * @param table     table view of all the tasks
+   * @param task      the current task
+   * @param taskTitle the task title
+   * @param editor    editor
+   */
+  public void displayTask(TableView<Task> table, Task task, TextField taskTitle, TextArea editor) {
+    if (table != null && task != null && taskTitle != null && editor != null) {
+      this.saveTaskToRegister(taskTitle, editor);
+
+      this.currentTask = task;
+      editor.setText(task.getDescription());
+      taskTitle.setText(task.getTaskName());
+
+      table.refresh();
+      table.sort();
     }
+  }
 
-    public void displayTask(TableView<Task> table, Task task, TextField taskTitle, TextArea editor)
-    {
-        if (table != null && task != null && taskTitle != null && editor != null) {
-            this.saveTaskToRegister(taskTitle, editor);
+  /**
+   * Saves the current task to the register.
+   *
+   * @param editor    The TextArea to save the text from,
+   *                  can not be null
+   * @param taskTitle The TextField to get the text from,
+   *                  can not be null
+   */
+  private void saveTaskToRegister(TextField taskTitle, TextArea editor) {
+    if (this.currentTask != null && taskTitle != null && editor != null) {
+      if (taskTitle.getText().isBlank()) {
+        //TODO: The TextField is blank, the task will throw an exception
+        //Do nothing for now
+      } else {
+        this.currentTask.setTaskName(taskTitle.getText());
+      }
+      this.currentTask.setDescription(editor.getText());
 
-            this.currentTask = task;
-            editor.setText(task.getDescription());
-            taskTitle.setText(task.getTaskName());
-
-            table.refresh();
-            table.sort();
-        }
+      this.taskRegister.addTask(this.currentTask);
+      this.updateObservableList();
     }
+  }
 
-    /**
-     * Saves the current task to the register
-     * @param editor    The TextArea to save the text from,
-     *                  can not be null
-     * @param taskTitle The TextField to get the text from,
-     *                  can not be null
-     */
-    private void saveTaskToRegister(TextField taskTitle, TextArea editor)
-    {
-        if (this.currentTask != null && taskTitle != null && editor != null) {
-            if (taskTitle.getText().isBlank()) {
-                //TODO: The TextField is blank, the task will throw an exception
-                //Do nothing for now
-            }
-            else {
-                this.currentTask.setTaskName(taskTitle.getText());
-            }
-            this.currentTask.setDescription(editor.getText());
+  /**
+   * Updates the observable list of tasks with fresh values from the task register.
+   */
+  private void updateObservableList() {
+    this.taskListWrapper.setAll(this.taskRegister.getAllTasks());
+  }
 
-            this.taskRegister.addTask(this.currentTask);
-            this.updateObservableList();
-        }
-    }
+  /**
+   * Adds a few tasks to the register for testing.
+   */
+  private void fillRegisterWithTestTasks() {
+    this.taskRegister.addTask(new Task("Title 1", "Desc 1",
+        "None", LocalDate.parse("2100-12-01")));
+    this.taskRegister.addTask(new Task("Title 2", "Desc 2",
+        "Cooking", LocalDate.parse("3100-12-01")));
 
-    /**
-     * Updates the observable list of tasks with fresh values from the task register
-     */
-    private void updateObservableList()
-    {
-        this.taskListWrapper.setAll(this.taskRegister.getAllTasks());
-    }
+    this.updateObservableList();
+  }
 
-    /**
-     * Adds a few tasks to the register for testing
-     */
-    private void fillRegisterWithTestTasks()
-    {
-        this.taskRegister.addTask(new Task("Title 1", "Desc 1",
-                "None", LocalDate.parse("2100-12-01")));
-        this.taskRegister.addTask(new Task("Title 2", "Desc 2",
-                "Cooking", LocalDate.parse("3100-12-01")));
+  /**
+   * Returns an ObservableList that holds the tasks.
+   *
+   * @return an ObservableList that holds the tasks
+   */
+  public ObservableList<Task> getTaskListWrapper() {
+    return this.taskListWrapper;
+  }
 
+  /**
+   * Deletes a reminder form the list.
+   *
+   * @param task the task to be removed
+   */
+  public void doDeleteReminder(Task task) {
+    if (task == null) {
+      showPleaseSelectItemDialog();
+    } else {
+      if (showDeleteConfirmationDialog()) {
+        this.taskRegister.removeTask(task);
         this.updateObservableList();
+      }
     }
+  }
 
-    /**
-     * Returns an ObservableList that holds the tasks
-     * @return an ObservableList that holds the tasks
-     */
-    public ObservableList<Task> getTaskListWrapper()
-    {
-        return this.taskListWrapper;
+  // -----------------------------------------------------------
+  //    DIALOGS
+  // -----------------------------------------------------------
+
+  /**
+   * Shows the About Dialog.
+   */
+  public void showAboutDialog() {
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setTitle("About");
+    alert.setHeaderText("To-Do List App");
+    alert.setContentText("An application created by" + "\n"
+        + "Group 2" + "\n\n"
+        + "2021");
+
+    alert.showAndWait();
+  }
+
+  /**
+   * Application exit dialog. A confirmation dialog that is displayed before exiting.
+   */
+  public void quit(Event event) {
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+    alert.setTitle("Confirm close");
+    alert.setHeaderText("Exit this application?");
+    alert.setContentText("Are you sure you want to exit the application?");
+
+    Optional<ButtonType> result = alert.showAndWait();
+
+    if (result.isPresent()) {
+      if (result.get() == ButtonType.OK) {
+        //TODO: Save the app's state to disk before exiting?
+        Platform.exit();
+      } else {
+        event.consume();
+      }
     }
+  }
 
-    // -----------------------------------------------------------
-    //    DIALOGS
-    // -----------------------------------------------------------
+  /**
+   * Creates a new pop-up dialog box,
+   * where the user can provide details of a new task to be added to the to-do list.
+   */
+  public void showNewReminderDialog() {
+    //TODO: Create class that handles dialogs.
+    // This method should not be handling the creation of the dialog box
+    Dialog<Task> newReminderDialog = new Dialog<>();
 
-    /**
-     * Shows the About Dialog
-     */
-    public void showAboutDialog()
-    {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("About");
-        alert.setHeaderText("To-Do List App");
-        alert.setContentText("An application created by" + "\n"
-                + "Group 2" + "\n\n"
-                + "2021");
+    newReminderDialog.setTitle("Reminder Details");
 
-        alert.showAndWait();
-    }
+    newReminderDialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
-    /**
-     * Application exit dialog. A confirmation dialog that is displayed before exiting
-     */
-    public void quit(Event event)
-    {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirm close");
-        alert.setHeaderText("Exit this application?");
-        alert.setContentText("Are you sure you want to exit the application?");
+    GridPane grid = new GridPane();
+    grid.setHgap(10);
+    grid.setVgap(10);
+    grid.setPadding(new Insets(20, 150, 10, 10));
 
-        Optional<ButtonType> result = alert.showAndWait();
+    TextField taskName = new TextField();
+    taskName.setPromptText("Title");
 
-        if (result.isPresent()) {
-            if (result.get() == ButtonType.OK) {
-                //TODO: Save the app's state to disk before exiting?
-                Platform.exit();
-            }
-            else {
-                event.consume();
-            }
+    TextField description = new TextField();
+    description.setPromptText("Description");
+
+    TextField category = new TextField();
+    category.setPromptText("Category");
+
+    TextField dueDate = new TextField();
+    dueDate.setPromptText("yyyy-mm-dd");
+
+    grid.add(new Label("Task name:"), 0, 0);
+    grid.add(taskName, 1, 0);
+    grid.add(new Label("Description:"), 0, 1);
+    grid.add(description, 1, 1);
+    grid.add(new Label("Category:"), 0, 2);
+    grid.add(category, 1, 2);
+    grid.add(new Label("Due date:"), 0, 3);
+    grid.add(dueDate, 1, 3);
+
+    newReminderDialog.getDialogPane().setContent(grid);
+
+    newReminderDialog.setResultConverter(
+        (ButtonType button) -> {
+          Task result = null;
+          if (button == ButtonType.OK) {
+            LocalDate dateDue = LocalDate.parse(dueDate.getText());
+            result = new Task(taskName.getText(), description.getText(),
+                category.getText(), dateDue);
+          }
+          return result;
         }
+    );
+
+    Optional<Task> result = newReminderDialog.showAndWait();
+
+    if (result.isPresent()) {
+      Task newTask = result.get();
+      this.taskRegister.addTask(newTask);
+      this.updateObservableList();
     }
+  }
 
-    public void showNewReminderDialog() {
-        //TODO: Create class that handles dialogs. This method should not be handling the creation of the dialog box
-        Dialog<Task> newReminderDialog = new Dialog<>();
 
-        newReminderDialog.setTitle("Reminder Details");
+  /**
+   * Displays a warning telling the user to select
+   * an element from the list.
+   */
+  private void showPleaseSelectItemDialog() {
+    Alert alert = new Alert(Alert.AlertType.WARNING);
+    alert.setTitle("Information");
+    alert.setHeaderText("No items selected");
+    alert.setContentText("No item is selected from the table.\n"
+        + "Please select an item from the table.");
 
-        newReminderDialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+    alert.showAndWait();
+  }
 
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
+  /**
+   * Displays a delete confirmation dialog. If the user confirms the delete,
+   * <code>true</code> is returned.
+   *
+   * @return <code>true</code> if the user confirms the delete
+   */
+  public boolean showDeleteConfirmationDialog() {
+    boolean deleteConfirmed = false;
 
-        TextField taskName = new TextField();
-        taskName.setPromptText("Title");
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+    alert.setTitle("Delete confirmation");
+    alert.setHeaderText("Delete confirmation");
+    alert.setContentText("Are you sure you want to delete this reminder?");
 
-        TextField description = new TextField();
-        description.setPromptText("Description");
+    Optional<ButtonType> result = alert.showAndWait();
 
-        TextField category = new TextField();
-        category.setPromptText("Category");
-
-        TextField dueDate = new TextField();
-        dueDate.setPromptText("yyyy-mm-dd");
-
-        grid.add(new Label("Task name:"), 0, 0);
-        grid.add(taskName, 1, 0);
-        grid.add(new Label("Description:"), 0, 1);
-        grid.add(description, 1, 1);
-        grid.add(new Label("Category:"), 0, 2);
-        grid.add(category, 1, 2);
-        grid.add(new Label("Due date:"), 0, 3);
-        grid.add(dueDate, 1, 3);
-
-        newReminderDialog.getDialogPane().setContent(grid);
-
-        newReminderDialog.setResultConverter(
-            (ButtonType button) -> {
-                Task result = null;
-                if (button == ButtonType.OK) {
-                    LocalDate dateDue = LocalDate.parse(dueDate.getText());
-                    result = new Task(taskName.getText(), description.getText(), category.getText(), dateDue);
-                }
-                return result;
-            }
-        );
-
-        Optional<Task> result = newReminderDialog.showAndWait();
-
-        if (result.isPresent()) {
-            Task newTask = result.get();
-            this.taskRegister.addTask(newTask);
-            updateObservableList();
-        }
+    if (result.isPresent()) {
+      deleteConfirmed = (result.get() == ButtonType.OK);
     }
+    return deleteConfirmed;
+  }
 }
