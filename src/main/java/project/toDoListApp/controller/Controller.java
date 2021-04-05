@@ -147,15 +147,13 @@ public class Controller {
 
   /**
    * Deletes a reminder form the list.
-   *
-   * @param task the task to be removed
    */
-  public void doDeleteReminder(Task task) {
-    if (task == null) {
+  public void doDeleteReminder() {
+    if (this.currentTask == null) {
       this.showPleaseSelectItemDialog();
     } else {
       if (this.showDeleteConfirmationDialog()) {
-        this.taskRegister.removeTask(task);
+        this.taskRegister.removeTask(this.currentTask);
         this.updateObservableList();
       }
     }
@@ -229,6 +227,7 @@ public class Controller {
 
     TextField dueDate = new TextField();
     dueDate.setPromptText("yyyy-mm-dd");
+    //TODO:Add failsafe for the date input
 
     grid.add(new Label("Task name:"), 0, 0);
     grid.add(taskName, 1, 0);

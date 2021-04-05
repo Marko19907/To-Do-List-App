@@ -113,9 +113,7 @@ public class ToDoListAppGUI extends Application {
     KeyCombination keyCombinationDeleteReminder =
         new KeyCodeCombination(KeyCode.DELETE, KeyCombination.CONTROL_DOWN);
     menuItem2.setAccelerator(keyCombinationDeleteReminder);
-    //TODO:Fix the item selection
-    menuItem2.setOnAction(e -> this.controller
-        .doDeleteReminder(this.setupLeftTopTable().getSelectionModel().getSelectedItem()));
+    menuItem2.setOnAction(e -> this.controller.doDeleteReminder());
 
     MenuItem menuItem3 = new MenuItem("Save all");
     KeyCombination keyCombinationSaveAll =
@@ -273,9 +271,7 @@ public class ToDoListAppGUI extends Application {
     button1.setPrefWidth(150);
 
     Button button2 = new Button("Delete Reminder");
-    //TODO:This doesnt work for some fucking reason
-    button2.setOnAction(e -> this.controller.doDeleteReminder(
-        this.setupLeftTopTable().getSelectionModel().getSelectedItem()));
+    button2.setOnAction(e -> this.controller.doDeleteReminder());
     button2.setPrefWidth(150);
 
     buttonBox.getChildren().addAll(button1, button2);
