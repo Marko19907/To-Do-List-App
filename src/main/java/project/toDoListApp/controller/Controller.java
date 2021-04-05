@@ -5,7 +5,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.geometry.Insets;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputControl;
 import javafx.scene.layout.GridPane;
 import project.toDoListApp.Task;
 import project.toDoListApp.TaskRegister;
@@ -41,13 +49,20 @@ public class Controller {
    * @param taskTitle the task title
    * @param editor    editor
    */
-  public void displayTask(TableView<Task> table, Task task, TextField taskTitle, TextArea editor) {
-    if (table != null && task != null && taskTitle != null && editor != null) {
+  public void displayTask(TableView<Task> table, Task task, TextField taskTitle,
+                          TextArea editor, Button dueDateButton) {
+    if (table != null && task != null && taskTitle != null && editor != null &&
+        dueDateButton != null) {
       this.saveTaskToRegister(taskTitle, editor);
 
       this.currentTask = task;
       editor.setText(task.getDescription());
       taskTitle.setText(task.getTaskName());
+      dueDateButton.setText("Due date:" + "\n" + task.getDueDate().toString());
+
+      this.enableTextField(taskTitle);
+      this.enableTextField(editor);
+      this.enableButton(dueDateButton);
 
       table.refresh();
       table.sort();
@@ -106,15 +121,40 @@ public class Controller {
   }
 
   /**
+   * Enables the given text field
+   *
+   * @param textField The text field to enable,
+   *                  can not be null
+   */
+  private void enableTextField(TextInputControl textField) {
+    if (textField != null) {
+      textField.setDisable(false);
+      textField.setEditable(true);
+    }
+  }
+
+  /**
+   * Enables the given button
+   *
+   * @param button The button to enable,
+   *               can not be null
+   */
+  private void enableButton(Button button) {
+    if (button != null) {
+      button.setDisable(false);
+    }
+  }
+
+  /**
    * Deletes a reminder form the list.
    *
    * @param task the task to be removed
    */
   public void doDeleteReminder(Task task) {
     if (task == null) {
-      showPleaseSelectItemDialog();
+      this.showPleaseSelectItemDialog();
     } else {
-      if (showDeleteConfirmationDialog()) {
+      if (this.showDeleteConfirmationDialog()) {
         this.taskRegister.removeTask(task);
         this.updateObservableList();
       }

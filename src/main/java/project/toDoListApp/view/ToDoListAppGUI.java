@@ -1,6 +1,7 @@
 package project.toDoListApp.view;
 
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,6 +14,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputControl;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
@@ -37,11 +39,13 @@ public class ToDoListAppGUI extends Application {
   private final Controller controller;
   private final TextArea descriptionTextArea;
   private final TextField taskTitleTextField;
+  private final Button dueDateButton;
 
   public ToDoListAppGUI() {
     this.controller = new Controller();
     this.descriptionTextArea = new TextArea();
     this.taskTitleTextField = new TextField();
+    this.dueDateButton = new Button();
   }
 
   /**
@@ -100,23 +104,28 @@ public class ToDoListAppGUI extends Application {
     SeparatorMenuItem separator2 = new SeparatorMenuItem();
 
     MenuItem menuItem1 = new MenuItem("New Reminder");
-    KeyCombination keyCombinationNewReminder = new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN);
+    KeyCombination keyCombinationNewReminder =
+        new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN);
     menuItem1.setAccelerator(keyCombinationNewReminder);
     menuItem1.setOnAction(e -> this.controller.showNewReminderDialog());
 
     MenuItem menuItem2 = new MenuItem("Delete Reminder");
-    KeyCombination keyCombinationDeleteReminder = new KeyCodeCombination(KeyCode.DELETE, KeyCombination.CONTROL_DOWN);
+    KeyCombination keyCombinationDeleteReminder =
+        new KeyCodeCombination(KeyCode.DELETE, KeyCombination.CONTROL_DOWN);
     menuItem2.setAccelerator(keyCombinationDeleteReminder);
     //TODO:Fix the item selection
-    menuItem2.setOnAction(e -> this.controller.doDeleteReminder(setupLeftTopTable().getSelectionModel().getSelectedItem()));
+    menuItem2.setOnAction(e -> this.controller
+        .doDeleteReminder(this.setupLeftTopTable().getSelectionModel().getSelectedItem()));
 
     MenuItem menuItem3 = new MenuItem("Save all");
-    KeyCombination keyCombinationSaveAll = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
+    KeyCombination keyCombinationSaveAll =
+        new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
     menuItem3.setAccelerator(keyCombinationSaveAll);
     menuItem3.setOnAction(e -> System.out.println("Save all test"));
 
     MenuItem menuItem4 = new MenuItem("Exit");
-    KeyCombination keyCombinationExit = new KeyCodeCombination(KeyCode.Q, KeyCombination.CONTROL_DOWN);
+    KeyCombination keyCombinationExit =
+        new KeyCodeCombination(KeyCode.Q, KeyCombination.CONTROL_DOWN);
     menuItem4.setAccelerator(keyCombinationExit);
     menuItem4.setOnAction(e -> this.controller.quit(e));
 
@@ -157,12 +166,14 @@ public class ToDoListAppGUI extends Application {
 
 
     MenuItem menuItem1 = new MenuItem("Zoom in");
-    KeyCombination keyCombinationZoomIn = new KeyCodeCombination(KeyCode.PLUS, KeyCombination.CONTROL_DOWN);
+    KeyCombination keyCombinationZoomIn =
+        new KeyCodeCombination(KeyCode.PLUS, KeyCombination.CONTROL_DOWN);
     menuItem1.setAccelerator(keyCombinationZoomIn);
     menuItem1.setOnAction(e -> System.out.println("Zoom in test"));
 
     MenuItem menuItem2 = new MenuItem("Zoom out");
-    KeyCombination keyCombinationZoomOut = new KeyCodeCombination(KeyCode.MINUS, KeyCombination.CONTROL_DOWN);
+    KeyCombination keyCombinationZoomOut =
+        new KeyCodeCombination(KeyCode.MINUS, KeyCombination.CONTROL_DOWN);
     menuItem2.setAccelerator(keyCombinationZoomOut);
     menuItem2.setOnAction(e -> System.out.println("Zoom out test"));
 
@@ -235,7 +246,8 @@ public class ToDoListAppGUI extends Application {
         int index = table.getSelectionModel().getSelectedIndex();
         if (index < this.controller.getTaskListWrapper().size() && index >= 0) {
           Task task = table.getItems().get(index);
-          this.controller.displayTask(table, task, this.taskTitleTextField, this.descriptionTextArea);
+          this.controller.displayTask(table, task, this.taskTitleTextField,
+              this.descriptionTextArea, this.dueDateButton);
         }
       }
     });
@@ -263,7 +275,7 @@ public class ToDoListAppGUI extends Application {
     Button button2 = new Button("Delete Reminder");
     //TODO:This doesnt work for some fucking reason
     button2.setOnAction(e -> this.controller.doDeleteReminder(
-        setupLeftTopTable().getSelectionModel().getSelectedItem()));
+        this.setupLeftTopTable().getSelectionModel().getSelectedItem()));
     button2.setPrefWidth(150);
 
     buttonBox.getChildren().addAll(button1, button2);
@@ -295,15 +307,32 @@ public class ToDoListAppGUI extends Application {
   private HBox setupTopCenterHBox() {
     HBox hBox = new HBox();
 
-    Button setDueDateButton = new Button("Due date:");
-    setDueDateButton.setOnAction(e -> System.out.println("Due date top center button test"));
-    setDueDateButton.setPrefWidth(150);
-    setDueDateButton.setMaxHeight(250);
+    this.dueDateButton.setText("Due date:");
+    this.dueDateButton.setOnAction(e -> System.out.println("Due date top center button test"));
+    this.dueDateButton.setPrefWidth(150);
+    this.dueDateButton.setMaxHeight(40);
+    this.dueDateButton.setDisable(true);
+    this.dueDateButton.setAlignment(Pos.CENTER);
 
     HBox.setHgrow(this.taskTitleTextField, Priority.ALWAYS);
-    this.taskTitleTextField.setStyle("-fx-font-size: 18");
+    this.taskTitleTextField.setStyle("-fx-font-size: 19");
+    this.taskTitleTextField.setPrefHeight(40);
+    this.disableTextField(this.taskTitleTextField);
 
-    hBox.getChildren().addAll(this.taskTitleTextField, setDueDateButton);
+    hBox.getChildren().addAll(this.taskTitleTextField, this.dueDateButton);
     return hBox;
+  }
+
+  /**
+   * Disables the given text field
+   *
+   * @param textField The text field to disable,
+   *                  can not be null
+   */
+  private void disableTextField(TextInputControl textField) {
+    if (textField != null) {
+      textField.setDisable(true);
+      textField.setEditable(false);
+    }
   }
 }
