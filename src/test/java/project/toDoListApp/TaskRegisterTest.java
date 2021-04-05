@@ -16,7 +16,7 @@ class TaskRegisterTest
     @DisplayName("Test adding tasks to the task register")
     void testAddingTasks()
     {
-        LocalDate endDate = LocalDate.parse("3100-12-01");
+        LocalDate endDate = this.getEndDate();
         TaskRegister taskRegister = new TaskRegister();
         Task task1 = new Task("Test title", "Test description",
                 "None", endDate);
@@ -33,7 +33,7 @@ class TaskRegisterTest
     @DisplayName("Test adding null to the task register")
     void testAddingNull()
     {
-        LocalDate endDate = LocalDate.parse("3100-12-01");
+        LocalDate endDate = this.getEndDate();
         TaskRegister taskRegister = new TaskRegister();
         Task task1 = new Task("Test title", "Test description",
                 "None", endDate);
@@ -51,7 +51,7 @@ class TaskRegisterTest
     @DisplayName("Test getting a List of tasks from the task register")
     void testGettingAllTasksList()
     {
-        LocalDate endDate = LocalDate.parse("3100-12-01");
+        LocalDate endDate = this.getEndDate();
         TaskRegister taskRegister = new TaskRegister();
         Task task1 = new Task("Test title", "Test description",
                 "None", endDate);
@@ -72,7 +72,7 @@ class TaskRegisterTest
     @DisplayName("Test removing tasks from the task register")
     void testRemovingTasks()
     {
-        LocalDate endDate = LocalDate.parse("3100-12-01");
+        LocalDate endDate = this.getEndDate();
         TaskRegister taskRegister = new TaskRegister();
         Task task1 = new Task("Test title", "Test description",
                 "None", endDate);
@@ -91,7 +91,7 @@ class TaskRegisterTest
     @DisplayName("Test removing null from the task register")
     void testRemovingNull()
     {
-        LocalDate endDate = LocalDate.parse("3100-12-01");
+        LocalDate endDate = this.getEndDate();
         TaskRegister taskRegister = new TaskRegister();
         Task task1 = new Task("Test title", "Test description",
                 "None", endDate);
@@ -110,7 +110,7 @@ class TaskRegisterTest
     @DisplayName("Test removing non existent task from the task register")
     void testRemovingNonExistentTasks()
     {
-        LocalDate endDate = LocalDate.parse("3100-12-01");
+        LocalDate endDate = this.getEndDate();
         TaskRegister taskRegister = new TaskRegister();
         Task task1 = new Task("Test title", "Test description",
                 "None", endDate);
@@ -122,5 +122,17 @@ class TaskRegisterTest
         assertFalse(taskRegister.removeTask(task2));
 
         assertEquals(1, taskRegister.getNumberOfTasks());
+    }
+
+    /**
+     * Returns a LocalDate that always set to 1000 years in the future from the current year
+     * @return a LocalDate set a 1000 years in the future
+     */
+    private LocalDate getEndDate()
+    {
+        int currentYear = LocalDate.now().getYear();
+        int endYear = currentYear + 1000;
+        String endDate = endYear + "-12-01";
+        return LocalDate.parse(endDate);
     }
 }
