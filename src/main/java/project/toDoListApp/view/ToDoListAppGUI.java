@@ -17,6 +17,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -37,12 +38,19 @@ import project.toDoListApp.controller.Controller;
  */
 public class ToDoListAppGUI extends Application {
   private final Controller controller;
+  private final ImageLoader imageLoader;
+
   private final TextArea descriptionTextArea;
   private final TextField taskTitleTextField;
   private final Button dueDateButton;
 
+  /**
+   * ToDoListAppGUI constructor.
+   */
   public ToDoListAppGUI() {
     this.controller = new Controller();
+    this.imageLoader = new ImageLoader();
+
     this.descriptionTextArea = new TextArea();
     this.taskTitleTextField = new TextField();
     this.dueDateButton = new Button();
@@ -270,12 +278,24 @@ public class ToDoListAppGUI extends Application {
     button1.setOnAction(e -> this.controller.showNewReminderDialog());
     button1.setPrefWidth(150);
 
+    ImageView plusIcon = this.imageLoader.getImage("plus-icon");
+    if (plusIcon != null) {
+      plusIcon.setFitHeight(20);
+      button1.setGraphic(plusIcon);
+    }
+
+
     Button button2 = new Button("Delete Reminder");
     button2.setOnAction(e -> this.controller.doDeleteReminder());
     button2.setPrefWidth(150);
 
-    buttonBox.getChildren().addAll(button1, button2);
+    ImageView trashIcon = this.imageLoader.getImage("trash-icon");
+    if (trashIcon != null) {
+      trashIcon.setFitHeight(20);
+      button2.setGraphic(trashIcon);
+    }
 
+    buttonBox.getChildren().addAll(button1, button2);
     return buttonBox;
   }
 
@@ -287,6 +307,7 @@ public class ToDoListAppGUI extends Application {
   private VBox setupCenter() {
     VBox vBox = new VBox();
     this.descriptionTextArea.setWrapText(true);
+    this.disableTextField(this.descriptionTextArea);
 
     HBox hBox = this.setupTopCenterHBox();
 

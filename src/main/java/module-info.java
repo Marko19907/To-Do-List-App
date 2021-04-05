@@ -1,7 +1,7 @@
 module project.toDoListApp {
-    requires javafx.controls;
-    exports project.toDoListApp.view;
-    exports project.toDoListApp;
+  requires javafx.controls;
+  requires java.logging;
+  exports project.toDoListApp.view;
 
-    opens project.toDoListApp to javafx.base;
+  opens project.toDoListApp to javafx.base;
 }
