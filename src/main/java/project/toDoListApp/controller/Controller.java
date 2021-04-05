@@ -154,6 +154,8 @@ public class Controller {
     } else {
       if (this.showDeleteConfirmationDialog()) {
         this.taskRegister.removeTask(this.currentTask);
+        this.currentTask = null;
+
         this.updateObservableList();
       }
     }
@@ -260,7 +262,6 @@ public class Controller {
       this.updateObservableList();
     }
   }
-
 
   /**
    * Displays a warning telling the user to select
