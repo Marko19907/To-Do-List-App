@@ -260,7 +260,7 @@ public class ToDoListAppGUI extends Application
         VBox buttonBox = new VBox();
 
         Button button1 = new Button("New Reminder");
-        button1.setOnAction(e -> System.out.println("New Reminder bottom left button"));
+        button1.setOnAction(e -> controller.showNewReminderDialog());
         button1.setPrefWidth(150);
 
         Button button2 = new Button("Delete Reminder");

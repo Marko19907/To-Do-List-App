@@ -4,11 +4,9 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import project.toDoListApp.Task;
 import project.toDoListApp.TaskRegister;
 
@@ -141,6 +139,62 @@ public class Controller
             else {
                 event.consume();
             }
+        }
+    }
+
+    public void showNewReminderDialog() {
+        //TODO: Create class that handles dialogs. This method should not be handling the creation of the dialog box
+        Dialog<Task> newReminderDialog = new Dialog<>();
+
+        newReminderDialog.setTitle("Reminder Details");
+
+        newReminderDialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField taskName = new TextField();
+        taskName.setPromptText("Title");
+
+        TextField description = new TextField();
+        description.setPromptText("Description");
+
+        TextField category = new TextField();
+        category.setPromptText("Category");
+
+        TextField dueDate = new TextField();
+        dueDate.setPromptText("Due Date");
+
+        grid.add(new Label("Task name:"), 0, 0);
+        grid.add(taskName, 1, 0);
+        grid.add(new Label("Description:"), 0, 1);
+        grid.add(description, 1, 1);
+        grid.add(new Label("Category:"), 0, 2);
+        grid.add(category, 1, 2);
+        grid.add(new Label("Due date:"), 0, 3);
+        grid.add(dueDate, 1, 3);
+
+        newReminderDialog.getDialogPane().setContent(grid);
+
+        newReminderDialog.setResultConverter(
+            (ButtonType button) -> {
+                Task result = null;
+                if (button == ButtonType.OK) {
+                    LocalDate dateDue = LocalDate.parse(dueDate.getText());
+                    result = new Task(taskName.getText(), description.getText(), category.getText(), dateDue);
+                }
+                return result;
+            }
+        );
+
+        Optional<Task> result = newReminderDialog.showAndWait();
+
+        if (result.isPresent()) {
+            Task newTask = result.get();
+            this.taskRegister.addTask(newTask);
+            updateObservableList();
         }
     }
 }
