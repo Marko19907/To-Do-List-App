@@ -155,4 +155,14 @@ public class Task {
     public LocalDate getDateAdded() {
         return this.dateAdded;
     }
+
+    @Override
+    public String toString(){
+        return "Task{" +
+                "taskName='" + taskName + '\''+
+                ", description=" + description +
+                ", category=" + category +
+                ", dueDate=" + dueDate +
+                '}';
+    }
 }
