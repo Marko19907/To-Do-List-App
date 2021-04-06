@@ -280,7 +280,7 @@ public class ToDoListAppGUI extends Application {
 
     ImageView plusIcon = this.imageLoader.getImage("plus-icon");
     if (plusIcon != null) {
-      plusIcon.setFitHeight(20);
+      plusIcon.setFitHeight(12);
       button1.setGraphic(plusIcon);
     }
 
@@ -291,7 +291,7 @@ public class ToDoListAppGUI extends Application {
 
     ImageView trashIcon = this.imageLoader.getImage("trash-icon");
     if (trashIcon != null) {
-      trashIcon.setFitHeight(20);
+      trashIcon.setFitHeight(12);
       button2.setGraphic(trashIcon);
     }
 
