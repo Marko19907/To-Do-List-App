@@ -15,7 +15,8 @@ class TaskSaveTest {
     @DisplayName("Test the task save function")
     void testSaveTask()
     {
-        String path = "C:/Users/elias/Desktop/";
+        //Change path and/or user after what is locally on your computer
+        String path = "C:/Users/user/Desktop/";
         FileUtility fileUtility = new FileUtility();
         Task task = new Task(
                 "Check test",
