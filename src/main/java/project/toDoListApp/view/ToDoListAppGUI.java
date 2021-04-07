@@ -31,7 +31,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
 import project.toDoListApp.Task;
 import project.toDoListApp.controller.Controller;
 
@@ -45,6 +44,7 @@ public class ToDoListAppGUI extends Application {
   private final TextArea descriptionTextArea;
   private final TextField taskTitleTextField;
   private final Button dueDateButton;
+  private final Label dateLabel;
 
   /**
    * ToDoListAppGUI constructor.
@@ -56,6 +56,7 @@ public class ToDoListAppGUI extends Application {
     this.descriptionTextArea = new TextArea();
     this.taskTitleTextField = new TextField();
     this.dueDateButton = new Button();
+    this.dateLabel = new Label();
   }
 
   /**
@@ -80,6 +81,9 @@ public class ToDoListAppGUI extends Application {
     Scene scene = new Scene(root, 600, 400, Color.WHITE);
     stage.setScene(scene);
     stage.show();
+
+    // Disable the center pane on first run
+    this.disableCenterPane();
 
     root.requestFocus();
   }
@@ -126,9 +130,7 @@ public class ToDoListAppGUI extends Application {
     menuItem2.setOnAction(e -> {
       boolean taskDeleted = this.controller.doDeleteReminder();
       if (taskDeleted) {
-        this.disableControl(this.taskTitleTextField);
-        this.disableControl(this.descriptionTextArea);
-        this.disableControl(this.dueDateButton);
+        this.disableCenterPane();
       }
     });
 
@@ -262,7 +264,7 @@ public class ToDoListAppGUI extends Application {
         if (index < this.controller.getTaskListWrapper().size() && index >= 0) {
           Task task = table.getItems().get(index);
           this.controller.displayTask(table, task, this.taskTitleTextField,
-              this.descriptionTextArea, this.dueDateButton);
+              this.descriptionTextArea, this.dueDateButton, this.dateLabel);
         }
       }
     });
@@ -299,9 +301,7 @@ public class ToDoListAppGUI extends Application {
     button2.setOnAction(e -> {
       boolean taskDeleted = this.controller.doDeleteReminder();
       if (taskDeleted) {
-        this.disableControl(this.taskTitleTextField);
-        this.disableControl(this.descriptionTextArea);
-        this.disableControl(this.dueDateButton);
+        this.disableCenterPane();
       }
     });
 
@@ -323,7 +323,6 @@ public class ToDoListAppGUI extends Application {
   private VBox setupCenter() {
     VBox vBox = new VBox();
     this.descriptionTextArea.setWrapText(true);
-    this.disableControl(this.descriptionTextArea);
 
     HBox hBox = this.setupTopCenterHBox();
 
@@ -340,25 +339,26 @@ public class ToDoListAppGUI extends Application {
   private HBox setupTopCenterHBox() {
     HBox hBox = new HBox();
 
-    this.dueDateButton.setText("Due date:");
     this.dueDateButton.setOnAction(e -> System.out.println("Due date top center button test"));
     this.dueDateButton.setPrefWidth(150);
-    this.dueDateButton.setMaxHeight(40);
-    this.dueDateButton.setDisable(true);
+    this.dueDateButton.setMaxHeight(30);
     this.dueDateButton.setAlignment(Pos.CENTER);
 
-    HBox.setHgrow(this.taskTitleTextField, Priority.ALWAYS);
-    this.taskTitleTextField.setStyle("-fx-font-size: 19");
+    this.taskTitleTextField.setStyle("-fx-font-size: 20");
     this.taskTitleTextField.setPrefHeight(40);
-    this.disableControl(this.taskTitleTextField);
 
-    hBox.getChildren().addAll(this.taskTitleTextField, this.dueDateButton);
+    VBox dateBox = new VBox();
+    dateBox.setAlignment(Pos.CENTER);
+    dateBox.getChildren().addAll(this.dateLabel, this.dueDateButton);
+
+    HBox.setHgrow(this.taskTitleTextField, Priority.ALWAYS);
+    hBox.getChildren().addAll(this.taskTitleTextField, dateBox);
     return hBox;
   }
 
   /**
    * Disables the given Control
-   * @param control The Control item to enable, can be a Button, TextArea, TextField or Label
+   * @param control The Control item to disable, can be a Button, TextArea, TextField or Label
    */
   private void disableControl(Control control) {
     if (control != null) {
@@ -371,5 +371,15 @@ public class ToDoListAppGUI extends Application {
         ((TextInputControl) control).setText("");
       }
     }
+  }
+
+  /**
+   * Disables the center pane TextFields and Buttons
+   */
+  private void disableCenterPane() {
+    this.disableControl(this.taskTitleTextField);
+    this.disableControl(this.descriptionTextArea);
+    this.disableControl(this.dueDateButton);
+    this.disableControl(this.dateLabel);
   }
 }

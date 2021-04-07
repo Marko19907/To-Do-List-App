@@ -50,19 +50,21 @@ public class Controller {
    * @param editor    editor
    */
   public void displayTask(TableView<Task> table, Task task, TextField taskTitle,
-                          TextArea editor, Button dueDateButton) {
+                          TextArea editor, Button dueDateButton, Label dueDateLabel) {
     if (table != null && task != null && taskTitle != null && editor != null &&
-        dueDateButton != null) {
+        dueDateButton != null && dueDateLabel != null) {
       this.saveTaskToRegister(taskTitle, editor);
 
       this.currentTask = task;
       editor.setText(task.getDescription());
       taskTitle.setText(task.getTaskName());
-      dueDateButton.setText("Due date:" + "\n" + task.getDueDate().toString());
+      dueDateButton.setText("Set due date");
+      dueDateLabel.setText("Due date: " + task.getDueDate().toString());
 
       this.enableControl(taskTitle);
       this.enableControl(editor);
       this.enableControl(dueDateButton);
+      this.enableControl(dueDateLabel);
 
       table.refresh();
       table.sort();
