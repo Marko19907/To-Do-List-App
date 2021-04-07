@@ -4,7 +4,9 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -124,9 +126,9 @@ public class ToDoListAppGUI extends Application {
     menuItem2.setOnAction(e -> {
       boolean taskDeleted = this.controller.doDeleteReminder();
       if (taskDeleted) {
-        this.disableTextField(this.taskTitleTextField);
-        this.disableTextField(this.descriptionTextArea);
-        this.disableButton(this.dueDateButton);
+        this.disableControl(this.taskTitleTextField);
+        this.disableControl(this.descriptionTextArea);
+        this.disableControl(this.dueDateButton);
       }
     });
 
@@ -297,9 +299,9 @@ public class ToDoListAppGUI extends Application {
     button2.setOnAction(e -> {
       boolean taskDeleted = this.controller.doDeleteReminder();
       if (taskDeleted) {
-        this.disableTextField(this.taskTitleTextField);
-        this.disableTextField(this.descriptionTextArea);
-        this.disableButton(this.dueDateButton);
+        this.disableControl(this.taskTitleTextField);
+        this.disableControl(this.descriptionTextArea);
+        this.disableControl(this.dueDateButton);
       }
     });
 
@@ -321,7 +323,7 @@ public class ToDoListAppGUI extends Application {
   private VBox setupCenter() {
     VBox vBox = new VBox();
     this.descriptionTextArea.setWrapText(true);
-    this.disableTextField(this.descriptionTextArea);
+    this.disableControl(this.descriptionTextArea);
 
     HBox hBox = this.setupTopCenterHBox();
 
@@ -348,35 +350,26 @@ public class ToDoListAppGUI extends Application {
     HBox.setHgrow(this.taskTitleTextField, Priority.ALWAYS);
     this.taskTitleTextField.setStyle("-fx-font-size: 19");
     this.taskTitleTextField.setPrefHeight(40);
-    this.disableTextField(this.taskTitleTextField);
+    this.disableControl(this.taskTitleTextField);
 
     hBox.getChildren().addAll(this.taskTitleTextField, this.dueDateButton);
     return hBox;
   }
 
   /**
-   * Disables the given text field and resets it's text value
-   *
-   * @param textField The text field to disable,
-   *                  can not be null
+   * Disables the given Control
+   * @param control The Control item to enable, can be a Button, TextArea, TextField or Label
    */
-  private void disableTextField(TextInputControl textField) {
-    if (textField != null) {
-      textField.setDisable(true);
-      textField.setEditable(false);
-      textField.setText("");
-    }
-  }
+  private void disableControl(Control control) {
+    if (control != null) {
+      control.setDisable(true);
 
-  /**
-   * Disables the given button
-   *
-   * @param button The button to disable,
-   *               can not be null
-   */
-  private void disableButton(Button button) {
-    if (button != null) {
-      button.setDisable(true);
+      if (control instanceof Labeled) {
+        ((Labeled) control).setText("");
+      }
+      if (control instanceof TextInputControl) {
+        ((TextInputControl) control).setText("");
+      }
     }
   }
 }

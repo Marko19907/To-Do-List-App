@@ -8,12 +8,12 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Control;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputControl;
 import javafx.scene.layout.GridPane;
 import project.toDoListApp.Task;
 import project.toDoListApp.TaskRegister;
@@ -60,9 +60,9 @@ public class Controller {
       taskTitle.setText(task.getTaskName());
       dueDateButton.setText("Due date:" + "\n" + task.getDueDate().toString());
 
-      this.enableTextField(taskTitle);
-      this.enableTextField(editor);
-      this.enableButton(dueDateButton);
+      this.enableControl(taskTitle);
+      this.enableControl(editor);
+      this.enableControl(dueDateButton);
 
       table.refresh();
       table.sort();
@@ -121,27 +121,12 @@ public class Controller {
   }
 
   /**
-   * Enables the given text field
-   *
-   * @param textField The text field to enable,
-   *                  can not be null
+   * Enable the given Control
+   * @param control The Control item to enable, can be a Button, TextArea, TextField or Label
    */
-  private void enableTextField(TextInputControl textField) {
-    if (textField != null) {
-      textField.setDisable(false);
-      textField.setEditable(true);
-    }
-  }
-
-  /**
-   * Enables the given button
-   *
-   * @param button The button to enable,
-   *               can not be null
-   */
-  private void enableButton(Button button) {
-    if (button != null) {
-      button.setDisable(false);
+  private void enableControl(Control control) {
+    if (control != null) {
+      control.setDisable(false);
     }
   }
 
