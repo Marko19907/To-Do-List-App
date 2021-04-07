@@ -147,18 +147,22 @@ public class Controller {
 
   /**
    * Deletes a reminder form the list.
+   * @return Returns true if the current task was deleted, false otherwise
    */
-  public void doDeleteReminder() {
+  public boolean doDeleteReminder() {
+    boolean success = false;
     if (this.currentTask == null) {
       this.showPleaseSelectItemDialog();
     } else {
       if (this.showDeleteConfirmationDialog()) {
         this.taskRegister.removeTask(this.currentTask);
         this.currentTask = null;
+        success = true;
 
         this.updateObservableList();
       }
     }
+    return success;
   }
 
   // -----------------------------------------------------------

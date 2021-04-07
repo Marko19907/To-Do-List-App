@@ -121,7 +121,14 @@ public class ToDoListAppGUI extends Application {
     KeyCombination keyCombinationDeleteReminder =
         new KeyCodeCombination(KeyCode.DELETE, KeyCombination.CONTROL_DOWN);
     menuItem2.setAccelerator(keyCombinationDeleteReminder);
-    menuItem2.setOnAction(e -> this.controller.doDeleteReminder());
+    menuItem2.setOnAction(e -> {
+      boolean taskDeleted = this.controller.doDeleteReminder();
+      if (taskDeleted) {
+        this.disableTextField(this.taskTitleTextField);
+        this.disableTextField(this.descriptionTextArea);
+        this.disableButton(this.dueDateButton);
+      }
+    });
 
     MenuItem menuItem3 = new MenuItem("Save all");
     KeyCombination keyCombinationSaveAll =
@@ -286,8 +293,15 @@ public class ToDoListAppGUI extends Application {
 
 
     Button button2 = new Button("Delete Reminder");
-    button2.setOnAction(e -> this.controller.doDeleteReminder());
     button2.setPrefWidth(150);
+    button2.setOnAction(e -> {
+      boolean taskDeleted = this.controller.doDeleteReminder();
+      if (taskDeleted) {
+        this.disableTextField(this.taskTitleTextField);
+        this.disableTextField(this.descriptionTextArea);
+        this.disableButton(this.dueDateButton);
+      }
+    });
 
     ImageView trashIcon = this.imageLoader.getImage("trash-icon");
     if (trashIcon != null) {
@@ -341,7 +355,7 @@ public class ToDoListAppGUI extends Application {
   }
 
   /**
-   * Disables the given text field
+   * Disables the given text field and resets it's text value
    *
    * @param textField The text field to disable,
    *                  can not be null
@@ -350,6 +364,19 @@ public class ToDoListAppGUI extends Application {
     if (textField != null) {
       textField.setDisable(true);
       textField.setEditable(false);
+      textField.setText("");
+    }
+  }
+
+  /**
+   * Disables the given button
+   *
+   * @param button The button to disable,
+   *               can not be null
+   */
+  private void disableButton(Button button) {
+    if (button != null) {
+      button.setDisable(true);
     }
   }
 }
