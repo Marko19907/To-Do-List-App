@@ -341,7 +341,7 @@ public class ToDoListAppGUI extends Application {
   private HBox setupTopCenterHBox() {
     HBox hBox = new HBox();
 
-    this.dueDateButton.setOnAction(e -> this.controller.doGetEndDateDialog());
+    this.dueDateButton.setOnAction(e -> this.controller.doSetNewEndDate(this.dateLabel));
     this.dueDateButton.setPrefWidth(150);
     this.dueDateButton.setMaxHeight(30);
     this.dueDateButton.setAlignment(Pos.CENTER);

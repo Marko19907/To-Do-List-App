@@ -81,7 +81,7 @@ public class Controller {
   }
 
   /**
-   * Saves the current task to the register.
+   * Saves the current task to the register after changing it's title and text content.
    *
    * @param editor    The TextArea to save the text from,
    *                  can not be null
@@ -138,6 +138,22 @@ public class Controller {
   private void enableControl(Control control) {
     if (control != null) {
       control.setDisable(false);
+    }
+  }
+
+  /**
+   * Sets the new end date of the currently selected task
+   * @param dateLabel The Label to set the new end date text to, can not be null
+   */
+  public void doSetNewEndDate(Label dateLabel) {
+    if (this.currentTask == null) {
+      this.showPleaseSelectItemDialog();
+    } else {
+      LocalDate newEndDate = this.doGetEndDateDialog();
+      if (newEndDate != null && dateLabel != null) {
+        this.currentTask.setDueDate(newEndDate);
+        dateLabel.setText("Due date: " + newEndDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+      }
     }
   }
 
@@ -305,7 +321,7 @@ public class Controller {
    *
    * @return The user selected LocalDate, null if cancelled
    */
-  public LocalDate doGetEndDateDialog() {
+  private LocalDate doGetEndDateDialog() {
     Dialog<LocalDate> dialog = new Dialog<>();
     dialog.setTitle("Date picker");
     dialog.getDialogPane().setPrefWidth(275);
@@ -372,12 +388,6 @@ public class Controller {
         }
         return localDateToReturn;
       }
-    });
-
-    datePicker.setOnAction(event -> {
-      LocalDate date = datePicker.getValue();
-      // Action for testing, can be removed
-      System.out.println("Selected date: " + date.toString());
     });
 
     datePicker.setDayCellFactory(picker -> new DateCell() {
