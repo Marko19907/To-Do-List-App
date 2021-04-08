@@ -9,16 +9,25 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Control;
+import javafx.scene.control.DateCell;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.util.StringConverter;
 import project.toDoListApp.Task;
 import project.toDoListApp.TaskRegister;
 
+import java.time.DateTimeException;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Optional;
 
 /**
@@ -59,7 +68,7 @@ public class Controller {
       editor.setText(task.getDescription());
       taskTitle.setText(task.getTaskName());
       dueDateButton.setText("Set due date");
-      dueDateLabel.setText("Due date: " + task.getDueDate().toString());
+      dueDateLabel.setText("Due date: " + task.getDueDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
 
       this.enableControl(taskTitle);
       this.enableControl(editor);
@@ -288,5 +297,118 @@ public class Controller {
       deleteConfirmed = (result.get() == ButtonType.OK);
     }
     return deleteConfirmed;
+  }
+
+  /**
+   * Displays a dialog in which the user can type the desired date as a String or select it from the DatePicker.
+   * If the user clicks okay, a LocalDate of the desired date is returned, otherwise null.
+   *
+   * @return The user selected LocalDate, null if cancelled
+   */
+  public LocalDate doGetEndDateDialog() {
+    Dialog<LocalDate> dialog = new Dialog<>();
+    dialog.setTitle("Date picker");
+    dialog.getDialogPane().setPrefWidth(275);
+
+    DatePicker datePicker = this.getDatePicker();
+
+    GridPane grid = new GridPane();
+    grid.setHgap(10);
+    grid.setVgap(10);
+    grid.setPadding(new Insets(5, 5, 5, 5));
+
+    grid.add(datePicker, 0, 0);
+
+    dialog.getDialogPane().getChildren().add(grid);
+    dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+    dialog.setResultConverter((ButtonType button) -> {
+      LocalDate result = null;
+      if (button == ButtonType.OK) {
+        result = datePicker.getValue();
+      }
+      return result;
+    });
+
+    return dialog.showAndWait().orElse(null);
+  }
+
+  /**
+   * Returns a set-up DatePicker in the "dd/MM/yyyy" format and with disabled past dates.
+   *
+   * @return An already set-up DatePicker
+   */
+  private DatePicker getDatePicker() {
+    DatePicker datePicker = new DatePicker();
+    String pattern = "dd/MM/yyyy";
+    datePicker.setMinSize(210, 25);
+    datePicker.setPromptText(pattern);
+    datePicker.setShowWeekNumbers(true);
+    datePicker.setStyle("-fx-font-size: 1.1em;");
+
+    datePicker.setConverter(new StringConverter<>() {
+      @Override
+      public String toString(LocalDate date) {
+        String toReturn = "";
+        if (date != null) {
+          try {
+            toReturn = DateTimeFormatter.ofPattern(pattern).format(date);
+          }
+          catch (DateTimeException | IllegalArgumentException ignored) {
+          }
+        }
+        return toReturn;
+      }
+
+      @Override
+      public LocalDate fromString(String string) {
+        LocalDate localDateToReturn = null;
+        if (string != null && !string.isEmpty()) {
+          try {
+            localDateToReturn = LocalDate.parse(string, DateTimeFormatter.ofPattern(pattern));
+          }
+          catch (DateTimeParseException ignored) {
+          }
+        }
+        return localDateToReturn;
+      }
+    });
+
+    datePicker.setOnAction(event -> {
+      LocalDate date = datePicker.getValue();
+      // Action for testing, can be removed
+      System.out.println("Selected date: " + date.toString());
+    });
+
+    datePicker.setDayCellFactory(picker -> new DateCell() {
+      @Override
+      public void updateItem(LocalDate date, boolean empty) {
+        super.updateItem(date, empty);
+
+        this.setTooltip(new Tooltip("Select this date"));
+
+        // Show weekends in red
+        DayOfWeek day = DayOfWeek.from(date);
+        if (day == DayOfWeek.SATURDAY || day == DayOfWeek.SUNDAY) {
+          this.setTextFill(Color.RED);
+        }
+
+        // Disable all past date and empty cells
+        if (empty || date.isBefore(LocalDate.now())) {
+          this.setDisable(true);
+          this.setStyle("-fx-background-color: #ffe3e9;");
+        }
+
+        // Disable the current date and show it in blue
+        if (date.isEqual(LocalDate.now())) {
+          //this.setDisable(true);
+          //TODO: Figure out if the current date is an acceptable value . . .
+          this.setStyle("-fx-background-color: #e3f3ff;");
+          this.setTooltip(new Tooltip("Can not be the same date as today"));
+        }
+      }
+    });
+
+    return datePicker;
   }
 }

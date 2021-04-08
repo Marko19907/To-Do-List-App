@@ -34,6 +34,8 @@ import javafx.stage.Stage;
 import project.toDoListApp.Task;
 import project.toDoListApp.controller.Controller;
 
+import java.time.LocalDate;
+
 /**
  * Class ToDoListAppGUI represents the main window in the application.
  */
@@ -339,7 +341,7 @@ public class ToDoListAppGUI extends Application {
   private HBox setupTopCenterHBox() {
     HBox hBox = new HBox();
 
-    this.dueDateButton.setOnAction(e -> System.out.println("Due date top center button test"));
+    this.dueDateButton.setOnAction(e -> this.controller.doGetEndDateDialog());
     this.dueDateButton.setPrefWidth(150);
     this.dueDateButton.setMaxHeight(30);
     this.dueDateButton.setAlignment(Pos.CENTER);
@@ -358,6 +360,7 @@ public class ToDoListAppGUI extends Application {
 
   /**
    * Disables the given Control
+   *
    * @param control The Control item to disable, can be a Button, TextArea, TextField or Label
    */
   private void disableControl(Control control) {
