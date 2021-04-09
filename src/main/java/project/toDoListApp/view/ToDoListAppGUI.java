@@ -34,8 +34,6 @@ import javafx.stage.Stage;
 import project.toDoListApp.Task;
 import project.toDoListApp.controller.Controller;
 
-import java.time.LocalDate;
-
 /**
  * Class ToDoListAppGUI represents the main window in the application.
  */
@@ -43,6 +41,7 @@ public class ToDoListAppGUI extends Application {
   private final Controller controller;
   private final ImageLoader imageLoader;
 
+  private final TableView<Task> taskTableView;
   private final TextArea descriptionTextArea;
   private final TextField taskTitleTextField;
   private final Button dueDateButton;
@@ -55,6 +54,7 @@ public class ToDoListAppGUI extends Application {
     this.controller = new Controller();
     this.imageLoader = new ImageLoader();
 
+    this.taskTableView = new TableView<>();
     this.descriptionTextArea = new TextArea();
     this.taskTitleTextField = new TextField();
     this.dueDateButton = new Button();
@@ -123,7 +123,10 @@ public class ToDoListAppGUI extends Application {
     KeyCombination keyCombinationNewReminder =
         new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN);
     menuItem1.setAccelerator(keyCombinationNewReminder);
-    menuItem1.setOnAction(e -> this.controller.showNewReminderDialog());
+    menuItem1.setOnAction(e -> {
+      this.controller.showNewReminderDialog();
+      this.refreshTable();
+    });
 
     MenuItem menuItem2 = new MenuItem("Delete Reminder");
     KeyCombination keyCombinationDeleteReminder =
@@ -133,6 +136,7 @@ public class ToDoListAppGUI extends Application {
       boolean taskDeleted = this.controller.doDeleteReminder();
       if (taskDeleted) {
         this.disableCenterPane();
+        this.refreshTable();
       }
     });
 
@@ -236,47 +240,44 @@ public class ToDoListAppGUI extends Application {
   private VBox setupLeft() {
     VBox vBox = new VBox();
 
-    TableView<Task> table = this.setupLeftTopTable();
+    this.setupLeftTopTable();
     VBox buttonBox = this.setupBottomLeftButtons();
-    vBox.getChildren().addAll(table, buttonBox);
+    vBox.getChildren().addAll(this.taskTableView, buttonBox);
 
     vBox.setPrefWidth(150);
-    VBox.setVgrow(table, Priority.ALWAYS);
+    VBox.setVgrow(this.taskTableView, Priority.ALWAYS);
     return vBox;
   }
 
   /**
-   * Sets up the left table.
-   *
-   * @return The already set up left table
+   * Sets up the left table that contains the tasks
    */
-  private TableView<Task> setupLeftTopTable() {
-    TableView<Task> table = new TableView<>();
-    table.setPlaceholder(new Label("No tasks to display"));
-    table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+  private void setupLeftTopTable() {
+    this.taskTableView.setPlaceholder(new Label("No tasks to display"));
+    this.taskTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
     TableColumn<Task, String> titleColumn = new TableColumn<>("Task Title");
     titleColumn.setCellValueFactory(new PropertyValueFactory<>("taskName"));
 
     // set on left click action
-    table.setOnMouseClicked((MouseEvent event) -> {
+    this.taskTableView.setOnMouseClicked((MouseEvent event) -> {
       if (event.getButton().equals(MouseButton.PRIMARY)) {
         //TODO: The view class should not be aware of the model, (e.g., the Task class)
-        int index = table.getSelectionModel().getSelectedIndex();
+        int index = this.taskTableView.getSelectionModel().getSelectedIndex();
         if (index < this.controller.getTaskListWrapper().size() && index >= 0) {
-          Task task = table.getItems().get(index);
-          this.controller.displayTask(table, task, this.taskTitleTextField,
+          Task task = this.taskTableView.getItems().get(index);
+
+          this.controller.displayTask(task, this.taskTitleTextField,
               this.descriptionTextArea, this.dueDateButton, this.dateLabel);
+          this.refreshTable();
         }
       }
     });
 
-    table.setItems(this.controller.getTaskListWrapper());
-    table.getColumns().add(titleColumn);
+    this.taskTableView.setItems(this.controller.getTaskListWrapper());
+    this.taskTableView.getColumns().add(titleColumn);
     //Set a default sort column
-    table.getSortOrder().add(titleColumn);
-
-    return table;
+    this.taskTableView.getSortOrder().add(titleColumn);
   }
 
   /**
@@ -288,8 +289,12 @@ public class ToDoListAppGUI extends Application {
     VBox buttonBox = new VBox();
 
     Button button1 = new Button("New Reminder");
-    button1.setOnAction(e -> this.controller.showNewReminderDialog());
+    button1.setOnAction(e -> {
+      this.controller.showNewReminderDialog();
+      this.refreshTable();
+    });
     button1.setPrefWidth(150);
+    button1.setAlignment(Pos.CENTER);
 
     ImageView plusIcon = this.imageLoader.getImage("plus-icon");
     if (plusIcon != null) {
@@ -300,10 +305,12 @@ public class ToDoListAppGUI extends Application {
 
     Button button2 = new Button("Delete Reminder");
     button2.setPrefWidth(150);
+    button2.setAlignment(Pos.CENTER);
     button2.setOnAction(e -> {
       boolean taskDeleted = this.controller.doDeleteReminder();
       if (taskDeleted) {
         this.disableCenterPane();
+        this.refreshTable();
       }
     });
 
@@ -384,5 +391,13 @@ public class ToDoListAppGUI extends Application {
     this.disableControl(this.descriptionTextArea);
     this.disableControl(this.dueDateButton);
     this.disableControl(this.dateLabel);
+  }
+
+  /**
+   * Refreshes the table and forces a sort of the data
+   */
+  private void refreshTable() {
+    this.taskTableView.refresh();
+    this.taskTableView.sort();
   }
 }

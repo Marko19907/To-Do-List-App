@@ -51,16 +51,17 @@ public class Controller {
   }
 
   /**
-   * Add Comment here.
+   * Displays a given Task to the given parameters.
    *
-   * @param table     table view of all the tasks
-   * @param task      the current task
-   * @param taskTitle the task title
-   * @param editor    editor
+   * @param task      The task to display, can not be null
+   * @param taskTitle The TextField to set the title to, can not be null
+   * @param editor    The TextArea to set the task text content to, can not be null
+   * @param dueDateButton The dueDateButton to enable after a Task is displayed, can not be null
+   * @param dueDateLabel The Label to set the end date text to, can not be null
    */
-  public void displayTask(TableView<Task> table, Task task, TextField taskTitle,
+  public void displayTask(Task task, TextField taskTitle,
                           TextArea editor, Button dueDateButton, Label dueDateLabel) {
-    if (table != null && task != null && taskTitle != null && editor != null &&
+    if (task != null && taskTitle != null && editor != null &&
         dueDateButton != null && dueDateLabel != null) {
       this.saveTaskToRegister(taskTitle, editor);
 
@@ -74,9 +75,6 @@ public class Controller {
       this.enableControl(editor);
       this.enableControl(dueDateButton);
       this.enableControl(dueDateLabel);
-
-      table.refresh();
-      table.sort();
     }
   }
 
