@@ -31,6 +31,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.web.HTMLEditor;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import project.toDoListApp.Task;
 import project.toDoListApp.controller.Controller;
@@ -60,6 +61,9 @@ public class ToDoListAppGUI extends Application {
     this.taskTitleTextField = new TextField();
     this.dueDateButton = new Button();
     this.dateLabel = new Label();
+
+    WebView webView = (WebView) this.descriptionTextArea.lookup(".web-view");
+    webView.setFontScale(1.2);
   }
 
   /**
