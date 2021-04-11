@@ -30,6 +30,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.web.HTMLEditor;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import project.toDoListApp.Task;
 import project.toDoListApp.controller.Controller;
@@ -42,7 +44,7 @@ public class ToDoListAppGUI extends Application {
   private final ImageLoader imageLoader;
 
   private final TableView<Task> taskTableView;
-  private final TextArea descriptionTextArea;
+  private final HTMLEditor descriptionTextArea;
   private final TextField taskTitleTextField;
   private final Button dueDateButton;
   private final Label dateLabel;
@@ -55,10 +57,13 @@ public class ToDoListAppGUI extends Application {
     this.imageLoader = new ImageLoader();
 
     this.taskTableView = new TableView<>();
-    this.descriptionTextArea = new TextArea();
+    this.descriptionTextArea = new HTMLEditor();
     this.taskTitleTextField = new TextField();
     this.dueDateButton = new Button();
     this.dateLabel = new Label();
+
+    WebView webView = (WebView) this.descriptionTextArea.lookup(".web-view");
+    webView.setFontScale(1.2);
   }
 
   /**
@@ -331,7 +336,7 @@ public class ToDoListAppGUI extends Application {
    */
   private VBox setupCenter() {
     VBox vBox = new VBox();
-    this.descriptionTextArea.setWrapText(true);
+    //this.descriptionTextArea.setWrapText(true);
 
     HBox hBox = this.setupTopCenterHBox();
 
@@ -379,6 +384,9 @@ public class ToDoListAppGUI extends Application {
       }
       if (control instanceof TextInputControl) {
         ((TextInputControl) control).setText("");
+      }
+      if (control instanceof HTMLEditor) {
+        ((HTMLEditor) control).setHtmlText("");
       }
     }
   }

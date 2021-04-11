@@ -19,6 +19,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.scene.web.HTMLEditor;
 import javafx.util.StringConverter;
 import project.toDoListApp.Task;
 import project.toDoListApp.TaskRegister;
@@ -60,13 +61,13 @@ public class Controller {
    * @param dueDateLabel The Label to set the end date text to, can not be null
    */
   public void displayTask(Task task, TextField taskTitle,
-                          TextArea editor, Button dueDateButton, Label dueDateLabel) {
+                          HTMLEditor editor, Button dueDateButton, Label dueDateLabel) {
     if (task != null && taskTitle != null && editor != null &&
         dueDateButton != null && dueDateLabel != null) {
       this.saveTaskToRegister(taskTitle, editor);
 
       this.currentTask = task;
-      editor.setText(task.getDescription());
+      editor.setHtmlText(task.getDescription());
       taskTitle.setText(task.getTaskName());
       dueDateButton.setText("Set due date");
       dueDateLabel.setText("Due date: " + task.getDueDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
@@ -86,7 +87,7 @@ public class Controller {
    * @param taskTitle The TextField to get the text from,
    *                  can not be null
    */
-  private void saveTaskToRegister(TextField taskTitle, TextArea editor) {
+  private void saveTaskToRegister(TextField taskTitle, HTMLEditor editor) {
     if (this.currentTask != null && taskTitle != null && editor != null) {
       if (taskTitle.getText().isBlank()) {
         //TODO: The TextField is blank, the task will throw an exception
@@ -94,7 +95,7 @@ public class Controller {
       } else {
         this.currentTask.setTaskName(taskTitle.getText());
       }
-      this.currentTask.setDescription(editor.getText());
+      this.currentTask.setDescription(editor.getHtmlText());
 
       this.taskRegister.addTask(this.currentTask);
       this.updateObservableList();
