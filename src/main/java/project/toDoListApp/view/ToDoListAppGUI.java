@@ -1,6 +1,7 @@
 package project.toDoListApp.view;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -337,8 +338,9 @@ public class ToDoListAppGUI extends Application {
     VBox vBox = new VBox();
 
     HBox hBox = this.setupTopCenterHBox();
+    HBox bottomZoomHBox = this.setupBottomZoomButtonBox();
 
-    vBox.getChildren().addAll(hBox, this.htmlEditor);
+    vBox.getChildren().addAll(hBox, this.htmlEditor, bottomZoomHBox);
     VBox.setVgrow(this.htmlEditor, Priority.ALWAYS);
     return vBox;
   }
@@ -365,6 +367,26 @@ public class ToDoListAppGUI extends Application {
 
     HBox.setHgrow(this.taskTitleTextField, Priority.ALWAYS);
     hBox.getChildren().addAll(this.taskTitleTextField, dateBox);
+    return hBox;
+  }
+
+  /**
+   * Sets up the bottom zoom HBox.
+   *
+   * @return The already set-up bottom zoom HBox
+   */
+  private HBox setupBottomZoomButtonBox() {
+    HBox hBox = new HBox();
+    hBox.setAlignment(Pos.CENTER_RIGHT);
+
+    hBox.setPadding(new Insets(0, 15, 0, 15));
+    hBox.setSpacing(10);
+
+    Button zoomOutButton = new Button("Zoom out");
+
+    Button zoomInButton = new Button("Zoom in");
+
+    hBox.getChildren().addAll(zoomOutButton, zoomInButton);
     return hBox;
   }
 
