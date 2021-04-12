@@ -14,7 +14,6 @@ import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.control.ToggleGroup;
@@ -44,7 +43,7 @@ public class ToDoListAppGUI extends Application {
   private final ImageLoader imageLoader;
 
   private final TableView<Task> taskTableView;
-  private final HTMLEditor descriptionTextArea;
+  private final HTMLEditor htmlEditor;
   private final TextField taskTitleTextField;
   private final Button dueDateButton;
   private final Label dateLabel;
@@ -57,13 +56,13 @@ public class ToDoListAppGUI extends Application {
     this.imageLoader = new ImageLoader();
 
     this.taskTableView = new TableView<>();
-    this.descriptionTextArea = new HTMLEditor();
+    this.htmlEditor = new HTMLEditor();
     this.taskTitleTextField = new TextField();
     this.dueDateButton = new Button();
     this.dateLabel = new Label();
 
-    WebView webView = (WebView) this.descriptionTextArea.lookup(".web-view");
-    webView.setFontScale(1.2);
+    WebView webView = (WebView) this.htmlEditor.lookup(".web-view");
+    webView.setFontScale(1);
   }
 
   /**
@@ -273,7 +272,7 @@ public class ToDoListAppGUI extends Application {
           Task task = this.taskTableView.getItems().get(index);
 
           this.controller.displayTask(task, this.taskTitleTextField,
-              this.descriptionTextArea, this.dueDateButton, this.dateLabel);
+              this.htmlEditor, this.dueDateButton, this.dateLabel);
           this.refreshTable();
         }
       }
@@ -336,12 +335,11 @@ public class ToDoListAppGUI extends Application {
    */
   private VBox setupCenter() {
     VBox vBox = new VBox();
-    //this.descriptionTextArea.setWrapText(true);
 
     HBox hBox = this.setupTopCenterHBox();
 
-    vBox.getChildren().addAll(hBox, this.descriptionTextArea);
-    VBox.setVgrow(this.descriptionTextArea, Priority.ALWAYS);
+    vBox.getChildren().addAll(hBox, this.htmlEditor);
+    VBox.setVgrow(this.htmlEditor, Priority.ALWAYS);
     return vBox;
   }
 
@@ -396,7 +394,7 @@ public class ToDoListAppGUI extends Application {
    */
   private void disableCenterPane() {
     this.disableControl(this.taskTitleTextField);
-    this.disableControl(this.descriptionTextArea);
+    this.disableControl(this.htmlEditor);
     this.disableControl(this.dueDateButton);
     this.disableControl(this.dateLabel);
   }

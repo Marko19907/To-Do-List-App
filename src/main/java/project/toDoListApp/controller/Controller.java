@@ -13,8 +13,6 @@ import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
@@ -36,6 +34,7 @@ import java.util.Optional;
  * It is responsible for handling the events from the GUI.
  */
 public class Controller {
+  private static final String DATE_FORMAT = "dd/MM/yyyy";
   private final TaskRegister taskRegister;
   private final ObservableList<Task> taskListWrapper;
 
@@ -70,7 +69,7 @@ public class Controller {
       editor.setHtmlText(task.getDescription());
       taskTitle.setText(task.getTaskName());
       dueDateButton.setText("Set due date");
-      dueDateLabel.setText("Due date: " + task.getDueDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+      dueDateLabel.setText("Due date: " + this.getLocalDateAsString(task.getDueDate()));
 
       this.enableControl(taskTitle);
       this.enableControl(editor);
@@ -131,7 +130,8 @@ public class Controller {
   }
 
   /**
-   * Enable the given Control
+   * Enables the given Control.
+   *
    * @param control The Control item to enable, can be a Button, TextArea, TextField or Label
    */
   private void enableControl(Control control) {
@@ -141,7 +141,22 @@ public class Controller {
   }
 
   /**
-   * Sets the new end date of the currently selected task
+   * Returns a String representation of the given LocalDate.
+   *
+   * @param localDate The LocalDate to represent as a String, can not be null
+   * @return A String representation of the given LocalDate or blank if null
+   */
+  private String getLocalDateAsString(LocalDate localDate) {
+    // Guard condition
+    if (localDate == null) {
+      return "";
+    }
+    return localDate.format(DateTimeFormatter.ofPattern(DATE_FORMAT));
+  }
+
+  /**
+   * Sets the new end date of the currently selected task.
+   *
    * @param dateLabel The Label to set the new end date text to, can not be null
    */
   public void doSetNewEndDate(Label dateLabel) {
@@ -151,13 +166,14 @@ public class Controller {
       LocalDate newEndDate = this.doGetEndDateDialog();
       if (newEndDate != null && dateLabel != null) {
         this.currentTask.setDueDate(newEndDate);
-        dateLabel.setText("Due date: " + newEndDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        dateLabel.setText("Due date: " + this.getLocalDateAsString(newEndDate));
       }
     }
   }
 
   /**
    * Deletes a reminder form the list.
+   *
    * @return Returns true if the current task was deleted, false otherwise
    */
   public boolean doDeleteReminder() {
@@ -355,9 +371,8 @@ public class Controller {
    */
   private DatePicker getDatePicker() {
     DatePicker datePicker = new DatePicker();
-    String pattern = "dd/MM/yyyy";
     datePicker.setMinSize(210, 25);
-    datePicker.setPromptText(pattern);
+    datePicker.setPromptText(DATE_FORMAT);
     datePicker.setShowWeekNumbers(true);
     datePicker.setStyle("-fx-font-size: 1.1em;");
 
@@ -367,7 +382,7 @@ public class Controller {
         String toReturn = "";
         if (date != null) {
           try {
-            toReturn = DateTimeFormatter.ofPattern(pattern).format(date);
+            toReturn = DateTimeFormatter.ofPattern(DATE_FORMAT).format(date);
           }
           catch (DateTimeException | IllegalArgumentException ignored) {
           }
@@ -380,7 +395,7 @@ public class Controller {
         LocalDate localDateToReturn = null;
         if (string != null && !string.isEmpty()) {
           try {
-            localDateToReturn = LocalDate.parse(string, DateTimeFormatter.ofPattern(pattern));
+            localDateToReturn = LocalDate.parse(string, DateTimeFormatter.ofPattern(DATE_FORMAT));
           }
           catch (DateTimeParseException ignored) {
           }
