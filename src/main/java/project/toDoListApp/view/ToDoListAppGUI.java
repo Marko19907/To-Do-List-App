@@ -31,7 +31,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.web.HTMLEditor;
-import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import project.toDoListApp.Task;
 import project.toDoListApp.controller.Controller;
@@ -61,9 +60,6 @@ public class ToDoListAppGUI extends Application {
     this.taskTitleTextField = new TextField();
     this.dueDateButton = new Button();
     this.dateLabel = new Label();
-
-    WebView webView = (WebView) this.htmlEditor.lookup(".web-view");
-    webView.setFontScale(1);
   }
 
   /**
@@ -383,8 +379,10 @@ public class ToDoListAppGUI extends Application {
     hBox.setSpacing(10);
 
     Button zoomOutButton = new Button("Zoom out");
+    zoomOutButton.setOnAction(e -> this.controller.doZoom(this.htmlEditor, -0.1));
 
     Button zoomInButton = new Button("Zoom in");
+    zoomInButton.setOnAction(e -> this.controller.doZoom(this.htmlEditor, 0.1));
 
     hBox.getChildren().addAll(zoomOutButton, zoomInButton);
     return hBox;
