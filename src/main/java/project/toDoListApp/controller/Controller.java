@@ -164,7 +164,12 @@ public class Controller {
   public void doZoom(HTMLEditor htmlEditor, double scaleFactor) {
     if (htmlEditor != null) {
       WebView webView = (WebView) htmlEditor.lookup(".web-view");
-      webView.setFontScale(webView.getFontScale() + scaleFactor);
+      double newFontScaleFactor = webView.getFontScale() + scaleFactor;
+      // round the new font scaling factor before applying it
+      double newRoundedFontScale = Math.round(newFontScaleFactor * 100) / 100.0;
+      if (0.5 <= newRoundedFontScale && newRoundedFontScale <= 2.0) {
+        webView.setFontScale(newRoundedFontScale);
+      }
     }
   }
 
