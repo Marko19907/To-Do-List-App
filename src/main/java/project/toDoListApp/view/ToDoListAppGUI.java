@@ -47,6 +47,7 @@ public class ToDoListAppGUI extends Application {
   private final TextField taskTitleTextField;
   private final Button dueDateButton;
   private final Label dateLabel;
+  private final Label zoomLabel;
 
   /**
    * ToDoListAppGUI constructor.
@@ -60,6 +61,7 @@ public class ToDoListAppGUI extends Application {
     this.taskTitleTextField = new TextField();
     this.dueDateButton = new Button();
     this.dateLabel = new Label();
+    this.zoomLabel = new Label();
   }
 
   /**
@@ -193,13 +195,13 @@ public class ToDoListAppGUI extends Application {
     KeyCombination keyCombinationZoomIn =
         new KeyCodeCombination(KeyCode.PLUS, KeyCombination.CONTROL_DOWN);
     menuItem1.setAccelerator(keyCombinationZoomIn);
-    menuItem1.setOnAction(e -> System.out.println("Zoom in test"));
+    menuItem1.setOnAction(e -> this.zoomInAction());
 
     MenuItem menuItem2 = new MenuItem("Zoom out");
     KeyCombination keyCombinationZoomOut =
         new KeyCodeCombination(KeyCode.MINUS, KeyCombination.CONTROL_DOWN);
     menuItem2.setAccelerator(keyCombinationZoomOut);
-    menuItem2.setOnAction(e -> System.out.println("Zoom out test"));
+    menuItem2.setOnAction(e -> this.zoomOutAction());
 
 
     ToggleGroup toggleGroup = new ToggleGroup();
@@ -379,13 +381,30 @@ public class ToDoListAppGUI extends Application {
     hBox.setSpacing(10);
 
     Button zoomOutButton = new Button("Zoom out");
-    zoomOutButton.setOnAction(e -> this.controller.doZoom(this.htmlEditor, -0.1));
+    zoomOutButton.setOnAction(e -> this.zoomOutAction());
 
     Button zoomInButton = new Button("Zoom in");
-    zoomInButton.setOnAction(e -> this.controller.doZoom(this.htmlEditor, 0.1));
+    zoomInButton.setOnAction(e -> this.zoomInAction());
 
-    hBox.getChildren().addAll(zoomOutButton, zoomInButton);
+    this.zoomLabel.setText("100%");
+    this.zoomLabel.setAlignment(Pos.CENTER_RIGHT);
+
+    hBox.getChildren().addAll(zoomOutButton, zoomInButton, this.zoomLabel);
     return hBox;
+  }
+
+  /**
+   * Performs the zoom in action
+   */
+  private void zoomInAction() {
+    this.controller.doZoom(this.htmlEditor, this.zoomLabel, 0.1);
+  }
+
+  /**
+   * Performs the zoom out action
+   */
+  private void zoomOutAction() {
+    this.controller.doZoom(this.htmlEditor, this.zoomLabel, -0.1);
   }
 
   /**
