@@ -382,9 +382,19 @@ public class ToDoListAppGUI extends Application {
 
     Button zoomOutButton = new Button("Zoom out");
     zoomOutButton.setOnAction(e -> this.zoomOutAction());
+    ImageView zoomOutIcon = this.imageLoader.getImage("zoom-out");
+    if (zoomOutIcon != null) {
+      zoomOutIcon.setFitHeight(10);
+      zoomOutButton.setGraphic(zoomOutIcon);
+    }
 
     Button zoomInButton = new Button("Zoom in");
     zoomInButton.setOnAction(e -> this.zoomInAction());
+    ImageView zoomInIcon = this.imageLoader.getImage("zoom-in");
+    if (zoomOutIcon != null) {
+      zoomInIcon.setFitHeight(10);
+      zoomInButton.setGraphic(zoomInIcon);
+    }
 
     this.zoomLabel.setText("100%");
     this.zoomLabel.setAlignment(Pos.CENTER_RIGHT);
