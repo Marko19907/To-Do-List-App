@@ -1,0 +1,23 @@
+image: maven:latest
+
+stages:
+  - build
+  - test
+
+build-job:
+  stage: build
+  only:
+    - master
+    - merge_requests
+  script:
+    - echo "Building a JAR"
+    - mvn clean package
+
+test-job:
+  stage: test
+  only:
+    - master
+    - merge_requests
+  script:
+    - echo "Running 'mvn clean test'"
+    - mvn clean test
