@@ -8,7 +8,6 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Control;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Dialog;
@@ -71,11 +70,6 @@ public class Controller {
       taskTitle.setText(task.getTaskName());
       dueDateButton.setText("Set due date");
       dueDateLabel.setText("Due date: " + this.getLocalDateAsString(task.getDueDate()));
-
-      this.enableControl(taskTitle);
-      this.enableControl(editor);
-      this.enableControl(dueDateButton);
-      this.enableControl(dueDateLabel);
     }
   }
 
@@ -128,17 +122,6 @@ public class Controller {
    */
   public ObservableList<Task> getTaskListWrapper() {
     return this.taskListWrapper;
-  }
-
-  /**
-   * Enables the given Control.
-   *
-   * @param control The Control item to enable, can be a Button, TextArea, TextField or Label
-   */
-  private void enableControl(Control control) {
-    if (control != null) {
-      control.setDisable(false);
-    }
   }
 
   /**

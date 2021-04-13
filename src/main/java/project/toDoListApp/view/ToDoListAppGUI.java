@@ -42,6 +42,7 @@ public class ToDoListAppGUI extends Application {
   private final Controller controller;
   private final ImageLoader imageLoader;
 
+  private final BorderPane root;
   private final TableView<Task> taskTableView;
   private final HTMLEditor htmlEditor;
   private final TextField taskTitleTextField;
@@ -56,6 +57,7 @@ public class ToDoListAppGUI extends Application {
     this.controller = new Controller();
     this.imageLoader = new ImageLoader();
 
+    this.root = new BorderPane();
     this.taskTableView = new TableView<>();
     this.htmlEditor = new HTMLEditor();
     this.taskTitleTextField = new TextField();
@@ -73,24 +75,23 @@ public class ToDoListAppGUI extends Application {
 
   @Override
   public void start(Stage stage) {
-    BorderPane root = new BorderPane();
-    root.setTop(this.setupTopMenu());
-    root.setLeft(this.setupLeft());
-    root.setCenter(this.setupCenter());
+    this.root.setTop(this.setupTopMenu());
+    this.root.setLeft(this.setupLeft());
+    this.root.setCenter(this.setupCenter());
 
     stage.setTitle("To-Do List App");
     stage.setMinWidth(300);
     stage.setMinHeight(200);
     stage.setOnCloseRequest(e -> this.controller.quit(e));
 
-    Scene scene = new Scene(root, 600, 400, Color.WHITE);
+    Scene scene = new Scene(this.root, 600, 400, Color.WHITE);
     stage.setScene(scene);
     stage.show();
 
     // Disable the center pane on first run
     this.disableCenterPane();
 
-    root.requestFocus();
+    this.root.requestFocus();
   }
 
   /**
@@ -272,6 +273,7 @@ public class ToDoListAppGUI extends Application {
 
           this.controller.displayTask(task, this.taskTitleTextField,
               this.htmlEditor, this.dueDateButton, this.dateLabel);
+          this.enableCenterPane();
           this.refreshTable();
         }
       }
@@ -418,19 +420,17 @@ public class ToDoListAppGUI extends Application {
   }
 
   /**
-   * Disables the given Control
+   * Clears the text of the given Control.
    *
-   * @param control The Control item to disable, can be a Button, TextArea, TextField or Label
+   * @param control The Control item to clear the text from, can be a Button, TextArea, TextField or Label
    */
-  private void disableControl(Control control) {
+  private void clearControlText(Control control) {
     if (control != null) {
-      control.setDisable(true);
-
       if (control instanceof Labeled) {
         ((Labeled) control).setText("");
       }
       if (control instanceof TextInputControl) {
-        ((TextInputControl) control).setText("");
+        ((TextInputControl) control).clear();
       }
       if (control instanceof HTMLEditor) {
         ((HTMLEditor) control).setHtmlText("");
@@ -439,13 +439,22 @@ public class ToDoListAppGUI extends Application {
   }
 
   /**
-   * Disables the center pane TextFields and Buttons
+   * Disables and clears the text of center pane's TextFields, Buttons and Labels.
    */
   private void disableCenterPane() {
-    this.disableControl(this.taskTitleTextField);
-    this.disableControl(this.htmlEditor);
-    this.disableControl(this.dueDateButton);
-    this.disableControl(this.dateLabel);
+    this.clearControlText(this.taskTitleTextField);
+    this.clearControlText(this.htmlEditor);
+    this.clearControlText(this.dueDateButton);
+    this.clearControlText(this.dateLabel);
+
+    this.root.getCenter().setDisable(true);
+  }
+
+  /**
+   * Enables the center pane.
+   */
+  private void enableCenterPane() {
+    this.root.getCenter().setDisable(false);
   }
 
   /**
