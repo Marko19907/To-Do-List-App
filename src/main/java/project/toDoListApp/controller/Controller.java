@@ -18,6 +18,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.web.HTMLEditor;
+import javafx.scene.web.WebView;
 import javafx.util.StringConverter;
 import project.toDoListApp.Task;
 import project.toDoListApp.TaskRegister;
@@ -152,6 +153,28 @@ public class Controller {
       return "";
     }
     return localDate.format(DateTimeFormatter.ofPattern(DATE_FORMAT));
+  }
+
+  /**
+   * Sets the font scaling factor of the given HTMLEditor.
+   *
+   * @param htmlEditor The HTMLEditor to set the font scaling factor to, can not be null
+   * @param zoomLabel The Label to set the scaling factor text to, can not be null
+   * @param scaleFactor The font scaling factor as a double, can be both positive and negative
+   */
+  public void doZoom(HTMLEditor htmlEditor, Label zoomLabel, double scaleFactor) {
+    if ((htmlEditor != null) && (zoomLabel != null) && (scaleFactor != 0)) {
+      WebView webView = (WebView) htmlEditor.lookup(".web-view");
+      if (webView != null) {
+        double newFontScaleFactor = webView.getFontScale() + scaleFactor;
+        // round the new font scaling factor before applying it
+        double newRoundedFontScale = Math.round(newFontScaleFactor * 100) / 100.0;
+        if ((0.5 <= newRoundedFontScale) && (newRoundedFontScale <= 2.0)) {
+          webView.setFontScale(newRoundedFontScale);
+          zoomLabel.setText(String.format("%.0f", newRoundedFontScale * 100) + "%");
+        }
+      }
+    }
   }
 
   /**

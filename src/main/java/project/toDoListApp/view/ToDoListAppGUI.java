@@ -1,6 +1,7 @@
 package project.toDoListApp.view;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -30,7 +31,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.web.HTMLEditor;
-import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import project.toDoListApp.Task;
 import project.toDoListApp.controller.Controller;
@@ -47,6 +47,7 @@ public class ToDoListAppGUI extends Application {
   private final TextField taskTitleTextField;
   private final Button dueDateButton;
   private final Label dateLabel;
+  private final Label zoomLabel;
 
   /**
    * ToDoListAppGUI constructor.
@@ -60,9 +61,7 @@ public class ToDoListAppGUI extends Application {
     this.taskTitleTextField = new TextField();
     this.dueDateButton = new Button();
     this.dateLabel = new Label();
-
-    WebView webView = (WebView) this.htmlEditor.lookup(".web-view");
-    webView.setFontScale(1);
+    this.zoomLabel = new Label();
   }
 
   /**
@@ -196,13 +195,13 @@ public class ToDoListAppGUI extends Application {
     KeyCombination keyCombinationZoomIn =
         new KeyCodeCombination(KeyCode.PLUS, KeyCombination.CONTROL_DOWN);
     menuItem1.setAccelerator(keyCombinationZoomIn);
-    menuItem1.setOnAction(e -> System.out.println("Zoom in test"));
+    menuItem1.setOnAction(e -> this.zoomInAction());
 
     MenuItem menuItem2 = new MenuItem("Zoom out");
     KeyCombination keyCombinationZoomOut =
         new KeyCodeCombination(KeyCode.MINUS, KeyCombination.CONTROL_DOWN);
     menuItem2.setAccelerator(keyCombinationZoomOut);
-    menuItem2.setOnAction(e -> System.out.println("Zoom out test"));
+    menuItem2.setOnAction(e -> this.zoomOutAction());
 
 
     ToggleGroup toggleGroup = new ToggleGroup();
@@ -337,8 +336,9 @@ public class ToDoListAppGUI extends Application {
     VBox vBox = new VBox();
 
     HBox hBox = this.setupTopCenterHBox();
+    HBox bottomZoomHBox = this.setupBottomZoomButtonBox();
 
-    vBox.getChildren().addAll(hBox, this.htmlEditor);
+    vBox.getChildren().addAll(hBox, this.htmlEditor, bottomZoomHBox);
     VBox.setVgrow(this.htmlEditor, Priority.ALWAYS);
     return vBox;
   }
@@ -366,6 +366,55 @@ public class ToDoListAppGUI extends Application {
     HBox.setHgrow(this.taskTitleTextField, Priority.ALWAYS);
     hBox.getChildren().addAll(this.taskTitleTextField, dateBox);
     return hBox;
+  }
+
+  /**
+   * Sets up the bottom zoom HBox.
+   *
+   * @return The already set-up bottom zoom HBox
+   */
+  private HBox setupBottomZoomButtonBox() {
+    HBox hBox = new HBox();
+    hBox.setAlignment(Pos.CENTER_RIGHT);
+
+    hBox.setPadding(new Insets(0, 15, 0, 15));
+    hBox.setSpacing(10);
+
+    Button zoomOutButton = new Button("Zoom out");
+    zoomOutButton.setOnAction(e -> this.zoomOutAction());
+    ImageView zoomOutIcon = this.imageLoader.getImage("zoom-out");
+    if (zoomOutIcon != null) {
+      zoomOutIcon.setFitHeight(10);
+      zoomOutButton.setGraphic(zoomOutIcon);
+    }
+
+    Button zoomInButton = new Button("Zoom in");
+    zoomInButton.setOnAction(e -> this.zoomInAction());
+    ImageView zoomInIcon = this.imageLoader.getImage("zoom-in");
+    if (zoomOutIcon != null) {
+      zoomInIcon.setFitHeight(10);
+      zoomInButton.setGraphic(zoomInIcon);
+    }
+
+    this.zoomLabel.setText("100%");
+    this.zoomLabel.setAlignment(Pos.CENTER_RIGHT);
+
+    hBox.getChildren().addAll(zoomOutButton, zoomInButton, this.zoomLabel);
+    return hBox;
+  }
+
+  /**
+   * Performs the zoom in action
+   */
+  private void zoomInAction() {
+    this.controller.doZoom(this.htmlEditor, this.zoomLabel, 0.1);
+  }
+
+  /**
+   * Performs the zoom out action
+   */
+  private void zoomOutAction() {
+    this.controller.doZoom(this.htmlEditor, this.zoomLabel, -0.1);
   }
 
   /**
