@@ -2,7 +2,9 @@ module project.toDoListApp {
   requires javafx.controls;
   requires javafx.web;
   requires java.logging;
-  exports project.toDoListApp.view;
 
-  opens project.toDoListApp to javafx.base;
+  // Opens the package to "anyone" to enable access by reflection for the Jupiter test engine
+  opens project.toDoListApp;
+
+  exports project.toDoListApp.view;
 }

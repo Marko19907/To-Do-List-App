@@ -20,12 +20,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.2</version>
-                <configuration>
-                    <!-- fixes the "Error: Could not find or load main class" -->
-                    <useSystemClassLoader>false</useSystemClassLoader>
-                    <forkCount>0</forkCount>
-                </configuration>
+                <version>3.0.0-M5</version>
             </plugin>
 
             <plugin>
@@ -38,7 +33,6 @@
             </plugin>
 
             <plugin>
-                <!-- fixes the "module not found: javafx.controls" -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
@@ -50,7 +44,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.7.0</version>
+            <version>5.7.1</version>
             <scope>test</scope>
         </dependency>
 
