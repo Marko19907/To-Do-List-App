@@ -260,12 +260,7 @@ public class ToDoListAppGUI extends Application {
     TableColumn<Task, String> titleColumn = new TableColumn<>("Task Title");
     titleColumn.setCellValueFactory(new PropertyValueFactory<>("taskName"));
 
-    ContextMenu contextMenu = new ContextMenu();
-
-    MenuItem deleteTaskMenu = new MenuItem("Delete Task");
-    deleteTaskMenu.setOnAction(event -> this.deleteReminderAction());
-
-    contextMenu.getItems().add(deleteTaskMenu);
+    ContextMenu contextMenu = this.setupTableContextMenu();
 
     // Set context menu on row, but use a binding to make it only show for non-empty rows
     this.taskTableView.setRowFactory(tableView -> {
@@ -300,6 +295,26 @@ public class ToDoListAppGUI extends Application {
     this.taskTableView.getColumns().add(titleColumn);
     //Set a default sort column
     this.taskTableView.getSortOrder().add(titleColumn);
+  }
+
+  /**
+   * Sets up a ContextMenu containing the MenuItems for the left TableView
+   *
+   * @return an already set-up ContextMenu for the left TableView
+   */
+  private ContextMenu setupTableContextMenu() {
+    ContextMenu contextMenu = new ContextMenu();
+
+    MenuItem deleteTaskMenu = new MenuItem("Delete task");
+    deleteTaskMenu.setOnAction(e -> this.deleteReminderAction());
+
+    SeparatorMenuItem separator = new SeparatorMenuItem();
+
+    MenuItem setDueDateMenu = new MenuItem("Set due date");
+    setDueDateMenu.setOnAction(e -> this.controller.doSetNewEndDate(this.dateLabel));
+
+    contextMenu.getItems().addAll(setDueDateMenu, separator, deleteTaskMenu);
+    return contextMenu;
   }
 
   /**
