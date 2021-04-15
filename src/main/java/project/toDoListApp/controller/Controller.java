@@ -247,8 +247,9 @@ public class Controller {
     Dialog<Task> newReminderDialog = new Dialog<>();
 
     newReminderDialog.setTitle("Reminder Details");
-
     newReminderDialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+    DatePicker datePicker = this.getDatePicker();
 
     GridPane grid = new GridPane();
     grid.setHgap(10);
@@ -266,7 +267,6 @@ public class Controller {
 
     TextField dueDate = new TextField();
     dueDate.setPromptText("yyyy-mm-dd");
-    //TODO:Add failsafe for the date input
 
     grid.add(new Label("Task name:"), 0, 0);
     grid.add(taskName, 1, 0);
@@ -275,7 +275,7 @@ public class Controller {
     grid.add(new Label("Category:"), 0, 2);
     grid.add(category, 1, 2);
     grid.add(new Label("Due date:"), 0, 3);
-    grid.add(dueDate, 1, 3);
+    grid.add(datePicker, 1, 3);
 
     newReminderDialog.getDialogPane().setContent(grid);
 
@@ -283,7 +283,7 @@ public class Controller {
         (ButtonType button) -> {
           Task result = null;
           if (button == ButtonType.OK) {
-            LocalDate dateDue = LocalDate.parse(dueDate.getText());
+            LocalDate dateDue = datePicker.getValue();
             result = new Task(taskName.getText(), description.getText(),
                 category.getText(), dateDue);
           }
