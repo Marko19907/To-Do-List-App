@@ -5,6 +5,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
@@ -136,13 +137,7 @@ public class ToDoListAppGUI extends Application {
     KeyCombination keyCombinationDeleteReminder =
         new KeyCodeCombination(KeyCode.DELETE, KeyCombination.CONTROL_DOWN);
     menuItem2.setAccelerator(keyCombinationDeleteReminder);
-    menuItem2.setOnAction(e -> {
-      boolean taskDeleted = this.controller.doDeleteReminder();
-      if (taskDeleted) {
-        this.disableCenterPane();
-        this.refreshTable();
-      }
-    });
+    menuItem2.setOnAction(e -> this.deleteReminderAction());
 
     MenuItem menuItem3 = new MenuItem("Save all");
     KeyCombination keyCombinationSaveAll =
@@ -263,9 +258,18 @@ public class ToDoListAppGUI extends Application {
     TableColumn<Task, String> titleColumn = new TableColumn<>("Task Title");
     titleColumn.setCellValueFactory(new PropertyValueFactory<>("taskName"));
 
+    ContextMenu contextMenu = new ContextMenu();
+
+    MenuItem deleteTaskMenu = new MenuItem("Delete Task");
+    deleteTaskMenu.setOnAction(event -> this.deleteReminderAction());
+
+    contextMenu.getItems().add(deleteTaskMenu);
+
     // set on left click action
     this.taskTableView.setOnMouseClicked((MouseEvent event) -> {
       if (event.getButton().equals(MouseButton.PRIMARY)) {
+        contextMenu.hide();
+
         //TODO: The view class should not be aware of the model, (e.g., the Task class)
         int index = this.taskTableView.getSelectionModel().getSelectedIndex();
         if (index < this.controller.getTaskListWrapper().size() && index >= 0) {
@@ -275,6 +279,13 @@ public class ToDoListAppGUI extends Application {
               this.htmlEditor, this.dueDateButton, this.dateLabel);
           this.enableCenterPane();
           this.refreshTable();
+        }
+      }
+
+      if (event.getButton().equals(MouseButton.SECONDARY)) {
+        int index = this.taskTableView.getSelectionModel().getSelectedIndex();
+        if (index < this.controller.getTaskListWrapper().size() && index >= 0) {
+          contextMenu.show(this.taskTableView, event.getScreenX(), event.getScreenY());
         }
       }
     });
@@ -311,13 +322,7 @@ public class ToDoListAppGUI extends Application {
     Button button2 = new Button("Delete Reminder");
     button2.setPrefWidth(150);
     button2.setAlignment(Pos.CENTER);
-    button2.setOnAction(e -> {
-      boolean taskDeleted = this.controller.doDeleteReminder();
-      if (taskDeleted) {
-        this.disableCenterPane();
-        this.refreshTable();
-      }
-    });
+    button2.setOnAction(e -> this.deleteReminderAction());
 
     ImageView trashIcon = this.imageLoader.getImage("trash-icon");
     if (trashIcon != null) {
@@ -417,6 +422,17 @@ public class ToDoListAppGUI extends Application {
    */
   private void zoomOutAction() {
     this.controller.doZoom(this.htmlEditor, this.zoomLabel, -0.1);
+  }
+
+  /**
+   * Performs the delete Task action
+   */
+  private void deleteReminderAction() {
+    boolean taskDeleted = this.controller.doDeleteReminder();
+    if (taskDeleted) {
+      this.disableCenterPane();
+      this.refreshTable();
+    }
   }
 
   /**
