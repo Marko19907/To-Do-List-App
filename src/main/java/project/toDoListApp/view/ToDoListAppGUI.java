@@ -1,6 +1,7 @@
 package project.toDoListApp.view;
 
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -15,6 +16,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
@@ -265,27 +267,31 @@ public class ToDoListAppGUI extends Application {
 
     contextMenu.getItems().add(deleteTaskMenu);
 
+    // Set context menu on row, but use a binding to make it only show for non-empty rows
+    this.taskTableView.setRowFactory(tableView -> {
+      TableRow<Task> row = new TableRow<>();
+      row.contextMenuProperty().bind(
+              Bindings.when(row.emptyProperty())
+                      .then((ContextMenu) null)
+                      .otherwise(contextMenu)
+      );
+      return row;
+    });
+
     // set on left click action
     this.taskTableView.setOnMouseClicked((MouseEvent event) -> {
-      if (event.getButton().equals(MouseButton.PRIMARY)) {
-        contextMenu.hide();
+      Task task = this.taskTableView.getSelectionModel().getSelectedItem();
 
-        //TODO: The view class should not be aware of the model, (e.g., the Task class)
-        int index = this.taskTableView.getSelectionModel().getSelectedIndex();
-        if (index < this.controller.getTaskListWrapper().size() && index >= 0) {
-          Task task = this.taskTableView.getItems().get(index);
+      if ((event.getButton().equals(MouseButton.PRIMARY) || event.getButton().equals(MouseButton.SECONDARY))
+              && task != null) {
+        this.controller.displayTask(task, this.taskTitleTextField,
+                this.htmlEditor, this.dueDateButton, this.dateLabel);
 
-          this.controller.displayTask(task, this.taskTitleTextField,
-              this.htmlEditor, this.dueDateButton, this.dateLabel);
-          this.enableCenterPane();
-          this.refreshTable();
-        }
-      }
+        this.enableCenterPane();
+        this.refreshTable();
 
-      if (event.getButton().equals(MouseButton.SECONDARY)) {
-        int index = this.taskTableView.getSelectionModel().getSelectedIndex();
-        if (index < this.controller.getTaskListWrapper().size() && index >= 0) {
-          contextMenu.show(this.taskTableView, event.getScreenX(), event.getScreenY());
+        if (event.getButton().equals(MouseButton.PRIMARY)) {
+          contextMenu.hide();
         }
       }
     });
