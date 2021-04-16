@@ -265,9 +265,6 @@ public class Controller {
     TextField category = new TextField();
     category.setPromptText("Category");
 
-    TextField dueDate = new TextField();
-    dueDate.setPromptText("yyyy-mm-dd");
-
     grid.add(new Label("Task name:"), 0, 0);
     grid.add(taskName, 1, 0);
     grid.add(new Label("Description:"), 0, 1);

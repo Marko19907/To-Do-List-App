@@ -1,6 +1,7 @@
 package project.toDoListApp.view;
 
 import javafx.application.Application;
+import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -20,6 +21,7 @@ import javafx.scene.control.TextInputControl;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -360,6 +362,7 @@ public class ToDoListAppGUI extends Application {
 
     this.taskTitleTextField.setStyle("-fx-font-size: 20");
     this.taskTitleTextField.setPrefHeight(40);
+    this.taskTitleTextField.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
 
     VBox dateBox = new VBox();
     dateBox.setAlignment(Pos.CENTER);
