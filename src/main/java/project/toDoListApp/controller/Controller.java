@@ -1,6 +1,7 @@
 package project.toDoListApp.controller;
 
 import javafx.application.Platform;
+import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -249,8 +250,6 @@ public class Controller {
     newReminderDialog.setTitle("Reminder Details");
     newReminderDialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
-    DatePicker datePicker = this.getDatePicker();
-
     GridPane grid = new GridPane();
     grid.setHgap(10);
     grid.setVgap(10);
@@ -265,6 +264,8 @@ public class Controller {
     TextField category = new TextField();
     category.setPromptText("Category");
 
+    DatePicker datePicker = this.getDatePicker();
+
     grid.add(new Label("Task name:"), 0, 0);
     grid.add(taskName, 1, 0);
     grid.add(new Label("Description:"), 0, 1);
@@ -275,6 +276,11 @@ public class Controller {
     grid.add(datePicker, 1, 3);
 
     newReminderDialog.getDialogPane().setContent(grid);
+
+    // Disable the OK Button if one of the two required TextFields is blank
+    BooleanBinding blankTextField = taskName.textProperty().isEmpty()
+            .or(datePicker.getEditor().textProperty().isEmpty());
+    newReminderDialog.getDialogPane().lookupButton(ButtonType.OK).disableProperty().bind(blankTextField);
 
     newReminderDialog.setResultConverter(
         (ButtonType button) -> {
