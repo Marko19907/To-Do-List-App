@@ -24,6 +24,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
@@ -250,13 +251,11 @@ public class ToDoListAppGUI extends Application {
    */
   private VBox setupLeft() {
     VBox vBox = new VBox();
-
-    this.setupLeftTopTable();
-    VBox buttonBox = this.setupBottomLeftButtons();
-    vBox.getChildren().addAll(this.taskTableView, buttonBox);
-
     vBox.setPrefWidth(150);
     VBox.setVgrow(this.taskTableView, Priority.ALWAYS);
+
+    this.setupLeftTopTable();
+    vBox.getChildren().addAll(this.taskTableView, this.setupBottomLeftButtons());
     return vBox;
   }
 
@@ -353,33 +352,35 @@ public class ToDoListAppGUI extends Application {
   private VBox setupBottomLeftButtons() {
     VBox buttonBox = new VBox();
 
-    Button button1 = new Button("New Reminder");
-    button1.setOnAction(e -> {
+    Button newReminderButton = new Button("New Reminder");
+    newReminderButton.setTooltip(new Tooltip("Create a New Reminder"));
+    newReminderButton.setOnAction(e -> {
       this.controller.showNewReminderDialog();
       this.refreshTable();
     });
-    button1.setPrefWidth(150);
-    button1.setAlignment(Pos.CENTER);
+    newReminderButton.setPrefWidth(150);
+    newReminderButton.setAlignment(Pos.CENTER);
 
     ImageView plusIcon = this.imageLoader.getImage("plus-icon");
     if (plusIcon != null) {
       plusIcon.setFitHeight(12);
-      button1.setGraphic(plusIcon);
+      newReminderButton.setGraphic(plusIcon);
     }
 
 
-    Button button2 = new Button("Delete Reminder");
-    button2.setPrefWidth(150);
-    button2.setAlignment(Pos.CENTER);
-    button2.setOnAction(e -> this.deleteReminderAction());
+    Button deleteReminderButton = new Button("Delete Reminder");
+    deleteReminderButton.setTooltip(new Tooltip("Delete Selected Reminder"));
+    deleteReminderButton.setPrefWidth(150);
+    deleteReminderButton.setAlignment(Pos.CENTER);
+    deleteReminderButton.setOnAction(e -> this.deleteReminderAction());
 
     ImageView trashIcon = this.imageLoader.getImage("trash-icon");
     if (trashIcon != null) {
       trashIcon.setFitHeight(12);
-      button2.setGraphic(trashIcon);
+      deleteReminderButton.setGraphic(trashIcon);
     }
 
-    buttonBox.getChildren().addAll(button1, button2);
+    buttonBox.getChildren().addAll(newReminderButton, deleteReminderButton);
     return buttonBox;
   }
 
