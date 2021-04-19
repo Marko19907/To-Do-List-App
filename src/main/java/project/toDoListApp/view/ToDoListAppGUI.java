@@ -1,6 +1,8 @@
 package project.toDoListApp.view;
 
 import javafx.application.Application;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -19,6 +21,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ContextMenuEvent;
@@ -36,6 +39,7 @@ import javafx.scene.web.HTMLEditor;
 import javafx.stage.Stage;
 import project.toDoListApp.Task;
 import project.toDoListApp.controller.Controller;
+import java.util.Arrays;
 
 /**
  * Class ToDoListAppGUI represents the main window in the application.
@@ -269,6 +273,20 @@ public class ToDoListAppGUI extends Application {
     TableColumn<Task, String> titleColumn = new TableColumn<>("Task Title");
     titleColumn.setCellValueFactory(new PropertyValueFactory<>("taskName"));
 
+    TableColumn<Task, BooleanProperty> statusColumn = new TableColumn<>("Done");
+    statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+    statusColumn.setCellFactory(col -> new CheckBoxTableCell<>(index -> {
+      BooleanProperty active = new SimpleBooleanProperty(this.taskTableView.getItems().get(index).isStatus());
+      active.addListener((obs, wasActive, isNowActive) -> {
+        Task task = this.taskTableView.getItems().get(index);
+        task.setStatus(isNowActive);
+      });
+      return active;
+    }));
+    statusColumn.setMinWidth(34);
+    statusColumn.setMaxWidth(34);
+
     // set on left click action
     this.taskTableView.setOnMouseClicked((MouseEvent event) -> {
       if (event.getButton().equals(MouseButton.PRIMARY)) {
@@ -285,8 +303,11 @@ public class ToDoListAppGUI extends Application {
       }
     });
 
+    // Make the table editable to allow the user to directly change the Task active status
+    this.taskTableView.setEditable(true);
+
     this.taskTableView.setItems(this.controller.getTaskListWrapper());
-    this.taskTableView.getColumns().add(titleColumn);
+    this.taskTableView.getColumns().addAll(Arrays.asList(titleColumn, statusColumn));
     //Set a default sort column
     this.taskTableView.getSortOrder().add(titleColumn);
   }
