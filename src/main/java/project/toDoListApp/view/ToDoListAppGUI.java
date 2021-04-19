@@ -1,6 +1,7 @@
 package project.toDoListApp.view;
 
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.Event;
@@ -8,6 +9,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
@@ -17,6 +19,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
@@ -142,13 +145,7 @@ public class ToDoListAppGUI extends Application {
     KeyCombination keyCombinationDeleteReminder =
         new KeyCodeCombination(KeyCode.DELETE, KeyCombination.CONTROL_DOWN);
     menuItem2.setAccelerator(keyCombinationDeleteReminder);
-    menuItem2.setOnAction(e -> {
-      boolean taskDeleted = this.controller.doDeleteReminder();
-      if (taskDeleted) {
-        this.disableCenterPane();
-        this.refreshTable();
-      }
-    });
+    menuItem2.setOnAction(e -> this.deleteReminderAction());
 
     MenuItem menuItem3 = new MenuItem("Save all");
     KeyCombination keyCombinationSaveAll =
@@ -287,18 +284,34 @@ public class ToDoListAppGUI extends Application {
     statusColumn.setMinWidth(34);
     statusColumn.setMaxWidth(34);
 
+
+    ContextMenu contextMenu = this.setupTableContextMenu();
+
+    // Set context menu on row, but use a binding to make it only show for non-empty rows
+    this.taskTableView.setRowFactory(tableView -> {
+      TableRow<Task> row = new TableRow<>();
+      row.contextMenuProperty().bind(
+              Bindings.when(row.emptyProperty())
+                      .then((ContextMenu) null)
+                      .otherwise(contextMenu)
+      );
+      return row;
+    });
+
     // set on left click action
     this.taskTableView.setOnMouseClicked((MouseEvent event) -> {
-      if (event.getButton().equals(MouseButton.PRIMARY)) {
-        //TODO: The view class should not be aware of the model, (e.g., the Task class)
-        int index = this.taskTableView.getSelectionModel().getSelectedIndex();
-        if (index < this.controller.getTaskListWrapper().size() && index >= 0) {
-          Task task = this.taskTableView.getItems().get(index);
+      Task task = this.taskTableView.getSelectionModel().getSelectedItem();
 
-          this.controller.displayTask(task, this.taskTitleTextField,
-              this.htmlEditor, this.dueDateButton, this.dateLabel);
-          this.enableCenterPane();
-          this.refreshTable();
+      if ((event.getButton().equals(MouseButton.PRIMARY) || event.getButton().equals(MouseButton.SECONDARY))
+              && task != null) {
+        this.controller.displayTask(task, this.taskTitleTextField,
+                this.htmlEditor, this.dueDateButton, this.dateLabel);
+
+        this.enableCenterPane();
+        this.refreshTable();
+
+        if (event.getButton().equals(MouseButton.PRIMARY)) {
+          contextMenu.hide();
         }
       }
     });
@@ -310,6 +323,26 @@ public class ToDoListAppGUI extends Application {
     this.taskTableView.getColumns().addAll(Arrays.asList(titleColumn, statusColumn));
     //Set a default sort column
     this.taskTableView.getSortOrder().add(titleColumn);
+  }
+
+  /**
+   * Sets up a ContextMenu containing the MenuItems for the left TableView
+   *
+   * @return an already set-up ContextMenu for the left TableView
+   */
+  private ContextMenu setupTableContextMenu() {
+    ContextMenu contextMenu = new ContextMenu();
+
+    MenuItem deleteTaskMenu = new MenuItem("Delete task");
+    deleteTaskMenu.setOnAction(e -> this.deleteReminderAction());
+
+    SeparatorMenuItem separator = new SeparatorMenuItem();
+
+    MenuItem setDueDateMenu = new MenuItem("Set due date");
+    setDueDateMenu.setOnAction(e -> this.controller.doSetNewEndDate(this.dateLabel));
+
+    contextMenu.getItems().addAll(setDueDateMenu, separator, deleteTaskMenu);
+    return contextMenu;
   }
 
   /**
@@ -338,13 +371,7 @@ public class ToDoListAppGUI extends Application {
     Button button2 = new Button("Delete Reminder");
     button2.setPrefWidth(150);
     button2.setAlignment(Pos.CENTER);
-    button2.setOnAction(e -> {
-      boolean taskDeleted = this.controller.doDeleteReminder();
-      if (taskDeleted) {
-        this.disableCenterPane();
-        this.refreshTable();
-      }
-    });
+    button2.setOnAction(e -> this.deleteReminderAction());
 
     ImageView trashIcon = this.imageLoader.getImage("trash-icon");
     if (trashIcon != null) {
@@ -445,6 +472,17 @@ public class ToDoListAppGUI extends Application {
    */
   private void zoomOutAction() {
     this.controller.doZoom(this.htmlEditor, this.zoomLabel, -0.1);
+  }
+
+  /**
+   * Performs the delete Task action
+   */
+  private void deleteReminderAction() {
+    boolean taskDeleted = this.controller.doDeleteReminder();
+    if (taskDeleted) {
+      this.disableCenterPane();
+      this.refreshTable();
+    }
   }
 
   /**
