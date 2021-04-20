@@ -112,6 +112,10 @@ public class Controller {
         "None", LocalDate.parse("2100-12-01")));
     this.taskRegister.addTask(new Task("Title 2", "Desc 2",
         "Cooking", LocalDate.parse("3100-12-01")));
+    this.taskRegister.addTask(new Task.TaskBuilder
+            ("Title 3", "The quick brown fox jumps over the lazy dog", "None")
+            .withStatus(true)
+            .build());
 
     this.updateObservableList();
   }
@@ -126,17 +130,19 @@ public class Controller {
   }
 
   /**
-   * Returns a String representation of the given LocalDate.
+   * Returns a String representation of the given LocalDate, or 'No date set' if null
    *
-   * @param localDate The LocalDate to represent as a String, can not be null
-   * @return A String representation of the given LocalDate or blank if null
+   * @param localDate The LocalDate to represent as a String, can be null
+   * @return A String representation of the given LocalDate
    */
   private String getLocalDateAsString(LocalDate localDate) {
-    // Guard condition
+    String toReturn = "";
     if (localDate == null) {
-      return "";
+      toReturn = "No date set";
+    } else {
+      toReturn = localDate.format(DateTimeFormatter.ofPattern(DATE_FORMAT));
     }
-    return localDate.format(DateTimeFormatter.ofPattern(DATE_FORMAT));
+    return toReturn;
   }
 
   /**
@@ -277,18 +283,18 @@ public class Controller {
 
     newReminderDialog.getDialogPane().setContent(grid);
 
-    // Disable the OK Button if one of the two required TextFields is blank
-    BooleanBinding blankTextField = taskName.textProperty().isEmpty()
-            .or(datePicker.getEditor().textProperty().isEmpty());
+    // Disable the OK Button if one of the required TextFields is blank
+    BooleanBinding blankTextField = taskName.textProperty().isEmpty();
     newReminderDialog.getDialogPane().lookupButton(ButtonType.OK).disableProperty().bind(blankTextField);
 
     newReminderDialog.setResultConverter(
         (ButtonType button) -> {
           Task result = null;
           if (button == ButtonType.OK) {
-            LocalDate dateDue = datePicker.getValue();
-            result = new Task(taskName.getText(), description.getText(),
-                category.getText(), dateDue);
+            result = new Task.TaskBuilder
+                    (taskName.getText(), description.getText(), category.getText())
+                    .withDueDate(datePicker.getValue())
+                    .build();
           }
           return result;
         }
