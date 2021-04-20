@@ -37,6 +37,26 @@ public class Task {
     }
 
     /**
+     * Constructor for task objects without the dueDate
+     */
+    public Task(String taskName, String description, String category) {
+        if (taskName == null || description == null || category == null) {
+            throw new IllegalArgumentException("taskName, description or category can not be null!");
+        }
+        if (taskName.isBlank()) {
+            throw new IllegalArgumentException("taskName can not be blank!");
+        }
+
+        this.taskName = taskName;
+        this.description = description;
+        this.category = category;
+
+        this.dueDate = null;
+        this.status = false;
+        this.dateAdded = LocalDate.now();
+    }
+
+    /**
      * Returns the task name (title)
      *
      * @return The task name as a String
@@ -154,5 +174,63 @@ public class Task {
      */
     public LocalDate getDateAdded() {
         return this.dateAdded;
+    }
+
+    /**
+     * The TaskBuilder class is responsible for building an instance
+     * of a Task class according to the Builder design pattern.
+     */
+    public static final class TaskBuilder {
+        private final String taskName;
+        private final String description;
+        private final String category;
+        private LocalDate dueDate;
+        private boolean status;
+
+        /**
+         * Instantiates the PatientBuilder with the required arguments.
+         */
+        public TaskBuilder(String taskName, String description, String category) {
+            this.taskName = taskName;
+            this.description = description;
+            this.category = category;
+
+            this.dueDate = null;
+            this.status = false;
+        }
+
+        /**
+         * Sets the task's dueDate and returns the TaskBuilder, intermediate operation
+         * @param dueDate The task's dueDate to set
+         * @return The TaskBuilder with the given dueDate
+         */
+        public TaskBuilder withDueDate(LocalDate dueDate) {
+            if (dueDate != null) {
+                this.dueDate = dueDate;
+            }
+            return this;
+        }
+
+        /**
+         * Sets the task's complete status and returns the TaskBuilder, intermediate operation
+         * @param status The task's status to set
+         * @return The TaskBuilder with the given status
+         */
+        public TaskBuilder withStatus(boolean status) {
+            this.status = status;
+            return this;
+        }
+
+        /**
+         * Returns an instance of a Task according to the provided arguments, terminal operation
+         * @return An instance of a Task with the provided arguments
+         */
+        public Task build() {
+            Task task = new Task(this.taskName, this.description, this.category);
+
+            task.dueDate = this.dueDate;
+            task.status = this.status;
+            return task;
+        }
     }
 }
