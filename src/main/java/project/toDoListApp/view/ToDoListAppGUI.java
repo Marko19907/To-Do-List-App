@@ -360,7 +360,7 @@ public class ToDoListAppGUI extends Application {
       this.controller.showNewReminderDialog();
       this.refreshTable();
     });
-    newReminderButton.setPrefWidth(150);
+    newReminderButton.setPrefWidth(200);
     newReminderButton.setAlignment(Pos.CENTER);
 
     ImageView plusIcon = this.imageLoader.getImage("plus-icon");
@@ -372,7 +372,7 @@ public class ToDoListAppGUI extends Application {
 
     Button deleteReminderButton = new Button("Delete Reminder");
     deleteReminderButton.setTooltip(new Tooltip("Delete Selected Reminder"));
-    deleteReminderButton.setPrefWidth(150);
+    deleteReminderButton.setPrefWidth(200);
     deleteReminderButton.setAlignment(Pos.CENTER);
     deleteReminderButton.setOnAction(e -> this.deleteReminderAction());
 
