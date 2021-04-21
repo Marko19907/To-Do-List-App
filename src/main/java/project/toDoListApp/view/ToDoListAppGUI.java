@@ -272,6 +272,8 @@ public class ToDoListAppGUI extends Application {
     TableColumn<Task, BooleanProperty> statusColumn = new TableColumn<>("Done");
     statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
+    TableColumn<Task, String> priorityColumn = new TableColumn<>("Priority");
+
     statusColumn.setCellFactory(col -> new CheckBoxTableCell<>(index -> {
       BooleanProperty active = new SimpleBooleanProperty(this.taskTableView.getItems().get(index).isStatus());
       active.addListener((obs, wasActive, isNowActive) -> {
@@ -319,7 +321,7 @@ public class ToDoListAppGUI extends Application {
     this.taskTableView.setEditable(true);
 
     this.taskTableView.setItems(this.controller.getTaskListWrapper());
-    this.taskTableView.getColumns().addAll(Arrays.asList(titleColumn, statusColumn));
+    this.taskTableView.getColumns().addAll(Arrays.asList(titleColumn, priorityColumn, statusColumn));
     //Set a default sort column
     this.taskTableView.getSortOrder().add(titleColumn);
   }
