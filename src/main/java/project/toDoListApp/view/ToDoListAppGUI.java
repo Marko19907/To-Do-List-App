@@ -251,7 +251,7 @@ public class ToDoListAppGUI extends Application {
    */
   private VBox setupLeft() {
     VBox vBox = new VBox();
-    vBox.setPrefWidth(150);
+    vBox.setPrefWidth(200);
     VBox.setVgrow(this.taskTableView, Priority.ALWAYS);
 
     this.setupLeftTopTable();
