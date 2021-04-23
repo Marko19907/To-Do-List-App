@@ -3,6 +3,7 @@ package project.toDoListApp;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Class TaskRegister represents a register that can hold Tasks
@@ -39,6 +40,17 @@ public class TaskRegister
     public List<Task> getAllTasks()
     {
         return new ArrayList<>(this.tasks);
+    }
+
+    /**
+     * Returns a List of all the active tasks present in the register
+     * @return A List of all the tasks present in the register in a random order
+     */
+    public List<Task> getAllUncompletedTasks()
+    {
+        return this.tasks.stream()
+                .filter(task -> !task.isStatus())
+                .collect(Collectors.toList());
     }
 
     /**

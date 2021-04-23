@@ -39,6 +39,7 @@ public class Controller {
   private final TaskRegister taskRegister;
   private final ObservableList<Task> taskListWrapper;
 
+  private boolean hideCompleteMode;
   private Task currentTask;
 
   /**
@@ -48,6 +49,8 @@ public class Controller {
     this.taskRegister = new TaskRegister();
     this.taskListWrapper = FXCollections.observableArrayList(this.taskRegister.getAllTasks());
 
+    this.hideCompleteMode = false;
+    this.currentTask = null;
     this.fillRegisterWithTestTasks();
   }
 
@@ -64,7 +67,9 @@ public class Controller {
                           HTMLEditor editor, Button dueDateButton, Label dueDateLabel) {
     if (task != null && taskTitle != null && editor != null &&
         dueDateButton != null && dueDateLabel != null) {
+      // Save the current task to the register and update the task list
       this.saveTaskToRegister(taskTitle, editor);
+      this.updateObservableList();
 
       this.currentTask = task;
       editor.setHtmlText(task.getDescription());
@@ -93,15 +98,19 @@ public class Controller {
       this.currentTask.setDescription(editor.getHtmlText());
 
       this.taskRegister.addTask(this.currentTask);
-      this.updateObservableList();
     }
   }
 
   /**
    * Updates the observable list of tasks with fresh values from the task register.
    */
-  private void updateObservableList() {
-    this.taskListWrapper.setAll(this.taskRegister.getAllTasks());
+  public void updateObservableList() {
+    if (this.hideCompleteMode) {
+      this.taskListWrapper.setAll(this.taskRegister.getAllUncompletedTasks());
+    }
+    else {
+      this.taskListWrapper.setAll(this.taskRegister.getAllTasks());
+    }
   }
 
   /**
@@ -203,6 +212,17 @@ public class Controller {
       }
     }
     return success;
+  }
+
+  /**
+   * Sets the display mode of the controller.
+   *
+   * @param hideCompleted The mode to set,
+   *                      true to hide the completed Tasks, false otherwise
+   */
+  public void doChangeDisplayMode(boolean hideCompleted) {
+    this.hideCompleteMode = hideCompleted;
+    this.updateObservableList();
   }
 
   // -----------------------------------------------------------
@@ -449,5 +469,27 @@ public class Controller {
     });
 
     return datePicker;
+  }
+
+  // -----------------------------------------------------------
+  //    GETTERS
+  // -----------------------------------------------------------
+
+  /**
+   * Returns the display mode, true if hide completed Tasks is enabled, false otherwise.
+   *
+   * @return The display mode as a boolean
+   */
+  public boolean getHideCompleteMode() {
+    return this.hideCompleteMode;
+  }
+
+  /**
+   * Returns the currently selected Task.
+   *
+   * @return The currently selected Task
+   */
+  public Task getCurrentlySelectedTask() {
+    return this.currentTask;
   }
 }

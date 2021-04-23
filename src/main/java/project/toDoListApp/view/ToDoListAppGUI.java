@@ -216,13 +216,12 @@ public class ToDoListAppGUI extends Application {
     ToggleGroup toggleGroup = new ToggleGroup();
 
     RadioMenuItem radioItem1 = new RadioMenuItem("Show completed");
-    radioItem1.setOnAction(e -> System.out.println("Show completed toggled"));
+    radioItem1.setOnAction(e -> this.toggleDisplayMode(false));
     radioItem1.setSelected(true);
     radioItem1.setToggleGroup(toggleGroup);
 
     RadioMenuItem radioItem2 = new RadioMenuItem("Hide completed");
-    radioItem2.setOnAction(e -> System.out.println("Hide completed toggled"));
-    radioItem2.setSelected(false);
+    radioItem2.setOnAction(e -> this.toggleDisplayMode(true));
     radioItem2.setToggleGroup(toggleGroup);
 
     viewMenu.getItems().addAll(radioItem1, radioItem2, separator1, menuItem1, menuItem2);
@@ -279,6 +278,22 @@ public class ToDoListAppGUI extends Application {
       active.addListener((obs, wasActive, isNowActive) -> {
         Task task = this.taskTableView.getItems().get(index);
         task.setStatus(isNowActive);
+
+        // Extra checks if the hide completed Tasks mode is turned on
+        if (this.controller.getHideCompleteMode()) {
+          this.controller.updateObservableList();
+          this.refreshTable();
+
+          // Disable the editor (center pane) only if the currently displayed Task is marked as complete
+          if (task == this.controller.getCurrentlySelectedTask()) {
+            this.disableCenterPane();
+          }
+
+          // Clear the table if the Task just marked as complete was the last one
+          if (this.controller.getTaskListWrapper().isEmpty()) {
+            this.taskTableView.getItems().clear();
+          }
+        }
       });
       return active;
     }));
@@ -475,6 +490,17 @@ public class ToDoListAppGUI extends Application {
    */
   private void zoomOutAction() {
     this.controller.doZoom(this.htmlEditor, this.zoomLabel, -0.1);
+  }
+
+  /**
+   * Toggles the hide completed Tasks mode
+   * @param mode The mode to set, true to hide the completed Tasks, false otherwise
+   */
+  private void toggleDisplayMode(boolean mode) {
+    this.controller.doChangeDisplayMode(mode);
+    this.disableCenterPane();
+    this.taskTableView.getSelectionModel().clearSelection();
+    this.refreshTable();
   }
 
   /**
