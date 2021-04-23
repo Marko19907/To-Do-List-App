@@ -275,8 +275,10 @@ public class ToDoListAppGUI extends Application {
           this.controller.updateObservableList();
           this.refreshTable();
 
-          // Disable the editor (center pane) only if the currently displayed Task is marked as complete
+          // Disable the editor (center pane) and save the selected Task
+          // only if the currently displayed Task is marked as complete
           if (task == this.controller.getCurrentlySelectedTask()) {
+            this.controller.saveTaskToRegister(this.taskTitleTextField, this.htmlEditor);
             this.disableCenterPane();
           }
 
@@ -495,7 +497,8 @@ public class ToDoListAppGUI extends Application {
       // A Task is selected
       if (this.controller.getHideCompleteMode() && this.controller.getCurrentlySelectedTask().isStatus()) {
         // The selected Task should not be shown in the current mode ->
-        // disable the editor (centerPane) and clear the selection
+        // save it, disable the editor (centerPane) and clear the selection
+        this.controller.saveTaskToRegister(this.taskTitleTextField, this.htmlEditor);
         this.disableCenterPane();
         this.taskTableView.getSelectionModel().clearSelection();
       }

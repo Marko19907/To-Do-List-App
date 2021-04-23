@@ -80,14 +80,14 @@ public class Controller {
   }
 
   /**
-   * Saves the current task to the register after changing it's title and text content.
+   * Saves the current task to the register after updating it's title and text content.
    *
    * @param editor    The TextArea to save the text from,
    *                  can not be null
    * @param taskTitle The TextField to get the text from,
    *                  can not be null
    */
-  private void saveTaskToRegister(TextField taskTitle, HTMLEditor editor) {
+  public void saveTaskToRegister(TextField taskTitle, HTMLEditor editor) {
     if (this.currentTask != null && taskTitle != null && editor != null) {
       if (taskTitle.getText().isBlank()) {
         //TODO: The TextField is blank, the task will throw an exception
@@ -98,7 +98,16 @@ public class Controller {
       this.currentTask.setDescription(editor.getHtmlText());
 
       this.taskRegister.addTask(this.currentTask);
+
+      this.clearSelectedTask();
     }
+  }
+
+  /**
+   * Clears the selected Task.
+   */
+  private void clearSelectedTask() {
+    this.currentTask = null;
   }
 
   /**
@@ -205,7 +214,7 @@ public class Controller {
     } else {
       if (this.showDeleteConfirmationDialog()) {
         this.taskRegister.removeTask(this.currentTask);
-        this.currentTask = null;
+        this.clearSelectedTask();
         success = true;
 
         this.updateObservableList();
