@@ -445,6 +445,7 @@ public class ToDoListAppGUI extends Application {
 
     hBox.setPadding(new Insets(0, 15, 0, 15));
     hBox.setSpacing(10);
+    hBox.setStyle("-fx-background-color: #d0d0d0");
 
     Button zoomOutButton = new Button("Zoom out");
     zoomOutButton.setOnAction(e -> this.zoomOutAction());
