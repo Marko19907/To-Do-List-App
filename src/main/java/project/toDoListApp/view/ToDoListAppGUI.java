@@ -111,24 +111,17 @@ public class ToDoListAppGUI extends Application {
    */
   private MenuBar setupTopMenu() {
     MenuBar menuBar = new MenuBar();
-
-    this.setupFileMenu(menuBar);
-    this.setupEditMenu(menuBar);
-    this.setupViewMenu(menuBar);
-    this.setupHelpMenu(menuBar);
-
+    menuBar.getMenus().addAll(this.setupFileMenu(), this.setupEditMenu(), this.setupViewMenu(), this.setupHelpMenu());
     return menuBar;
   }
 
   /**
-   * Sets up the top file menu bar.
+   * Returns an already set-up top file menu bar.
    *
-   * @param menuBar The already set up file menu bar
+   * @return An already set-up top file menu bar
    */
-  private void setupFileMenu(MenuBar menuBar) {
+  private Menu setupFileMenu() {
     Menu fileMenu = new Menu("File");
-
-    menuBar.getMenus().add(fileMenu);
 
     SeparatorMenuItem separator1 = new SeparatorMenuItem();
     SeparatorMenuItem separator2 = new SeparatorMenuItem();
@@ -161,17 +154,16 @@ public class ToDoListAppGUI extends Application {
     menuItem4.setOnAction(e -> this.controller.quit(e));
 
     fileMenu.getItems().addAll(menuItem1, menuItem2, separator1, menuItem3, separator2, menuItem4);
+    return fileMenu;
   }
 
   /**
-   * Sets up the top edit menu bar.
+   * Returns an already set-up top edit menu bar.
    *
-   * @param menuBar The already set up edit menu bar
+   * @return An already set-up top edit menu bar
    */
-  private void setupEditMenu(MenuBar menuBar) {
+  private Menu setupEditMenu() {
     Menu editMenu = new Menu("Edit");
-
-    menuBar.getMenus().add(editMenu);
 
     SeparatorMenuItem separator1 = new SeparatorMenuItem();
 
@@ -185,17 +177,16 @@ public class ToDoListAppGUI extends Application {
     MenuItem menuItem4 = new MenuItem("Preferences");
 
     editMenu.getItems().addAll(menuItem1, menuItem2, menuItem3, editEndDate, separator1, menuItem4);
+    return editMenu;
   }
 
   /**
-   * Sets up the top view menu bar.
+   * Returns an already set-up top view menu bar.
    *
-   * @param menuBar The already set up view menu bar
+   * @return An already set-up top view menu bar
    */
-  private void setupViewMenu(MenuBar menuBar) {
+  private Menu setupViewMenu() {
     Menu viewMenu = new Menu("View");
-
-    menuBar.getMenus().add(viewMenu);
 
     SeparatorMenuItem separator1 = new SeparatorMenuItem();
 
@@ -225,22 +216,22 @@ public class ToDoListAppGUI extends Application {
     radioItem2.setToggleGroup(toggleGroup);
 
     viewMenu.getItems().addAll(radioItem1, radioItem2, separator1, menuItem1, menuItem2);
+    return viewMenu;
   }
 
   /**
-   * Sets up the top help menu bar.
+   * Returns an already set-up top help menu bar.
    *
-   * @param menuBar The already set up help menu bar
+   * @return An already set-up top help menu bar
    */
-  private void setupHelpMenu(MenuBar menuBar) {
+  private Menu setupHelpMenu() {
     Menu helpMenu = new Menu("Help");
-
-    menuBar.getMenus().add(helpMenu);
 
     MenuItem menuItem1 = new MenuItem("About");
     menuItem1.setOnAction(e -> this.controller.showAboutDialog());
 
     helpMenu.getItems().add(menuItem1);
+    return helpMenu;
   }
 
   /**
