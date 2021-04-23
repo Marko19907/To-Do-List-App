@@ -493,13 +493,21 @@ public class ToDoListAppGUI extends Application {
   }
 
   /**
-   * Toggles the hide completed Tasks mode
+   * Toggles the hide completed Tasks mode.
+   *
    * @param mode The mode to set, true to hide the completed Tasks, false otherwise
    */
   private void toggleDisplayMode(boolean mode) {
     this.controller.doChangeDisplayMode(mode);
-    this.disableCenterPane();
-    this.taskTableView.getSelectionModel().clearSelection();
+    if (this.controller.getCurrentlySelectedTask() != null) {
+      // A Task is selected
+      if (this.controller.getHideCompleteMode() && this.controller.getCurrentlySelectedTask().isStatus()) {
+        // The selected Task should not be shown in the current mode ->
+        // disable the editor (centerPane) and clear the selection
+        this.disableCenterPane();
+        this.taskTableView.getSelectionModel().clearSelection();
+      }
+    }
     this.refreshTable();
   }
 
