@@ -207,12 +207,12 @@ public class ToDoListAppGUI extends Application {
     ToggleGroup toggleGroup = new ToggleGroup();
 
     RadioMenuItem radioItem1 = new RadioMenuItem("Show completed");
-    radioItem1.setOnAction(e -> this.toggleDisplayMode(false));
+    radioItem1.setOnAction(e -> this.controller.doToggleDisplayMode(false, this));
     radioItem1.setSelected(true);
     radioItem1.setToggleGroup(toggleGroup);
 
     RadioMenuItem radioItem2 = new RadioMenuItem("Hide completed");
-    radioItem2.setOnAction(e -> this.toggleDisplayMode(true));
+    radioItem2.setOnAction(e -> this.controller.doToggleDisplayMode(true, this));
     radioItem2.setToggleGroup(toggleGroup);
 
     viewMenu.getItems().addAll(radioItem1, radioItem2, separator1, menuItem1, menuItem2);
@@ -271,22 +271,7 @@ public class ToDoListAppGUI extends Application {
         task.setStatus(isNowActive);
 
         // Extra checks if the hide completed Tasks mode is turned on
-        if (this.controller.getHideCompleteMode()) {
-          this.controller.updateObservableList();
-          this.refreshTable();
-
-          // Disable the editor (center pane) and save the selected Task
-          // only if the currently displayed Task is marked as complete
-          if (task == this.controller.getCurrentlySelectedTask()) {
-            this.controller.saveTaskToRegister(this.taskTitleTextField, this.htmlEditor);
-            this.disableCenterPane();
-          }
-
-          // Clear the table if the Task just marked as complete was the last one
-          if (this.controller.getTaskListWrapper().isEmpty()) {
-            this.taskTableView.getItems().clear();
-          }
-        }
+        this.controller.checkTaskVisibility(task, this);
       });
       return active;
     }));
@@ -330,7 +315,7 @@ public class ToDoListAppGUI extends Application {
 
     this.taskTableView.setItems(this.controller.getTaskListWrapper());
     this.taskTableView.getColumns().addAll(Arrays.asList(titleColumn, priorityColumn, statusColumn));
-    //Set a default sort column
+    // Set a default sort column
     this.taskTableView.getSortOrder().add(titleColumn);
   }
 
@@ -487,26 +472,6 @@ public class ToDoListAppGUI extends Application {
   }
 
   /**
-   * Toggles the hide completed Tasks mode.
-   *
-   * @param mode The mode to set, true to hide the completed Tasks, false otherwise
-   */
-  private void toggleDisplayMode(boolean mode) {
-    this.controller.doChangeDisplayMode(mode);
-    if (this.controller.getCurrentlySelectedTask() != null) {
-      // A Task is selected
-      if (this.controller.getHideCompleteMode() && this.controller.getCurrentlySelectedTask().isStatus()) {
-        // The selected Task should not be shown in the current mode ->
-        // save it, disable the editor (centerPane) and clear the selection
-        this.controller.saveTaskToRegister(this.taskTitleTextField, this.htmlEditor);
-        this.disableCenterPane();
-        this.taskTableView.getSelectionModel().clearSelection();
-      }
-    }
-    this.refreshTable();
-  }
-
-  /**
    * Performs the delete Task action
    */
   private void deleteReminderAction() {
@@ -539,7 +504,7 @@ public class ToDoListAppGUI extends Application {
   /**
    * Disables and clears the text of center pane's TextFields, Buttons and Labels.
    */
-  private void disableCenterPane() {
+  public void disableCenterPane() {
     this.clearControlText(this.taskTitleTextField);
     this.clearControlText(this.htmlEditor);
     this.clearControlText(this.dueDateButton);
@@ -558,8 +523,39 @@ public class ToDoListAppGUI extends Application {
   /**
    * Refreshes the table and forces a sort of the data
    */
-  private void refreshTable() {
+  public void refreshTable() {
     this.taskTableView.refresh();
     this.taskTableView.sort();
+  }
+
+  // -----------------------------------------------------------
+  //    GETTERS
+  // -----------------------------------------------------------
+
+  /**
+   * Returns the editor.
+   *
+   * @return The HTML editor
+   */
+  public HTMLEditor getHtmlEditor() {
+    return this.htmlEditor;
+  }
+
+  /**
+   * Returns the Task title TextField.
+   *
+   * @return The Task title TextField
+   */
+  public TextField getTaskTitleTextField() {
+    return this.taskTitleTextField;
+  }
+
+  /**
+   * Returns the left TableView of Tasks.
+   *
+   * @return The left TableView of Tasks
+   */
+  public TableView<Task> getTaskTableView() {
+    return this.taskTableView;
   }
 }

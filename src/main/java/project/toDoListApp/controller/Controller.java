@@ -22,6 +22,7 @@ import javafx.scene.web.WebView;
 import javafx.util.StringConverter;
 import project.toDoListApp.Task;
 import project.toDoListApp.TaskRegister;
+import project.toDoListApp.view.ToDoListAppGUI;
 
 import java.time.DateTimeException;
 import java.time.DayOfWeek;
@@ -113,7 +114,7 @@ public class Controller {
   /**
    * Updates the observable list of tasks with fresh values from the task register.
    */
-  public void updateObservableList() {
+  private void updateObservableList() {
     if (this.hideCompleteMode) {
       this.taskListWrapper.setAll(this.taskRegister.getAllUncompletedTasks());
     }
@@ -224,14 +225,57 @@ public class Controller {
   }
 
   /**
+   * Checks if the given Task should be shown in the Task table mode or not.
+   *
+   * @param task The Task whose visibility must be checked
+   */
+  public void checkTaskVisibility(Task task, ToDoListAppGUI toDoListAppGUI) {
+    if (this.getHideCompleteMode()) {
+      this.updateObservableList();
+
+      // Disable the editor (center pane) and save the selected Task
+      // only if the currently displayed Task is marked as complete
+      if (task == this.getCurrentlySelectedTask()) {
+        this.saveTaskToRegister(toDoListAppGUI.getTaskTitleTextField(), toDoListAppGUI.getHtmlEditor());
+        toDoListAppGUI.disableCenterPane();
+      }
+
+      // Clear the table if the Task just marked as complete was the last one
+      if (this.getTaskListWrapper().isEmpty()) {
+        toDoListAppGUI.getTaskTableView().getItems().clear();
+      }
+    }
+    toDoListAppGUI.refreshTable();
+  }
+
+  /**
    * Sets the display mode of the controller.
    *
    * @param hideCompleted The mode to set,
    *                      true to hide the completed Tasks, false otherwise
    */
-  public void doChangeDisplayMode(boolean hideCompleted) {
+  private void doChangeDisplayMode(boolean hideCompleted) {
     this.hideCompleteMode = hideCompleted;
+  }
+
+  /**
+   * Toggles the hide completed Tasks mode.
+   *
+   * @param mode The mode to set, true to hide the completed Tasks, false otherwise
+   */
+  public void doToggleDisplayMode(boolean mode, ToDoListAppGUI toDoListAppGUI) {
+    this.doChangeDisplayMode(mode);
     this.updateObservableList();
+
+    if (this.getCurrentlySelectedTask() != null) {
+      if (this.getHideCompleteMode() && this.getCurrentlySelectedTask().isStatus()) {
+        // The selected Task should not be shown in the current mode ->
+        // save it, disable the editor (centerPane) and clear the selection
+        this.saveTaskToRegister(toDoListAppGUI.getTaskTitleTextField(), toDoListAppGUI.getHtmlEditor());
+        toDoListAppGUI.disableCenterPane();
+      }
+    }
+    toDoListAppGUI.refreshTable();
   }
 
   // -----------------------------------------------------------
