@@ -460,7 +460,7 @@ public class Controller {
   private DatePicker getDatePicker() {
     DatePicker datePicker = new DatePicker();
     datePicker.setMinSize(210, 25);
-    datePicker.setPromptText(DATE_FORMAT);
+    datePicker.setPromptText(DATE_FORMAT.toLowerCase());
     datePicker.setShowWeekNumbers(true);
     datePicker.setStyle("-fx-font-size: 1.1em;");
 
