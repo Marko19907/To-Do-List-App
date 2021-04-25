@@ -2,6 +2,7 @@ package project.toDoListApp.view;
 
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.Event;
@@ -327,15 +328,56 @@ public class ToDoListAppGUI extends Application {
   private ContextMenu setupTableContextMenu() {
     ContextMenu contextMenu = new ContextMenu();
 
-    MenuItem deleteTaskMenu = new MenuItem("Delete task");
-    deleteTaskMenu.setOnAction(e -> this.deleteReminderAction());
+    MenuItem markAsComplete = new MenuItem("Mark as complete");
+    markAsComplete.setOnAction(e -> {
+      Task task = this.controller.getCurrentlySelectedTask();
+      if ((task != null) && !task.isStatus()) {
+        task.setStatus(true);
+        this.controller.checkTaskVisibility(task, this);
+      }
+    });
+    // Create a Binding that disables a button if the task is already marked as completed
+    BooleanBinding taskCompletedBinding = Bindings.createBooleanBinding(() -> {
+      boolean buttonDisabled = false;
+      Task task = this.taskTableView.getSelectionModel().getSelectedItem();
+      if ((task == null) || task.isStatus()) {
+        buttonDisabled = true;
+      }
+      return buttonDisabled;
+    }, this.taskTableView.getSelectionModel().selectedItemProperty());
+    markAsComplete.disableProperty().bind(taskCompletedBinding);
 
-    SeparatorMenuItem separator = new SeparatorMenuItem();
+    MenuItem markAsIncomplete = new MenuItem("Mark as incomplete");
+    markAsIncomplete.setOnAction(e -> {
+      Task task = this.controller.getCurrentlySelectedTask();
+      if ((task != null) && task.isStatus()) {
+        task.setStatus(false);
+        this.controller.checkTaskVisibility(task, this);
+      }
+    });
+    // Create a Binding that disables a button if the task is already marked as not completed
+    BooleanBinding taskNotCompletedBinding = Bindings.createBooleanBinding(() -> {
+      boolean buttonDisabled = false;
+      Task task = this.taskTableView.getSelectionModel().getSelectedItem();
+      if ((task == null) || !task.isStatus()) {
+        buttonDisabled = true;
+      }
+      return buttonDisabled;
+    }, this.taskTableView.getSelectionModel().selectedItemProperty());
+    markAsIncomplete.disableProperty().bind(taskNotCompletedBinding);
+
+    SeparatorMenuItem separator1 = new SeparatorMenuItem();
 
     MenuItem setDueDateMenu = new MenuItem("Set due date");
     setDueDateMenu.setOnAction(e -> this.controller.doSetNewEndDate(this.dateLabel));
 
-    contextMenu.getItems().addAll(setDueDateMenu, separator, deleteTaskMenu);
+    SeparatorMenuItem separator2 = new SeparatorMenuItem();
+
+    MenuItem deleteTaskMenu = new MenuItem("Delete task");
+    deleteTaskMenu.setOnAction(e -> this.deleteReminderAction());
+
+    contextMenu.getItems().addAll(markAsComplete, markAsIncomplete, separator1,
+        setDueDateMenu, separator2, deleteTaskMenu);
     return contextMenu;
   }
 
