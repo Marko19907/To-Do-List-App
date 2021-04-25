@@ -443,7 +443,7 @@ public class Controller {
 
     dialog.setResultConverter((ButtonType button) -> {
       LocalDate result = null;
-      if (button == ButtonType.OK) {
+      if (button == ButtonType.OK && !datePicker.getEditor().getText().isBlank()) {
         result = datePicker.getValue();
       }
       return result;
@@ -481,7 +481,7 @@ public class Controller {
       @Override
       public LocalDate fromString(String string) {
         LocalDate localDateToReturn = null;
-        if (string != null && !string.isEmpty()) {
+        if (string != null && !string.isBlank()) {
           try {
             localDateToReturn = LocalDate.parse(string, DateTimeFormatter.ofPattern(DATE_FORMAT));
           }
