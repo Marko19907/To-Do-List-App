@@ -51,7 +51,6 @@ import java.util.Arrays;
  */
 public class ToDoListAppGUI extends Application {
   private final Controller controller;
-  private final ImageLoader imageLoader;
 
   private final BorderPane root;
   private final TableView<Task> taskTableView;
@@ -66,7 +65,6 @@ public class ToDoListAppGUI extends Application {
    */
   public ToDoListAppGUI() {
     this.controller = new Controller();
-    this.imageLoader = new ImageLoader();
 
     this.root = new BorderPane();
     this.taskTableView = new TableView<>();
@@ -398,7 +396,7 @@ public class ToDoListAppGUI extends Application {
     newReminderButton.setPrefWidth(200);
     newReminderButton.setAlignment(Pos.CENTER);
 
-    ImageView plusIcon = this.imageLoader.getImage("plus-icon");
+    ImageView plusIcon = ImageLoader.getInstance().getImage("plus-icon");
     if (plusIcon != null) {
       plusIcon.setFitHeight(12);
       newReminderButton.setGraphic(plusIcon);
@@ -411,7 +409,7 @@ public class ToDoListAppGUI extends Application {
     deleteReminderButton.setAlignment(Pos.CENTER);
     deleteReminderButton.setOnAction(e -> this.deleteReminderAction());
 
-    ImageView trashIcon = this.imageLoader.getImage("trash-icon");
+    ImageView trashIcon = ImageLoader.getInstance().getImage("trash-icon");
     if (trashIcon != null) {
       trashIcon.setFitHeight(12);
       deleteReminderButton.setGraphic(trashIcon);
@@ -478,7 +476,7 @@ public class ToDoListAppGUI extends Application {
 
     Button zoomOutButton = new Button("Zoom out");
     zoomOutButton.setOnAction(e -> this.zoomOutAction());
-    ImageView zoomOutIcon = this.imageLoader.getImage("zoom-out");
+    ImageView zoomOutIcon = ImageLoader.getInstance().getImage("zoom-out");
     if (zoomOutIcon != null) {
       zoomOutIcon.setFitHeight(10);
       zoomOutButton.setGraphic(zoomOutIcon);
@@ -486,7 +484,7 @@ public class ToDoListAppGUI extends Application {
 
     Button zoomInButton = new Button("Zoom in");
     zoomInButton.setOnAction(e -> this.zoomInAction());
-    ImageView zoomInIcon = this.imageLoader.getImage("zoom-in");
+    ImageView zoomInIcon = ImageLoader.getInstance().getImage("zoom-in");
     if (zoomOutIcon != null) {
       zoomInIcon.setFitHeight(10);
       zoomInButton.setGraphic(zoomInIcon);
