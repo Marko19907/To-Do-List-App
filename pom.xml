@@ -35,7 +35,7 @@
                     <launcher>To-Do List App, Group 2 - launcher</launcher>
                     <jlinkImageName>To-DoListApp, Group 2</jlinkImageName>
                     <jlinkZipName>To-Do List App, Group 2 - zip</jlinkZipName>
-                    <mainClass>project.toDoListApp.view.ToDoListAppGUI</mainClass>
+                    <mainClass>project.toDoListApp/project.toDoListApp.view.ToDoListAppGUI</mainClass>
                 </configuration>
             </plugin>
 
