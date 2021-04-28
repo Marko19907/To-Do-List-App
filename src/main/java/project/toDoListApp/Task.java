@@ -53,6 +53,7 @@ public class Task implements Serializable {
         this.taskName = taskName;
         this.description = description;
         this.category = category;
+        this.priority = "Medium";
 
         this.dueDate = null;
         this.status = false;
@@ -108,10 +109,12 @@ public class Task implements Serializable {
     /**
      * Sets the priority of the task.
      *
-     * @param priority the priority to be set
+     * @param priority The String priority to be set, not blank or null
      */
     public void setPriority(String priority) {
-        this.priority = priority;
+        if (priority != null && !priority.isBlank()) {
+            this.priority = priority;
+        }
     }
 
     /**
