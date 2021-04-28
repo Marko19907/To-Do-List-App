@@ -1,5 +1,6 @@
 package project.toDoListApp;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.stream.Collectors;
  * Class TaskRegister represents a register that can hold Tasks
  * It is responsible for adding, removing and returning a list of the tasks
  */
-public class TaskRegister
+public class TaskRegister implements Serializable
 {
     private final HashSet<Task> tasks;
 
