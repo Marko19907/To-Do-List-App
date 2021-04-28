@@ -33,7 +33,7 @@ public class Task implements Serializable {
         this.description = description;
         this.category = category;
         this.dueDate = dueDate;
-        this.priority = "";
+        this.priority = "Medium";
 
         this.status = false;
         this.dateAdded = LocalDate.now();
