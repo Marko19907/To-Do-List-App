@@ -41,7 +41,7 @@ public class Controller {
   private static final String DATE_FORMAT = "dd/MM/yyyy";
   private final TaskRegister taskRegister;
   private final ObservableList<Task> taskListWrapper;
-  private FileUtility fileUtility;
+  private final FileUtility fileUtility;
 
   private boolean hideCompleteMode;
   private Task currentTask;
@@ -56,7 +56,7 @@ public class Controller {
 
     this.hideCompleteMode = false;
     this.currentTask = null;
-    this.fillRegisterWithTestTasks();
+    //this.fillRegisterWithTestTasks();
   }
 
   /**
@@ -282,6 +282,25 @@ public class Controller {
     toDoListAppGUI.refreshTable();
   }
 
+  /**
+   * Saves the task register to a file.
+   *
+   * @param showFeedbackMode True to show a feedback dialog, false otherwise
+   */
+  public void saveTaskRegisterToFile(boolean showFeedbackMode) {
+    try {
+      this.fileUtility.saveToFile("tasks/savedTasks.txt", this.taskRegister);
+      if (showFeedbackMode) {
+        this.doShowSaveSuccessfulDialog();
+      }
+    }
+    catch (IOException e) {
+      if (showFeedbackMode) {
+        this.doShowSaveUnsuccessfulDialog();
+      }
+    }
+  }
+
   // -----------------------------------------------------------
   //    DIALOGS
   // -----------------------------------------------------------
@@ -301,6 +320,28 @@ public class Controller {
   }
 
   /**
+   * Displays an information dialog that notifies the user of a successful save.
+   */
+  private void doShowSaveSuccessfulDialog() {
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setTitle("Information");
+    alert.setHeaderText("Successfully saved");
+    alert.setContentText("The tasks were successfully saved to disk");
+    alert.showAndWait();
+  }
+
+  /**
+   * Displays a warning dialog that notifies the user of an unsuccessful save.
+   */
+  private void doShowSaveUnsuccessfulDialog() {
+    Alert alert = new Alert(Alert.AlertType.WARNING);
+    alert.setTitle("Warning");
+    alert.setHeaderText("Not saved");
+    alert.setContentText("The tasks were not saved to disk");
+    alert.showAndWait();
+  }
+
+  /**
    * Application exit dialog. A confirmation dialog that is displayed before exiting.
    */
   public void quit(Event event, TextField taskTitle, HTMLEditor editor) {
@@ -314,11 +355,7 @@ public class Controller {
     if (result.isPresent()) {
       if (result.get() == ButtonType.OK) {
         this.saveTaskToRegister(taskTitle, editor);
-        try {
-          fileUtility.saveToFile("tasks/savedTasks.txt",taskRegister);
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
+        this.saveTaskRegisterToFile(false);
         Platform.exit();
       } else {
         event.consume();

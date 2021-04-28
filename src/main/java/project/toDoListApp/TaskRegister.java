@@ -1,5 +1,9 @@
 package project.toDoListApp;
 
+import project.toDoListApp.utility.FileUtility;
+
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,6 +24,32 @@ public class TaskRegister implements Serializable
     public TaskRegister()
     {
         this.tasks = new HashSet<>();
+
+        try {
+            this.addSavedTasks();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Reads the saved register object from the disk.
+     *
+     * @throws IOException If an IO error is encountered
+     * @throws ClassNotFoundException If the class of the serialized object cannot be found
+     */
+    private void addSavedTasks() throws IOException, ClassNotFoundException {
+        File dir = new File("tasks");
+        if (dir.exists()){
+            File file = new File("tasks/savedTasks.txt");
+            if(file.exists()){
+                FileUtility fileUtility = new FileUtility();
+                TaskRegister register = (TaskRegister) fileUtility.readFromFile("tasks/savedTasks.txt");
+                List<Task> taskList = register.getAllTasks();
+                this.tasks.addAll(taskList);
+            }
+        }
+
     }
 
     /**
