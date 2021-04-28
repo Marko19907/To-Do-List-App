@@ -22,8 +22,10 @@ import javafx.scene.web.WebView;
 import javafx.util.StringConverter;
 import project.toDoListApp.Task;
 import project.toDoListApp.TaskRegister;
+import project.toDoListApp.utility.FileUtility;
 import project.toDoListApp.view.ToDoListAppGUI;
 
+import java.io.IOException;
 import java.time.DateTimeException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -39,6 +41,7 @@ public class Controller {
   private static final String DATE_FORMAT = "dd/MM/yyyy";
   private final TaskRegister taskRegister;
   private final ObservableList<Task> taskListWrapper;
+  private FileUtility fileUtility;
 
   private boolean hideCompleteMode;
   private Task currentTask;
@@ -48,6 +51,7 @@ public class Controller {
    */
   public Controller() {
     this.taskRegister = new TaskRegister();
+    this.fileUtility = new FileUtility();
     this.taskListWrapper = FXCollections.observableArrayList(this.taskRegister.getAllTasks());
 
     this.hideCompleteMode = false;
@@ -310,7 +314,11 @@ public class Controller {
     if (result.isPresent()) {
       if (result.get() == ButtonType.OK) {
         this.saveTaskToRegister(taskTitle, editor);
-        //TODO: Save the app's state to disk before exiting?
+        try {
+          fileUtility.saveToFile("tasks/savedTasks.txt",taskRegister);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
         Platform.exit();
       } else {
         event.consume();
