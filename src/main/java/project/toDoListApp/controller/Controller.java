@@ -41,7 +41,7 @@ public class Controller {
   private static final String DATE_FORMAT = "dd/MM/yyyy";
   private final TaskRegister taskRegister;
   private final ObservableList<Task> taskListWrapper;
-  private FileUtility fileUtility;
+  private final FileUtility fileUtility;
 
   private boolean hideCompleteMode;
   private Task currentTask;
@@ -56,7 +56,7 @@ public class Controller {
 
     this.hideCompleteMode = false;
     this.currentTask = null;
-    this.fillRegisterWithTestTasks();
+    //this.fillRegisterWithTestTasks();
   }
 
   /**
@@ -131,7 +131,7 @@ public class Controller {
    * Adds a few tasks to the register for testing.
    */
   private void fillRegisterWithTestTasks() {
-    /*this.taskRegister.addTask(new Task("Title 1", "Desc 1",
+    this.taskRegister.addTask(new Task("Title 1", "Desc 1",
         "None", LocalDate.parse("2100-12-01")));
     this.taskRegister.addTask(new Task("Title 2", "Desc 2",
         "Cooking", LocalDate.parse("3100-12-01")));
@@ -141,8 +141,6 @@ public class Controller {
             .build());
 
     this.updateObservableList();
-
-     */
   }
 
   /**
@@ -316,7 +314,7 @@ public class Controller {
     if (result.isPresent()) {
       if (result.get() == ButtonType.OK) {
         this.saveTaskToRegister(taskTitle, editor);
-        saveTaskRegisterToFile();
+        this.saveTaskRegisterToFile();
         Platform.exit();
       } else {
         event.consume();
@@ -329,7 +327,7 @@ public class Controller {
    */
   public void saveTaskRegisterToFile(){
     try {
-      fileUtility.saveToFile("tasks/savedTasks.txt",taskRegister);
+      this.fileUtility.saveToFile("tasks/savedTasks.txt", this.taskRegister);
     } catch (IOException e) {
       e.printStackTrace();
     }

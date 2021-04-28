@@ -150,7 +150,7 @@ public class ToDoListAppGUI extends Application {
     KeyCombination keyCombinationSaveAll =
         new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
     saveAll.setAccelerator(keyCombinationSaveAll);
-    saveAll.setOnAction(e -> controller.saveTaskRegisterToFile());
+    saveAll.setOnAction(e -> this.controller.saveTaskRegisterToFile());
 
     MenuItem exit = new MenuItem("Exit");
     KeyCombination keyCombinationExit =

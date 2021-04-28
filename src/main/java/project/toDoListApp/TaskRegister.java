@@ -24,14 +24,21 @@ public class TaskRegister implements Serializable
     public TaskRegister()
     {
         this.tasks = new HashSet<>();
+
         try {
-            addSavedTasks();
+            this.addSavedTasks();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    public void addSavedTasks() throws IOException, ClassNotFoundException {
+    /**
+     * Reads the saved register object from the disk.
+     *
+     * @throws IOException If an IO error is encountered
+     * @throws ClassNotFoundException If the class of the serialized object cannot be found
+     */
+    private void addSavedTasks() throws IOException, ClassNotFoundException {
         File dir = new File("tasks");
         if (dir.exists()){
             File file = new File("tasks/savedTasks.txt");
