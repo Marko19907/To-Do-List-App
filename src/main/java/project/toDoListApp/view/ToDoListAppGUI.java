@@ -28,6 +28,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
@@ -45,6 +46,7 @@ import javafx.stage.Stage;
 import project.toDoListApp.Task;
 import project.toDoListApp.controller.Controller;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Class ToDoListAppGUI represents the main window in the application.
@@ -89,6 +91,9 @@ public class ToDoListAppGUI extends Application {
     this.root.setCenter(this.setupCenter());
 
     stage.setTitle("To-Do List App");
+    stage.getIcons().add(new Image(Objects
+            .requireNonNull(ToDoListAppGUI.class
+            .getResourceAsStream("/to-do-list icon.png"))));
     stage.setMinWidth(300);
     stage.setMinHeight(200);
     stage.setOnCloseRequest(e -> this.controller.quit(e));
