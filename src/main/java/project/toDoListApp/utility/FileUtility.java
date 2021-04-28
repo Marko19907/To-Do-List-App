@@ -1,6 +1,11 @@
 package project.toDoListApp.utility;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.logging.Logger;
 
 
@@ -27,9 +32,9 @@ public class FileUtility {
             dir.mkdir();
         }
         File outputFile = new File(destinationFile);
-        ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(outputFile));
-        os.writeObject(object);
-        os.close();
+        try (ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(outputFile))) {
+            os.writeObject(object);
+        }
     }
 
     /**
@@ -40,21 +45,19 @@ public class FileUtility {
      * @return The Task object.
      * @throws IOException If the reading process fails for any reason.
      */
-    public Object readFromFile(String sourceFile) throws IOException, ClassNotFoundException{
-        try{
-            FileInputStream fi = new FileInputStream(sourceFile);
+    public Object readFromFile(String sourceFile) throws IOException, ClassNotFoundException {
+        Object obj = null;
+        try (FileInputStream fi = new FileInputStream(sourceFile)) {
             ObjectInputStream oi = new ObjectInputStream(fi);
 
-            Object obj = oi.readObject();
+            obj = oi.readObject();
 
             oi.close();
-            fi.close();
-
-            return obj;
-        }catch (IOException e){
+        }
+        catch (IOException e){
             throw new IOException("Unable to make a valid filename for "+
                     sourceFile);
         }
+        return obj;
     }
-
 }
