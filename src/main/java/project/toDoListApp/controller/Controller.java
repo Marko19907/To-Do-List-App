@@ -299,7 +299,7 @@ public class Controller {
   /**
    * Application exit dialog. A confirmation dialog that is displayed before exiting.
    */
-  public void quit(Event event) {
+  public void quit(Event event, TextField taskTitle, HTMLEditor editor) {
     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
     alert.setTitle("Confirm close");
     alert.setHeaderText("Exit this application?");
@@ -309,6 +309,7 @@ public class Controller {
 
     if (result.isPresent()) {
       if (result.get() == ButtonType.OK) {
+        this.saveTaskToRegister(taskTitle, editor);
         //TODO: Save the app's state to disk before exiting?
         Platform.exit();
       } else {

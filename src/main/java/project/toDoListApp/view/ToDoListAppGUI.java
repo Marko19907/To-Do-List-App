@@ -96,7 +96,8 @@ public class ToDoListAppGUI extends Application {
             .getResourceAsStream("/to-do-list icon.png"))));
     stage.setMinWidth(300);
     stage.setMinHeight(200);
-    stage.setOnCloseRequest(e -> this.controller.quit(e));
+    stage.setOnCloseRequest(e -> this.controller
+        .quit(e, this.getTaskTitleTextField(), this.getHtmlEditor()));
 
     Scene scene = new Scene(this.root, 600, 400, Color.WHITE);
     stage.setScene(scene);
@@ -155,7 +156,8 @@ public class ToDoListAppGUI extends Application {
     KeyCombination keyCombinationExit =
         new KeyCodeCombination(KeyCode.Q, KeyCombination.CONTROL_DOWN);
     exit.setAccelerator(keyCombinationExit);
-    exit.setOnAction(e -> this.controller.quit(e));
+    exit.setOnAction(e -> this.controller
+        .quit(e, this.getTaskTitleTextField(), this.getHtmlEditor()));
 
     fileMenu.getItems().addAll(newReminder, deleteReminder, separator1, saveAll, separator2, exit);
     return fileMenu;
