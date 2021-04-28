@@ -125,34 +125,34 @@ public class ToDoListAppGUI extends Application {
     SeparatorMenuItem separator1 = new SeparatorMenuItem();
     SeparatorMenuItem separator2 = new SeparatorMenuItem();
 
-    MenuItem menuItem1 = new MenuItem("New Reminder");
+    MenuItem newReminder = new MenuItem("New Reminder");
     KeyCombination keyCombinationNewReminder =
         new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN);
-    menuItem1.setAccelerator(keyCombinationNewReminder);
-    menuItem1.setOnAction(e -> {
+    newReminder.setAccelerator(keyCombinationNewReminder);
+    newReminder.setOnAction(e -> {
       this.controller.showNewReminderDialog();
       this.refreshTable();
     });
 
-    MenuItem menuItem2 = new MenuItem("Delete Reminder");
+    MenuItem deleteReminder = new MenuItem("Delete Reminder");
     KeyCombination keyCombinationDeleteReminder =
         new KeyCodeCombination(KeyCode.DELETE, KeyCombination.CONTROL_DOWN);
-    menuItem2.setAccelerator(keyCombinationDeleteReminder);
-    menuItem2.setOnAction(e -> this.deleteReminderAction());
+    deleteReminder.setAccelerator(keyCombinationDeleteReminder);
+    deleteReminder.setOnAction(e -> this.deleteReminderAction());
 
-    MenuItem menuItem3 = new MenuItem("Save all");
+    MenuItem saveAll = new MenuItem("Save all");
     KeyCombination keyCombinationSaveAll =
         new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
-    menuItem3.setAccelerator(keyCombinationSaveAll);
-    menuItem3.setOnAction(e -> System.out.println("Save all test"));
+    saveAll.setAccelerator(keyCombinationSaveAll);
+    saveAll.setOnAction(e -> System.out.println("Save all test"));
 
-    MenuItem menuItem4 = new MenuItem("Exit");
+    MenuItem exit = new MenuItem("Exit");
     KeyCombination keyCombinationExit =
         new KeyCodeCombination(KeyCode.Q, KeyCombination.CONTROL_DOWN);
-    menuItem4.setAccelerator(keyCombinationExit);
-    menuItem4.setOnAction(e -> this.controller.quit(e));
+    exit.setAccelerator(keyCombinationExit);
+    exit.setOnAction(e -> this.controller.quit(e));
 
-    fileMenu.getItems().addAll(menuItem1, menuItem2, separator1, menuItem3, separator2, menuItem4);
+    fileMenu.getItems().addAll(newReminder, deleteReminder, separator1, saveAll, separator2, exit);
     return fileMenu;
   }
 
@@ -190,31 +190,31 @@ public class ToDoListAppGUI extends Application {
     SeparatorMenuItem separator1 = new SeparatorMenuItem();
 
 
-    MenuItem menuItem1 = new MenuItem("Zoom in");
+    MenuItem zoomInMenuItem = new MenuItem("Zoom in");
     KeyCombination keyCombinationZoomIn =
         new KeyCodeCombination(KeyCode.PLUS, KeyCombination.CONTROL_DOWN);
-    menuItem1.setAccelerator(keyCombinationZoomIn);
-    menuItem1.setOnAction(e -> this.zoomInAction());
+    zoomInMenuItem.setAccelerator(keyCombinationZoomIn);
+    zoomInMenuItem.setOnAction(e -> this.zoomInAction());
 
-    MenuItem menuItem2 = new MenuItem("Zoom out");
+    MenuItem zoomOutMenuItem = new MenuItem("Zoom out");
     KeyCombination keyCombinationZoomOut =
         new KeyCodeCombination(KeyCode.MINUS, KeyCombination.CONTROL_DOWN);
-    menuItem2.setAccelerator(keyCombinationZoomOut);
-    menuItem2.setOnAction(e -> this.zoomOutAction());
+    zoomOutMenuItem.setAccelerator(keyCombinationZoomOut);
+    zoomOutMenuItem.setOnAction(e -> this.zoomOutAction());
 
 
-    ToggleGroup toggleGroup = new ToggleGroup();
+    ToggleGroup showHideCompletedGroup = new ToggleGroup();
 
-    RadioMenuItem radioItem1 = new RadioMenuItem("Show completed");
-    radioItem1.setOnAction(e -> this.controller.doToggleDisplayMode(false, this));
-    radioItem1.setSelected(true);
-    radioItem1.setToggleGroup(toggleGroup);
+    RadioMenuItem showCompleted = new RadioMenuItem("Show completed");
+    showCompleted.setOnAction(e -> this.controller.doToggleDisplayMode(false, this));
+    showCompleted.setSelected(true);
+    showCompleted.setToggleGroup(showHideCompletedGroup);
 
-    RadioMenuItem radioItem2 = new RadioMenuItem("Hide completed");
-    radioItem2.setOnAction(e -> this.controller.doToggleDisplayMode(true, this));
-    radioItem2.setToggleGroup(toggleGroup);
+    RadioMenuItem hideCompleted = new RadioMenuItem("Hide completed");
+    hideCompleted.setOnAction(e -> this.controller.doToggleDisplayMode(true, this));
+    hideCompleted.setToggleGroup(showHideCompletedGroup);
 
-    viewMenu.getItems().addAll(radioItem1, radioItem2, separator1, menuItem1, menuItem2);
+    viewMenu.getItems().addAll(showCompleted, hideCompleted, separator1, zoomInMenuItem, zoomOutMenuItem);
     return viewMenu;
   }
 
@@ -226,10 +226,10 @@ public class ToDoListAppGUI extends Application {
   private Menu setupHelpMenu() {
     Menu helpMenu = new Menu("Help");
 
-    MenuItem menuItem1 = new MenuItem("About");
-    menuItem1.setOnAction(e -> this.controller.showAboutDialog());
+    MenuItem aboutMenuItem = new MenuItem("About");
+    aboutMenuItem.setOnAction(e -> this.controller.showAboutDialog());
 
-    helpMenu.getItems().add(menuItem1);
+    helpMenu.getItems().add(aboutMenuItem);
     return helpMenu;
   }
 
@@ -261,8 +261,6 @@ public class ToDoListAppGUI extends Application {
     TableColumn<Task, BooleanProperty> statusColumn = new TableColumn<>("Done");
     statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-    TableColumn<Task, String> priorityColumn = new TableColumn<>("Priority");
-
     statusColumn.setCellFactory(col -> new CheckBoxTableCell<>(index -> {
       BooleanProperty active = new SimpleBooleanProperty(this.taskTableView.getItems().get(index).isStatus());
       active.addListener((obs, wasActive, isNowActive) -> {
@@ -276,6 +274,8 @@ public class ToDoListAppGUI extends Application {
     }));
     statusColumn.setMinWidth(34);
     statusColumn.setMaxWidth(34);
+
+    TableColumn<Task, String> priorityColumn = new TableColumn<>("Priority");
 
 
     ContextMenu contextMenu = this.setupTableContextMenu();
