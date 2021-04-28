@@ -1,5 +1,6 @@
 package project.toDoListApp;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
@@ -7,7 +8,7 @@ import java.time.LocalDate;
  * It stores a task name, description and category, as well as the due date,
  * status and the date on which the task was created
  */
-public class Task {
+public class Task implements Serializable {
     private String taskName;
     private String description;
     private String category;
@@ -154,5 +155,15 @@ public class Task {
      */
     public LocalDate getDateAdded() {
         return this.dateAdded;
+    }
+
+    @Override
+    public String toString(){
+        return "Task{" +
+                "taskName='" + taskName + '\''+
+                ", description=" + description +
+                ", category=" + category +
+                ", dueDate=" + dueDate +
+                '}';
     }
 }

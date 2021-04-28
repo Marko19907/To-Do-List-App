@@ -22,6 +22,10 @@ public class FileUtility {
      * @throws IOException If the saving process fails for any reason.
      */
     public void saveToFile(String destinationFile, Object object) throws IOException{
+        File dir = new File("tasks");
+        if(!dir.exists()){
+            dir.mkdir();
+        }
         File outputFile = new File(destinationFile);
         ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(outputFile));
         os.writeObject(object);
@@ -47,8 +51,6 @@ public class FileUtility {
             fi.close();
 
             return obj;
-
-
         }catch (IOException e){
             throw new IOException("Unable to make a valid filename for "+
                     sourceFile);

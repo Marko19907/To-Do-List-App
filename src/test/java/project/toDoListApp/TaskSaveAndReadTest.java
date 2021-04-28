@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 class TaskSaveAndReadTest {
 
@@ -23,10 +25,13 @@ class TaskSaveAndReadTest {
                 LocalDate.MAX
         );
         TaskRegister register = new TaskRegister();
-        register.addTask(task);
         register.addTask(new Task("test","test","test",LocalDate.MAX));
+        register.addTask(task);
         fileUtility.saveToFile("tasks/registerexample.txt",register);
 
-        assertEquals(((TaskRegister) fileUtility.readFromFile("tasks/registerexample.txt")).getAllTasks().toString(),register.getAllTasks().toString());
+        TaskRegister registerRead = (TaskRegister) fileUtility.readFromFile("tasks/registerexample.txt");
+
+        assertTrue(registerRead.getAllTasks().contains(registerRead.getAllTasks().get(0)));
+        assertTrue(registerRead.getAllTasks().contains(registerRead.getAllTasks().get(1)));
     }
 }
