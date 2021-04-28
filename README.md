@@ -1,6 +1,10 @@
 <h3 align="center">To-Do List App</h3>
 
 <p align="center">
+<a href="https://gitlab.stud.iie.ntnu.no/idata1002_g2/prosjekt-2021-group-2">
+<img src="src/main/resources/to-do-list icon.png" alt="Logo" width="50" height="50">
+</a>
+
 A to-do-list application written in Java
 <br />
 <a href="https://gitlab.stud.iie.ntnu.no/idata1002_g2/prosjekt-2021-group-2/-/wikis/home">
@@ -52,7 +56,8 @@ This is a list of things you need to use this software.
    Options in other IDEs may vary.
 
 ## Contributing
-We accept Pull Requests and are some rules that we'd like you to follow:<br>
+We accept Pull Requests. <br>
+Here are some rules that we'd like you to follow: <br>
 * Respect the code style.
 * Provide JUnit tests for your changes and make sure your changes don't break any existing tests by running ```mvn clean test```.
 
