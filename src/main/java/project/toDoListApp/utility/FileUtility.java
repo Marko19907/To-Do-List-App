@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.logging.Logger;
-import project.toDoListApp.TaskRegister;
+import project.toDoListApp.model.TaskRegister;
 
 /**
  * Class FileUtility represents a simple helper class that is tasked with

@@ -46,7 +46,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.web.HTMLEditor;
 import javafx.stage.Stage;
-import project.toDoListApp.Task;
+import project.toDoListApp.model.Task;
 import project.toDoListApp.controller.Controller;
 import project.toDoListApp.utility.PriorityComparator;
 

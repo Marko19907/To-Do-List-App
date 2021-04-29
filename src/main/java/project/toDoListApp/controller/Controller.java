@@ -27,8 +27,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.web.HTMLEditor;
 import javafx.scene.web.WebView;
 import javafx.util.StringConverter;
-import project.toDoListApp.Task;
-import project.toDoListApp.TaskRegister;
+import project.toDoListApp.model.Task;
+import project.toDoListApp.model.TaskRegister;
 import project.toDoListApp.utility.FileUtility;
 import project.toDoListApp.view.ToDoListAppGUI;
 

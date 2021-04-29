@@ -4,7 +4,7 @@ module project.toDoListApp {
   requires java.logging;
 
   // Opens the package to "anyone" to enable access by reflection for the Jupiter test engine
-  opens project.toDoListApp;
+  opens project.toDoListApp.model;
 
   exports project.toDoListApp.view;
 }

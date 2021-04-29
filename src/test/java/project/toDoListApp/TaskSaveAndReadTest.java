@@ -2,6 +2,8 @@ package project.toDoListApp;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import project.toDoListApp.model.Task;
+import project.toDoListApp.model.TaskRegister;
 import project.toDoListApp.utility.FileUtility;
 
 import java.io.IOException;
