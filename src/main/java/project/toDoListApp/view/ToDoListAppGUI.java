@@ -96,12 +96,12 @@ public class ToDoListAppGUI extends Application {
     stage.getIcons().add(new Image(Objects
             .requireNonNull(ToDoListAppGUI.class
             .getResourceAsStream("/to-do-list icon.png"))));
-    stage.setMinWidth(300);
-    stage.setMinHeight(200);
-    stage.setOnCloseRequest(e -> this.controller
-        .quit(e, this.getTaskTitleTextField(), this.getHtmlEditor()));
+    stage.setMinWidth(818);
+    stage.setMinHeight(500);
+    stage.setOnCloseRequest(e ->
+            this.controller.quit(e, this.getTaskTitleTextField(), this.getHtmlEditor()));
 
-    Scene scene = new Scene(this.root, 600, 400, Color.WHITE);
+    Scene scene = new Scene(this.root, 800, 500, Color.WHITE);
     stage.setScene(scene);
     stage.show();
 
