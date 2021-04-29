@@ -1,5 +1,7 @@
 package project.toDoListApp.view;
 
+import java.util.Arrays;
+import java.util.Objects;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -44,11 +46,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.web.HTMLEditor;
 import javafx.stage.Stage;
-import project.toDoListApp.utility.PriorityComparator;
 import project.toDoListApp.Task;
 import project.toDoListApp.controller.Controller;
-import java.util.Arrays;
-import java.util.Objects;
+import project.toDoListApp.utility.PriorityComparator;
 
 /**
  * Class ToDoListAppGUI represents the main window in the application.
@@ -253,7 +253,7 @@ public class ToDoListAppGUI extends Application {
   }
 
   /**
-   * Sets up the left table that contains the tasks
+   * Sets up the left table that contains the tasks.
    */
   private void setupLeftTopTable() {
     this.getTaskTableView().setPlaceholder(new Label("No tasks to display"));
@@ -346,7 +346,7 @@ public class ToDoListAppGUI extends Application {
   }
 
   /**
-   * Sets up a ContextMenu containing the MenuItems for the left TableView
+   * Sets up a ContextMenu containing the MenuItems for the left TableView.
    *
    * @return an already set-up ContextMenu for the left TableView
    */
@@ -525,21 +525,21 @@ public class ToDoListAppGUI extends Application {
   }
 
   /**
-   * Performs the zoom in action
+   * Performs the zoom in action.
    */
   private void zoomInAction() {
     this.controller.doZoom(this.getHtmlEditor(), this.getZoomLabel(), 0.1);
   }
 
   /**
-   * Performs the zoom out action
+   * Performs the zoom out action.
    */
   private void zoomOutAction() {
     this.controller.doZoom(this.getHtmlEditor(), this.getZoomLabel(), -0.1);
   }
 
   /**
-   * Performs the delete Task action
+   * Performs the delete Task action.
    */
   private void deleteReminderAction() {
     boolean taskDeleted = this.controller.doDeleteReminder();
@@ -552,7 +552,8 @@ public class ToDoListAppGUI extends Application {
   /**
    * Clears the text of the given Control.
    *
-   * @param control The Control item to clear the text from, can be a Button, TextArea, TextField or Label
+   * @param control The Control item to clear the text from,
+   *                can be a Button, TextArea, TextField or Label
    */
   private void clearControlText(Control control) {
     if (control != null) {
@@ -588,7 +589,7 @@ public class ToDoListAppGUI extends Application {
   }
 
   /**
-   * Refreshes the table and forces a sort of the data
+   * Refreshes the table and forces a sort of the data.
    */
   public void refreshTable() {
     this.getTaskTableView().refresh();
