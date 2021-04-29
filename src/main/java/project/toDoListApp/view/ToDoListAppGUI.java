@@ -44,6 +44,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.web.HTMLEditor;
 import javafx.stage.Stage;
+import project.toDoListApp.utility.PriorityComparator;
 import project.toDoListApp.Task;
 import project.toDoListApp.controller.Controller;
 import java.util.Arrays;
@@ -299,7 +300,11 @@ public class ToDoListAppGUI extends Application {
       Task task = e.getTableView().getItems().get(index);
 
       task.setPriority(newValue);
+
+      // Refresh the table after the priority has changed
+      this.refreshTable();
     });
+    priorityColumn.setComparator(new PriorityComparator());
 
 
     ContextMenu contextMenu = this.setupTableContextMenu();
