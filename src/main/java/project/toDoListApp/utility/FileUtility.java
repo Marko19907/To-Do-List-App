@@ -7,57 +7,106 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.logging.Logger;
+import project.toDoListApp.TaskRegister;
 
-
+/**
+ * Class FileUtility represents a simple helper class that is tasked with
+ * reading and writing objects to and from the disk
+ */
 public class FileUtility {
 
-    //Initialize the logger for easier access.
-    private final Logger logger;
+  //Initialize the logger for easier access.
+  private final Logger logger;
 
-    public FileUtility(){
-        this.logger = Logger.getLogger(this.getClass().toString());
+  /**
+   * FileUtility constructor.
+   */
+  public FileUtility() {
+    this.logger = Logger.getLogger(this.getClass().toString());
+  }
+
+  /**
+   * Save a binary version of the object to the given file.
+   * If the file name is not an absolute path, then it is assumed
+   * to be relative to the current project folder.
+   *
+   * @param destinationFile The file where the details are to be saved.
+   * @param object          The object to be saved in binary version.
+   * @throws IOException If the saving process fails for any reason.
+   */
+  public void saveToFile(String destinationFile, Object object) throws IOException {
+    File dir = new File("tasks");
+    if (!dir.exists()) {
+      dir.mkdir();
+    }
+    File outputFile = new File(destinationFile);
+    try (ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(outputFile))) {
+      os.writeObject(object);
+    }
+  }
+
+  /**
+   * Read the binary version of an address book from the given file.
+   * If the file name is not an absolute path, then it is assumed
+   * to be relative to the current project folder.
+   *
+   * @param sourceFile The file from where the details are to be read.
+   * @return The Task object.
+   * @throws IOException If the reading process fails for any reason.
+   */
+  public Object readFromFile(String sourceFile) throws IOException, ClassNotFoundException {
+    Object obj = null;
+    try (FileInputStream fi = new FileInputStream(sourceFile)) {
+      ObjectInputStream oi = new ObjectInputStream(fi);
+
+      obj = oi.readObject();
+
+      oi.close();
+    } catch (IOException e) {
+      throw new IOException("Unable to make a valid filename for " +
+          sourceFile);
+    }
+    return obj;
+  }
+
+  /**
+   * Returns the saved TaskRegister from the disk if possible, returns a new TaskRegister otherwise
+   *
+   * @return The saved TaskRegister instance from the disk
+   */
+  public TaskRegister getRegister() {
+    TaskRegister register = null;
+
+    try {
+      register = this.getRegisterFromDisk();
+    } catch (IOException | ClassNotFoundException ignored) {
     }
 
-    /**
-     * Save a binary version of the object to the given file.
-     * If the file name is not an absolute path, then it is assumed
-     * to be relative to the current project folder.
-     * @param destinationFile The file where the details are to be saved.
-     * @param object The object to be saved in binary version.
-     * @throws IOException If the saving process fails for any reason.
-     */
-    public void saveToFile(String destinationFile, Object object) throws IOException{
-        File dir = new File("tasks");
-        if(!dir.exists()){
-            dir.mkdir();
-        }
-        File outputFile = new File(destinationFile);
-        try (ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(outputFile))) {
-            os.writeObject(object);
-        }
+    if (register == null) {
+      // The register is still null, wasn't loaded properly or no previous saves exist ->
+      // Create a new register
+      register = new TaskRegister();
     }
 
-    /**
-     * Read the binary version of an address book from the given file.
-     * If the file name is not an absolute path, then it is assumed
-     * to be relative to the current project folder.
-     * @param sourceFile The file from where the details are to be read.
-     * @return The Task object.
-     * @throws IOException If the reading process fails for any reason.
-     */
-    public Object readFromFile(String sourceFile) throws IOException, ClassNotFoundException {
-        Object obj = null;
-        try (FileInputStream fi = new FileInputStream(sourceFile)) {
-            ObjectInputStream oi = new ObjectInputStream(fi);
+    return register;
+  }
 
-            obj = oi.readObject();
-
-            oi.close();
-        }
-        catch (IOException e){
-            throw new IOException("Unable to make a valid filename for "+
-                    sourceFile);
-        }
-        return obj;
+  /**
+   * Returns the saved register object from the disk.
+   *
+   * @return The saved register object from the disk.
+   * @throws IOException            If an IO error is encountered
+   * @throws ClassNotFoundException If the class of the serialized object cannot be found
+   */
+  private TaskRegister getRegisterFromDisk() throws IOException, ClassNotFoundException {
+    File dir = new File("tasks");
+    TaskRegister register = null;
+    if (dir.exists()) {
+      File file = new File("tasks/savedTasks.txt");
+      if (file.exists()) {
+        register = (TaskRegister) this.readFromFile("tasks/savedTasks.txt");
+      }
     }
+    return register;
+  }
 }

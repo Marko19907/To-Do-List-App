@@ -50,8 +50,9 @@ public class Controller {
    * Instantiates the controller.
    */
   public Controller() {
-    this.taskRegister = new TaskRegister();
     this.fileUtility = new FileUtility();
+    this.taskRegister = this.fileUtility.getRegister();
+
     this.taskListWrapper = FXCollections.observableArrayList(this.taskRegister.getAllTasks());
 
     this.hideCompleteMode = false;
