@@ -7,7 +7,6 @@ import project.toDoListApp.utility.FileUtility;
 import java.io.IOException;
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
@@ -27,9 +26,9 @@ class TaskSaveAndReadTest {
         TaskRegister register = new TaskRegister();
         register.addTask(new Task("test","test","test",LocalDate.MAX));
         register.addTask(task);
-        fileUtility.saveToFile("tasks/registerexample.txt",register);
+        fileUtility.saveToFile("target/registerTest.txt",register);
 
-        TaskRegister registerRead = (TaskRegister) fileUtility.readFromFile("tasks/registerexample.txt");
+        TaskRegister registerRead = (TaskRegister) fileUtility.readFromFile("target/registerTest.txt");
 
         assertTrue(registerRead.getAllTasks().contains(registerRead.getAllTasks().get(0)));
         assertTrue(registerRead.getAllTasks().contains(registerRead.getAllTasks().get(1)));
