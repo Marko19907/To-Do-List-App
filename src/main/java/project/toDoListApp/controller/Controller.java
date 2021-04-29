@@ -313,8 +313,11 @@ public class Controller {
     alert.setTitle("About");
     alert.setHeaderText("To-Do List App");
     alert.setContentText("An application created by" + "\n"
-        + "Group 2" + "\n\n"
-        + "2021");
+        + "Group 2" + "\n"
+        + "2021"
+        + "\n\n"
+        + "Running on Java " + System.getProperty("java.version")
+        + " with JavaFX version " + System.getProperty("javafx.version"));
 
     alert.showAndWait();
   }
@@ -348,7 +351,8 @@ public class Controller {
     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
     alert.setTitle("Confirm close");
     alert.setHeaderText("Exit this application?");
-    alert.setContentText("Are you sure you want to exit the application?");
+    alert.setContentText("Are you sure you want to exit the application?" + "\n"
+        + "Your changes are automatically saved . . ." );
 
     Optional<ButtonType> result = alert.showAndWait();
 
