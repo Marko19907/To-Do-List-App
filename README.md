@@ -61,3 +61,7 @@ Here are some rules that we'd like you to follow: <br>
 * Respect the code style.
 * Provide JUnit tests for your changes and make sure your changes don't break any existing tests by running ```mvn clean test```.
 
+## Disclaimers
+
+* App icon was made by [inipagistudio](https://www.flaticon.com/authors/inipagistudio) from [flaticon.com](https://www.flaticon.com/) and is licensed by [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/)
+
