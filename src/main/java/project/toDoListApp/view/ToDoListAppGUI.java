@@ -118,7 +118,8 @@ public class ToDoListAppGUI extends Application {
    */
   private MenuBar setupTopMenu() {
     MenuBar menuBar = new MenuBar();
-    menuBar.getMenus().addAll(this.setupFileMenu(), this.setupEditMenu(), this.setupViewMenu(), this.setupHelpMenu());
+    menuBar.getMenus().addAll(this.setupFileMenu(), this.setupEditMenu(),
+        this.setupViewMenu(), this.setupHelpMenu());
     return menuBar;
   }
 
@@ -173,7 +174,7 @@ public class ToDoListAppGUI extends Application {
   private Menu setupEditMenu() {
     Menu editMenu = new Menu("Edit");
     MenuItem editEndDate = new MenuItem("Edit end date");
-    editEndDate.setOnAction(e -> this.controller.doSetNewEndDate(this.dateLabel));
+    editEndDate.setOnAction(e -> this.controller.doSetNewEndDate(this.getDateLabel()));
 
     editMenu.getItems().add(editEndDate);
     return editMenu;
@@ -206,15 +207,18 @@ public class ToDoListAppGUI extends Application {
     ToggleGroup showHideCompletedGroup = new ToggleGroup();
 
     RadioMenuItem showCompleted = new RadioMenuItem("Show completed");
-    showCompleted.setOnAction(e -> this.controller.doToggleDisplayMode(false, this));
+    showCompleted.setOnAction(e ->
+        this.controller.doToggleDisplayMode(false, this));
     showCompleted.setSelected(true);
     showCompleted.setToggleGroup(showHideCompletedGroup);
 
     RadioMenuItem hideCompleted = new RadioMenuItem("Hide completed");
-    hideCompleted.setOnAction(e -> this.controller.doToggleDisplayMode(true, this));
+    hideCompleted.setOnAction(e ->
+        this.controller.doToggleDisplayMode(true, this));
     hideCompleted.setToggleGroup(showHideCompletedGroup);
 
-    viewMenu.getItems().addAll(showCompleted, hideCompleted, separator1, zoomInMenuItem, zoomOutMenuItem);
+    viewMenu.getItems().addAll(showCompleted, hideCompleted, separator1,
+        zoomInMenuItem, zoomOutMenuItem);
     return viewMenu;
   }
 
@@ -241,10 +245,10 @@ public class ToDoListAppGUI extends Application {
   private VBox setupLeft() {
     VBox vBox = new VBox();
     vBox.setPrefWidth(200);
-    VBox.setVgrow(this.taskTableView, Priority.ALWAYS);
+    VBox.setVgrow(this.getTaskTableView(), Priority.ALWAYS);
 
     this.setupLeftTopTable();
-    vBox.getChildren().addAll(this.taskTableView, this.setupBottomLeftButtons());
+    vBox.getChildren().addAll(this.getTaskTableView(), this.setupBottomLeftButtons());
     return vBox;
   }
 
@@ -252,8 +256,8 @@ public class ToDoListAppGUI extends Application {
    * Sets up the left table that contains the tasks
    */
   private void setupLeftTopTable() {
-    this.taskTableView.setPlaceholder(new Label("No tasks to display"));
-    this.taskTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+    this.getTaskTableView().setPlaceholder(new Label("No tasks to display"));
+    this.getTaskTableView().setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
     TableColumn<Task, String> titleColumn = new TableColumn<>("Task Title");
     titleColumn.setCellValueFactory(new PropertyValueFactory<>("taskName"));
@@ -262,9 +266,10 @@ public class ToDoListAppGUI extends Application {
     statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
     statusColumn.setCellFactory(col -> new CheckBoxTableCell<>(index -> {
-      BooleanProperty active = new SimpleBooleanProperty(this.taskTableView.getItems().get(index).isStatus());
+      BooleanProperty active = new SimpleBooleanProperty(
+          this.getTaskTableView().getItems().get(index).isStatus());
       active.addListener((obs, wasActive, isNowActive) -> {
-        Task task = this.taskTableView.getItems().get(index);
+        Task task = this.getTaskTableView().getItems().get(index);
         task.setStatus(isNowActive);
 
         // Extra checks if the hide completed Tasks mode is turned on
@@ -301,7 +306,7 @@ public class ToDoListAppGUI extends Application {
     ContextMenu contextMenu = this.setupTableContextMenu();
 
     // Set context menu on row, but use a binding to make it only show for non-empty rows
-    this.taskTableView.setRowFactory(tableView -> {
+    this.getTaskTableView().setRowFactory(tableView -> {
       TableRow<Task> row = new TableRow<>();
       row.contextMenuProperty().bind(
               Bindings.when(row.emptyProperty())
@@ -312,13 +317,14 @@ public class ToDoListAppGUI extends Application {
     });
 
     // set on left click action
-    this.taskTableView.setOnMouseClicked((MouseEvent event) -> {
-      Task task = this.taskTableView.getSelectionModel().getSelectedItem();
+    this.getTaskTableView().setOnMouseClicked((MouseEvent event) -> {
+      Task task = this.getTaskTableView().getSelectionModel().getSelectedItem();
 
-      if ((event.getButton().equals(MouseButton.PRIMARY) || event.getButton().equals(MouseButton.SECONDARY))
+      if ((event.getButton().equals(MouseButton.PRIMARY)
+          || event.getButton().equals(MouseButton.SECONDARY))
               && task != null) {
-        this.controller.displayTask(task, this.taskTitleTextField,
-                this.htmlEditor, this.dueDateButton, this.dateLabel);
+        this.controller.displayTask(task, this.getTaskTitleTextField(),
+            this.getHtmlEditor(), this.getDueDateButton(), this.getDateLabel());
 
         this.enableCenterPane();
         this.refreshTable();
@@ -330,12 +336,13 @@ public class ToDoListAppGUI extends Application {
     });
 
     // Make the table editable to allow the user to directly change the Task active status
-    this.taskTableView.setEditable(true);
+    this.getTaskTableView().setEditable(true);
 
-    this.taskTableView.setItems(this.controller.getTaskListWrapper());
-    this.taskTableView.getColumns().addAll(Arrays.asList(titleColumn, priorityColumn, statusColumn));
+    this.getTaskTableView().setItems(this.controller.getTaskListWrapper());
+    this.getTaskTableView()
+        .getColumns().addAll(Arrays.asList(titleColumn, priorityColumn, statusColumn));
     // Set a default sort column
-    this.taskTableView.getSortOrder().add(titleColumn);
+    this.getTaskTableView().getSortOrder().add(titleColumn);
   }
 
   /**
@@ -357,12 +364,12 @@ public class ToDoListAppGUI extends Application {
     // Create a Binding that disables a button if the task is already marked as completed
     BooleanBinding taskCompletedBinding = Bindings.createBooleanBinding(() -> {
       boolean buttonDisabled = false;
-      Task task = this.taskTableView.getSelectionModel().getSelectedItem();
+      Task task = this.getTaskTableView().getSelectionModel().getSelectedItem();
       if ((task == null) || task.isStatus()) {
         buttonDisabled = true;
       }
       return buttonDisabled;
-    }, this.taskTableView.getSelectionModel().selectedItemProperty());
+    }, this.getTaskTableView().getSelectionModel().selectedItemProperty());
     markAsComplete.disableProperty().bind(taskCompletedBinding);
 
     MenuItem markAsIncomplete = new MenuItem("Mark as incomplete");
@@ -376,18 +383,18 @@ public class ToDoListAppGUI extends Application {
     // Create a Binding that disables a button if the task is already marked as not completed
     BooleanBinding taskNotCompletedBinding = Bindings.createBooleanBinding(() -> {
       boolean buttonDisabled = false;
-      Task task = this.taskTableView.getSelectionModel().getSelectedItem();
+      Task task = this.getTaskTableView().getSelectionModel().getSelectedItem();
       if ((task == null) || !task.isStatus()) {
         buttonDisabled = true;
       }
       return buttonDisabled;
-    }, this.taskTableView.getSelectionModel().selectedItemProperty());
+    }, this.getTaskTableView().getSelectionModel().selectedItemProperty());
     markAsIncomplete.disableProperty().bind(taskNotCompletedBinding);
 
     SeparatorMenuItem separator1 = new SeparatorMenuItem();
 
     MenuItem setDueDateMenu = new MenuItem("Set due date");
-    setDueDateMenu.setOnAction(e -> this.controller.doSetNewEndDate(this.dateLabel));
+    setDueDateMenu.setOnAction(e -> this.controller.doSetNewEndDate(this.getDateLabel()));
 
     SeparatorMenuItem separator2 = new SeparatorMenuItem();
 
@@ -450,8 +457,8 @@ public class ToDoListAppGUI extends Application {
     HBox hBox = this.setupTopCenterHBox();
     HBox bottomZoomHBox = this.setupBottomZoomButtonBox();
 
-    vBox.getChildren().addAll(hBox, this.htmlEditor, bottomZoomHBox);
-    VBox.setVgrow(this.htmlEditor, Priority.ALWAYS);
+    vBox.getChildren().addAll(hBox, this.getHtmlEditor(), bottomZoomHBox);
+    VBox.setVgrow(this.getHtmlEditor(), Priority.ALWAYS);
     return vBox;
   }
 
@@ -463,10 +470,10 @@ public class ToDoListAppGUI extends Application {
   private HBox setupTopCenterHBox() {
     HBox hBox = new HBox();
 
-    this.dueDateButton.setOnAction(e -> this.controller.doSetNewEndDate(this.dateLabel));
-    this.dueDateButton.setPrefWidth(150);
-    this.dueDateButton.setMaxHeight(30);
-    this.dueDateButton.setAlignment(Pos.CENTER);
+    this.getDueDateButton().setOnAction(e -> this.controller.doSetNewEndDate(this.getDateLabel()));
+    this.getDueDateButton().setPrefWidth(150);
+    this.getDueDateButton().setMaxHeight(30);
+    this.getDueDateButton().setAlignment(Pos.CENTER);
 
     this.taskTitleTextField.setStyle("-fx-font-size: 20");
     this.taskTitleTextField.setPrefHeight(40);
@@ -474,7 +481,7 @@ public class ToDoListAppGUI extends Application {
 
     VBox dateBox = new VBox();
     dateBox.setAlignment(Pos.CENTER);
-    dateBox.getChildren().addAll(this.dateLabel, this.dueDateButton);
+    dateBox.getChildren().addAll(this.getDateLabel(), this.getDueDateButton());
 
     HBox.setHgrow(this.taskTitleTextField, Priority.ALWAYS);
     hBox.getChildren().addAll(this.taskTitleTextField, dateBox);
@@ -510,10 +517,10 @@ public class ToDoListAppGUI extends Application {
       zoomInButton.setGraphic(zoomInIcon);
     }
 
-    this.zoomLabel.setText("100%");
-    this.zoomLabel.setAlignment(Pos.CENTER_RIGHT);
+    this.getZoomLabel().setText("100%");
+    this.getZoomLabel().setAlignment(Pos.CENTER_RIGHT);
 
-    hBox.getChildren().addAll(zoomOutButton, zoomInButton, this.zoomLabel);
+    hBox.getChildren().addAll(zoomOutButton, zoomInButton, this.getZoomLabel());
     return hBox;
   }
 
@@ -521,14 +528,14 @@ public class ToDoListAppGUI extends Application {
    * Performs the zoom in action
    */
   private void zoomInAction() {
-    this.controller.doZoom(this.htmlEditor, this.zoomLabel, 0.1);
+    this.controller.doZoom(this.getHtmlEditor(), this.getZoomLabel(), 0.1);
   }
 
   /**
    * Performs the zoom out action
    */
   private void zoomOutAction() {
-    this.controller.doZoom(this.htmlEditor, this.zoomLabel, -0.1);
+    this.controller.doZoom(this.getHtmlEditor(), this.getZoomLabel(), -0.1);
   }
 
   /**
@@ -565,10 +572,10 @@ public class ToDoListAppGUI extends Application {
    * Disables and clears the text of center pane's TextFields, Buttons and Labels.
    */
   public void disableCenterPane() {
-    this.clearControlText(this.taskTitleTextField);
-    this.clearControlText(this.htmlEditor);
-    this.clearControlText(this.dueDateButton);
-    this.clearControlText(this.dateLabel);
+    this.clearControlText(this.getTaskTitleTextField());
+    this.clearControlText(this.getHtmlEditor());
+    this.clearControlText(this.getDueDateButton());
+    this.clearControlText(this.getDateLabel());
 
     this.root.getCenter().setDisable(true);
   }
@@ -584,8 +591,8 @@ public class ToDoListAppGUI extends Application {
    * Refreshes the table and forces a sort of the data
    */
   public void refreshTable() {
-    this.taskTableView.refresh();
-    this.taskTableView.sort();
+    this.getTaskTableView().refresh();
+    this.getTaskTableView().sort();
   }
 
   // -----------------------------------------------------------
@@ -617,5 +624,32 @@ public class ToDoListAppGUI extends Application {
    */
   public TableView<Task> getTaskTableView() {
     return this.taskTableView;
+  }
+
+  /**
+   * Returns the due date Button.
+   *
+   * @return The due date Button
+   */
+  private Button getDueDateButton() {
+    return this.dueDateButton;
+  }
+
+  /**
+   * Returns the date Label.
+   *
+   * @return The date Label
+   */
+  private Label getDateLabel() {
+    return this.dateLabel;
+  }
+
+  /**
+   * Returns the zoom percentage Label.
+   *
+   * @return The zoom percentage Label
+   */
+  private Label getZoomLabel() {
+    return this.zoomLabel;
   }
 }
