@@ -124,6 +124,46 @@ class TaskRegisterTest
         assertEquals(1, taskRegister.getNumberOfTasks());
     }
 
+    @Test
+    @DisplayName("Test getting only active tasks from the task register")
+    void testGettingOnlyActiveTasks()
+    {
+        LocalDate endDate = this.getEndDate();
+        TaskRegister taskRegister = new TaskRegister();
+        Task task1 = new Task("Test title", "Test description",
+            "None", endDate);
+        task1.setStatus(true);
+        Task task2 = new Task("Test title 2", "Test description 2",
+            "None 2", endDate);
+
+        taskRegister.addTask(task1);
+        taskRegister.addTask(task2);
+
+        assertEquals(2, taskRegister.getNumberOfTasks());
+        assertTrue(taskRegister.getAllUncompletedTasks().stream()
+            .anyMatch(task -> task.equals(task2)));
+    }
+
+    @Test
+    @DisplayName("Test getting no uncompleted tasks from the task register")
+    void testGettingOnlyActiveTasksWithNoActiveTasks()
+    {
+        LocalDate endDate = this.getEndDate();
+        TaskRegister taskRegister = new TaskRegister();
+        Task task1 = new Task("Test title", "Test description",
+            "None", endDate);
+        task1.setStatus(true);
+        Task task2 = new Task("Test title 2", "Test description 2",
+            "None 2", endDate);
+        task2.setStatus(true);
+
+        taskRegister.addTask(task1);
+        taskRegister.addTask(task2);
+
+        assertEquals(2, taskRegister.getNumberOfTasks());
+        assertTrue(taskRegister.getAllUncompletedTasks().isEmpty());
+    }
+
     /**
      * Returns a LocalDate that always set to 1000 years in the future from the current year
      * @return a LocalDate set a 1000 years in the future
