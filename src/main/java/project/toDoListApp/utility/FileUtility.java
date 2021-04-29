@@ -11,7 +11,7 @@ import project.toDoListApp.TaskRegister;
 
 /**
  * Class FileUtility represents a simple helper class that is tasked with
- * reading and writing objects to and from the disk
+ * reading and writing objects to and from the disk.
  */
 public class FileUtility {
 
@@ -63,14 +63,14 @@ public class FileUtility {
 
       oi.close();
     } catch (IOException e) {
-      throw new IOException("Unable to make a valid filename for " +
-          sourceFile);
+      throw new IOException("Unable to make a valid filename for "
+          + sourceFile);
     }
     return obj;
   }
 
   /**
-   * Returns the saved TaskRegister from the disk if possible, returns a new TaskRegister otherwise
+   * Returns the saved TaskRegister from the disk if possible, returns a new TaskRegister otherwise.
    *
    * @return The saved TaskRegister instance from the disk
    */
