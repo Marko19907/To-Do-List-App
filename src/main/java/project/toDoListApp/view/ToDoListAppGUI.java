@@ -172,19 +172,10 @@ public class ToDoListAppGUI extends Application {
    */
   private Menu setupEditMenu() {
     Menu editMenu = new Menu("Edit");
-
-    SeparatorMenuItem separator1 = new SeparatorMenuItem();
-
-    MenuItem menuItem1 = new MenuItem("Edit font");
-    MenuItem menuItem2 = new MenuItem("Edit title color");
-    MenuItem menuItem3 = new MenuItem("Edit text color");
-
     MenuItem editEndDate = new MenuItem("Edit end date");
     editEndDate.setOnAction(e -> this.controller.doSetNewEndDate(this.dateLabel));
 
-    MenuItem menuItem4 = new MenuItem("Preferences");
-
-    editMenu.getItems().addAll(menuItem1, menuItem2, menuItem3, editEndDate, separator1, menuItem4);
+    editMenu.getItems().add(editEndDate);
     return editMenu;
   }
 
