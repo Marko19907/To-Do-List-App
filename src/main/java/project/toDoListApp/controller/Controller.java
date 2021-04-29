@@ -1,5 +1,12 @@
 package project.toDoListApp.controller;
 
+import java.io.IOException;
+import java.time.DateTimeException;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Optional;
 import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
@@ -24,14 +31,6 @@ import project.toDoListApp.Task;
 import project.toDoListApp.TaskRegister;
 import project.toDoListApp.utility.FileUtility;
 import project.toDoListApp.view.ToDoListAppGUI;
-
-import java.io.IOException;
-import java.time.DateTimeException;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.Optional;
 
 /**
  * Class Controller represents the main controller for the application.
@@ -63,16 +62,19 @@ public class Controller {
   /**
    * Displays a given Task to the given parameters.
    *
-   * @param task      The task to display, can not be null
-   * @param taskTitle The TextField to set the title to, can not be null
-   * @param editor    The TextArea to set the task text content to, can not be null
+   * @param task          The task to display, can not be null
+   * @param taskTitle     The TextField to set the title to, can not be null
+   * @param editor        The TextArea to set the task text content to, can not be null
    * @param dueDateButton The dueDateButton to enable after a Task is displayed, can not be null
-   * @param dueDateLabel The Label to set the end date text to, can not be null
+   * @param dueDateLabel  The Label to set the end date text to, can not be null
    */
   public void displayTask(Task task, TextField taskTitle,
                           HTMLEditor editor, Button dueDateButton, Label dueDateLabel) {
-    if (task != null && taskTitle != null && editor != null &&
-        dueDateButton != null && dueDateLabel != null) {
+    if (task != null
+        && taskTitle != null
+        && editor != null
+        && dueDateButton != null
+        && dueDateLabel != null) {
       // Save the current task to the register and update the task list
       this.saveTaskToRegister(taskTitle, editor);
       this.updateObservableList();
@@ -120,8 +122,7 @@ public class Controller {
   private void updateObservableList() {
     if (this.hideCompleteMode) {
       this.taskListWrapper.setAll(this.taskRegister.getAllUncompletedTasks());
-    }
-    else {
+    } else {
       this.taskListWrapper.setAll(this.taskRegister.getAllTasks());
     }
   }
@@ -134,10 +135,12 @@ public class Controller {
         "None", LocalDate.parse("2100-12-01")));
     this.taskRegister.addTask(new Task("Title 2", "Desc 2",
         "Cooking", LocalDate.parse("3100-12-01")));
-    this.taskRegister.addTask(new Task.TaskBuilder
-            ("Title 3", "The quick brown fox jumps over the lazy dog", "None")
-            .withStatus(true)
-            .build());
+    this.taskRegister.addTask(new Task
+        .TaskBuilder("Title 3",
+        "The quick brown fox jumps over the lazy dog",
+        "None")
+        .withStatus(true)
+        .build());
 
     this.updateObservableList();
   }
@@ -152,7 +155,7 @@ public class Controller {
   }
 
   /**
-   * Returns a String representation of the given LocalDate, or 'No date set' if null
+   * Returns a String representation of the given LocalDate, or 'No date set' if null.
    *
    * @param localDate The LocalDate to represent as a String, can be null
    * @return A String representation of the given LocalDate
@@ -170,8 +173,8 @@ public class Controller {
   /**
    * Sets the font scaling factor of the given HTMLEditor.
    *
-   * @param htmlEditor The HTMLEditor to set the font scaling factor to, can not be null
-   * @param zoomLabel The Label to set the scaling factor text to, can not be null
+   * @param htmlEditor  The HTMLEditor to set the font scaling factor to, can not be null
+   * @param zoomLabel   The Label to set the scaling factor text to, can not be null
    * @param scaleFactor The font scaling factor as a double, can be both positive and negative
    */
   public void doZoom(HTMLEditor htmlEditor, Label zoomLabel, double scaleFactor) {
@@ -239,7 +242,9 @@ public class Controller {
       // Disable the editor (center pane) and save the selected Task
       // only if the currently displayed Task is marked as complete
       if (task == this.getCurrentlySelectedTask()) {
-        this.saveTaskToRegister(toDoListAppGUI.getTaskTitleTextField(), toDoListAppGUI.getHtmlEditor());
+        this.saveTaskToRegister(toDoListAppGUI.getTaskTitleTextField(),
+            toDoListAppGUI.getHtmlEditor());
+
         toDoListAppGUI.disableCenterPane();
       }
 
@@ -274,7 +279,9 @@ public class Controller {
       if (this.getHideCompleteMode() && this.getCurrentlySelectedTask().isStatus()) {
         // The selected Task should not be shown in the current mode ->
         // save it, disable the editor (centerPane) and clear the selection
-        this.saveTaskToRegister(toDoListAppGUI.getTaskTitleTextField(), toDoListAppGUI.getHtmlEditor());
+        this.saveTaskToRegister(toDoListAppGUI.getTaskTitleTextField(),
+            toDoListAppGUI.getHtmlEditor());
+
         toDoListAppGUI.disableCenterPane();
       }
     }
@@ -292,8 +299,7 @@ public class Controller {
       if (showFeedbackMode) {
         this.doShowSaveSuccessfulDialog();
       }
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       if (showFeedbackMode) {
         this.doShowSaveUnsuccessfulDialog();
       }
@@ -351,7 +357,7 @@ public class Controller {
     alert.setTitle("Confirm close");
     alert.setHeaderText("Exit this application?");
     alert.setContentText("Are you sure you want to exit the application?" + "\n"
-        + "Your changes are automatically saved . . ." );
+        + "Your changes are automatically saved . . .");
 
     Optional<ButtonType> result = alert.showAndWait();
 
@@ -405,14 +411,19 @@ public class Controller {
 
     // Disable the OK Button if one of the required TextFields is blank
     BooleanBinding blankTextField = taskName.textProperty().isEmpty();
-    newReminderDialog.getDialogPane().lookupButton(ButtonType.OK).disableProperty().bind(blankTextField);
+    newReminderDialog.getDialogPane().lookupButton(ButtonType.OK)
+        .disableProperty()
+        .bind(blankTextField);
 
     newReminderDialog.setResultConverter(
         (ButtonType button) -> {
           Task result = null;
           if (button == ButtonType.OK) {
-            result = new Task.TaskBuilder
-                    (taskName.getText(), description.getText(), category.getText())
+            result = new Task
+                .TaskBuilder(
+                    taskName.getText(),
+                    description.getText(),
+                    category.getText())
                     .withDueDate(datePicker.getValue())
                     .build();
           }
@@ -466,7 +477,8 @@ public class Controller {
   }
 
   /**
-   * Displays a dialog in which the user can type the desired date as a String or select it from the DatePicker.
+   * Displays a dialog in which the user can type the desired date as a String or
+   * select it from the DatePicker.
    * If the user clicks okay, a LocalDate of the desired date is returned, otherwise null.
    *
    * @return The user selected LocalDate, null if cancelled
@@ -518,8 +530,7 @@ public class Controller {
         if (date != null) {
           try {
             toReturn = DateTimeFormatter.ofPattern(DATE_FORMAT).format(date);
-          }
-          catch (DateTimeException | IllegalArgumentException ignored) {
+          } catch (DateTimeException | IllegalArgumentException ignored) {
           }
         }
         return toReturn;
@@ -531,8 +542,7 @@ public class Controller {
         if (string != null && !string.isBlank()) {
           try {
             localDateToReturn = LocalDate.parse(string, DateTimeFormatter.ofPattern(DATE_FORMAT));
-          }
-          catch (DateTimeParseException ignored) {
+          } catch (DateTimeParseException ignored) {
           }
         }
         return localDateToReturn;

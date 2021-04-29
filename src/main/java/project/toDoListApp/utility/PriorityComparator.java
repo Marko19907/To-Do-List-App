@@ -40,9 +40,12 @@ public class PriorityComparator implements Comparator<String> {
 
   @Override
   public int compare(String o1, String o2) {
-    // Guard condition
+    // Guard conditions
     if (o1 == null || o2 == null) {
-      return 0;
+      return -1;
+    }
+    if (o1.isBlank() || o2.isBlank()) {
+      return -1;
     }
 
     return Integer.compare(this.convertPriority(o1), this.convertPriority(o2));
