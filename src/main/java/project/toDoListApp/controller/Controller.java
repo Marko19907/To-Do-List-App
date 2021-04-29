@@ -96,8 +96,6 @@ public class Controller {
   public void saveTaskToRegister(TextField taskTitle, HTMLEditor editor) {
     if (this.currentTask != null && taskTitle != null && editor != null) {
       if (taskTitle.getText().isBlank()) {
-        //TODO: The TextField is blank, the task will throw an exception
-        //Do nothing for now
       } else {
         this.currentTask.setTaskName(taskTitle.getText());
       }
@@ -373,8 +371,6 @@ public class Controller {
    * where the user can provide details of a new task to be added to the to-do list.
    */
   public void showNewReminderDialog() {
-    //TODO: Create class that handles dialogs.
-    // This method should not be handling the creation of the dialog box
     Dialog<Task> newReminderDialog = new Dialog<>();
 
     newReminderDialog.setTitle("Reminder Details");
@@ -564,8 +560,6 @@ public class Controller {
 
         // Disable the current date and show it in blue
         if (date.isEqual(LocalDate.now())) {
-          //this.setDisable(true);
-          //TODO: Figure out if the current date is an acceptable value . . .
           this.setStyle("-fx-background-color: #e3f3ff;");
           this.setTooltip(new Tooltip("Can not be the same date as today"));
         }
