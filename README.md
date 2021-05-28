@@ -16,7 +16,7 @@ A to-do-list application written in Java
 <a href="https://gitlab.stud.iie.ntnu.no/idata1002_g2/prosjekt-2021-group-2/-/issues">Request a Feature</a>
 </p>
 
-[![pipeline status](https://gitlab.stud.idi.ntnu.no/idata1002_g2/prosjekt-2021-group-2/badges/master/pipeline.svg)](https://gitlab.stud.idi.ntnu.no/idata1002_g2/prosjekt-2021-group-2/-/commits/master)
+![build status](https://github.com/Marko19907/To-Do-List-App/actions/workflows/maven.yml/badge.svg)
 
 ### Built With
 * [Java 11](https://www.java.com)
