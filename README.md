@@ -1,22 +1,22 @@
 <h3 align="center">To-Do List App</h3>
 
 <p align="center">
-<a href="https://gitlab.stud.iie.ntnu.no/idata1002_g2/prosjekt-2021-group-2">
+<a href="https://github.com/Marko19907/To-Do-List-App">
 <img src="src/main/resources/to-do-list icon.png" alt="Logo" width="50" height="50">
 </a>
 
 A to-do-list application written in Java
 <br />
-<a href="https://gitlab.stud.iie.ntnu.no/idata1002_g2/prosjekt-2021-group-2/-/wikis/home">
+<a href="https://github.com/Marko19907/To-Do-List-App/wiki">
 <strong>Explore the docs »</strong></a>
 <br />
 <br />
-<a href="https://gitlab.stud.iie.ntnu.no/idata1002_g2/prosjekt-2021-group-2/-/issues/new">Report a Bug</a>
+<a href="https://github.com/Marko19907/To-Do-List-App/issues/new">Report a Bug</a>
 ·
-<a href="https://gitlab.stud.iie.ntnu.no/idata1002_g2/prosjekt-2021-group-2/-/issues">Request a Feature</a>
+<a href="https://github.com/Marko19907/To-Do-List-App/discussions/new">Request a Feature</a>
 </p>
 
-![build status](https://github.com/Marko19907/To-Do-List-App/actions/workflows/maven.yml/badge.svg)
+[![build status](https://github.com/Marko19907/To-Do-List-App/actions/workflows/maven.yml/badge.svg)](https://github.com/Marko19907/To-Do-List-App/actions/workflows/maven.yml)
 
 ### Built With
 * [Java 11](https://www.java.com)
@@ -25,29 +25,37 @@ A to-do-list application written in Java
 ## Getting Started
 
 To get a local copy up and running follow these simple steps. <br>
+### GitHub Releases [Recommended]
+
+Released builds can be downloaded from this repository's ["Releases" page](https://github.com/Marko19907/To-Do-List-App/releases). <br/>
+This is the preferred method.
+
+### Other installation methods
+
+#### Via GitHub
 Either clone the repository with git or download it as a zip.
 
-### Prerequisites
+#### Prerequisites
 
 This is a list of things you need to use this software.
 * Your favourite IDE
 * JDK 11 or newer
 
-### Downloading the project
+#### Downloading the project
 
 1. Clone the repo <br>
    **Via HTTPS:**
    ```sh
-   git clone git@gitlab.stud.idi.ntnu.no:idata1002_g2/prosjekt-2021-group-2.git
+   git clone https://github.com/Marko19907/To-Do-List-App.git
    ```
    **Via SSH:**
    ```sh
-   git clone https://gitlab.stud.idi.ntnu.no/idata1002_g2/prosjekt-2021-group-2.git
+   git clone git@github.com:Marko19907/To-Do-List-App.git
    ```
-   or download it as a zip from [here](https://gitlab.stud.iie.ntnu.no/idata1002_g2/prosjekt-2021-group-2/-/archive/master/prosjekt-2021-group-2-master.zip).
+   or download it as a zip from [here](https://github.com/Marko19907/To-Do-List-App/archive/refs/heads/master.zip).
    <br>
 
-## Usage
+### Usage
 1. Download and extract zip-file **or** clone project to the desired location.
 2. Open the pom.xml with your favourite IDE.
 3. In IntelliJ, open the Maven tab in the top right corner, expand the plugins submenu,
