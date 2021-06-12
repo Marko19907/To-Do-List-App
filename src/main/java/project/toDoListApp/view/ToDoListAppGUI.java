@@ -56,6 +56,11 @@ import project.toDoListApp.utility.PriorityComparator;
  * Class ToDoListAppGUI represents the main window in the application.
  */
 public class ToDoListAppGUI extends Application {
+  /**
+   * The width of the left TableView and the bottom left Buttons
+   */
+  private static final int LEFT_PANE_WIDTH = 200;
+
   private final Controller controller;
 
   private final BorderPane root;
@@ -246,7 +251,7 @@ public class ToDoListAppGUI extends Application {
    */
   private VBox setupLeft() {
     VBox vBox = new VBox();
-    vBox.setPrefWidth(200);
+    vBox.setPrefWidth(LEFT_PANE_WIDTH);
     VBox.setVgrow(this.getTaskTableView(), Priority.ALWAYS);
 
     this.setupLeftTopTable();
@@ -422,7 +427,7 @@ public class ToDoListAppGUI extends Application {
       this.controller.showNewReminderDialog();
       this.refreshTable();
     });
-    newReminderButton.setPrefWidth(200);
+    newReminderButton.setPrefWidth(LEFT_PANE_WIDTH);
     newReminderButton.setAlignment(Pos.CENTER);
 
     ImageView plusIcon = ImageLoader.getInstance().getImage("plus-icon");
@@ -434,7 +439,7 @@ public class ToDoListAppGUI extends Application {
 
     Button deleteReminderButton = new Button("Delete Reminder");
     deleteReminderButton.setTooltip(new Tooltip("Delete Selected Reminder"));
-    deleteReminderButton.setPrefWidth(200);
+    deleteReminderButton.setPrefWidth(LEFT_PANE_WIDTH);
     deleteReminderButton.setAlignment(Pos.CENTER);
     deleteReminderButton.setOnAction(e -> this.deleteReminderAction());
 
