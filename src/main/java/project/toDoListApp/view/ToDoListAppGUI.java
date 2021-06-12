@@ -40,11 +40,13 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.web.HTMLEditor;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import project.toDoListApp.model.Task;
 import project.toDoListApp.controller.Controller;
@@ -459,6 +461,14 @@ public class ToDoListAppGUI extends Application {
 
     vBox.getChildren().addAll(hBox, this.getHtmlEditor(), bottomZoomHBox);
     VBox.setVgrow(this.getHtmlEditor(), Priority.ALWAYS);
+
+    // Make sure that the internal WebView of the HtmlEditor always fills it's parent, bug in JavaFX
+    WebView webview = (WebView) this.getHtmlEditor().lookup(".web-view");
+    if (webview != null) {
+      GridPane.setHgrow(webview, Priority.ALWAYS);
+      GridPane.setVgrow(webview, Priority.ALWAYS);
+    }
+
     return vBox;
   }
 
