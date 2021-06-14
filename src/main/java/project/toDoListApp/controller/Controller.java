@@ -396,7 +396,7 @@ public class Controller {
     TextField category = new TextField();
     category.setPromptText("Category");
 
-    DatePicker datePicker = this.getDatePicker();
+    DatePicker datePicker = this.getDatePicker(true);
 
     grid.add(new Label("Task name:"), 0, 0);
     grid.add(taskName, 1, 0);
@@ -488,7 +488,7 @@ public class Controller {
     dialog.setTitle("Date picker");
     dialog.getDialogPane().setPrefWidth(275);
 
-    DatePicker datePicker = this.getDatePicker();
+    DatePicker datePicker = this.getDatePicker(false);
 
     GridPane grid = new GridPane();
     grid.setHgap(10);
@@ -514,10 +514,19 @@ public class Controller {
   /**
    * Returns a set-up DatePicker in the "dd/MM/yyyy" format and with disabled past dates.
    *
+   * @param mode The mode toggle,
+   *             true if the returned DatePicker should always be blank,
+   *             false if the returned DatePicker should try to include
+   *             the selected task's end date as text.
    * @return An already set-up DatePicker
    */
-  private DatePicker getDatePicker() {
-    DatePicker datePicker = new DatePicker();
+  private DatePicker getDatePicker(boolean mode) {
+    DatePicker datePicker = null;
+    if (!mode && this.currentTask != null && this.currentTask.getDueDate() != null) {
+      datePicker = new DatePicker(this.currentTask.getDueDate());
+    } else {
+      datePicker = new DatePicker();
+    }
     datePicker.setMinSize(210, 25);
     datePicker.setPromptText(DATE_FORMAT.toLowerCase());
     datePicker.setShowWeekNumbers(true);
@@ -568,10 +577,10 @@ public class Controller {
           this.setStyle("-fx-background-color: #ffe3e9;");
         }
 
-        // Disable the current date and show it in blue
+        // Show the current date in blue
         if (date.isEqual(LocalDate.now())) {
           this.setStyle("-fx-background-color: #e3f3ff;");
-          this.setTooltip(new Tooltip("Can not be the same date as today"));
+          this.setTooltip(new Tooltip("Today"));
         }
       }
     });
