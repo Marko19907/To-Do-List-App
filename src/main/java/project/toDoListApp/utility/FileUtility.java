@@ -14,8 +14,9 @@ import project.toDoListApp.model.TaskRegister;
  * reading and writing objects to and from the disk.
  */
 public class FileUtility {
-
-  //Initialize the logger for easier access.
+  /**
+   * The logger.
+   */
   private final Logger logger;
 
   /**
@@ -56,15 +57,12 @@ public class FileUtility {
    */
   public Object readFromFile(String sourceFile) throws IOException, ClassNotFoundException {
     Object obj = null;
-    try (FileInputStream fi = new FileInputStream(sourceFile)) {
-      ObjectInputStream oi = new ObjectInputStream(fi);
+    try (FileInputStream fi = new FileInputStream(sourceFile);
+         ObjectInputStream oi = new ObjectInputStream(fi)) {
 
       obj = oi.readObject();
-
-      oi.close();
     } catch (IOException e) {
-      throw new IOException("Unable to make a valid filename for "
-          + sourceFile);
+      throw new IOException("Unable to make a valid filename for " + sourceFile);
     }
     return obj;
   }
@@ -78,7 +76,7 @@ public class FileUtility {
     TaskRegister register = null;
 
     try {
-      register = this.getRegisterFromDisk();
+      register = (TaskRegister) this.readFromFile("tasks/savedTasks.txt");
     } catch (IOException | ClassNotFoundException ignored) {
     }
 
@@ -88,25 +86,6 @@ public class FileUtility {
       register = new TaskRegister();
     }
 
-    return register;
-  }
-
-  /**
-   * Returns the saved register object from the disk.
-   *
-   * @return The saved register object from the disk.
-   * @throws IOException            If an IO error is encountered
-   * @throws ClassNotFoundException If the class of the serialized object cannot be found
-   */
-  private TaskRegister getRegisterFromDisk() throws IOException, ClassNotFoundException {
-    File dir = new File("tasks");
-    TaskRegister register = null;
-    if (dir.exists()) {
-      File file = new File("tasks/savedTasks.txt");
-      if (file.exists()) {
-        register = (TaskRegister) this.readFromFile("tasks/savedTasks.txt");
-      }
-    }
     return register;
   }
 }
