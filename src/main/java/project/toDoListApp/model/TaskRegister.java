@@ -48,7 +48,7 @@ public class TaskRegister implements Serializable {
    */
   public List<Task> getAllUncompletedTasks() {
     return this.tasks.stream()
-        .filter(task -> !task.isStatus())
+        .filter(task -> !task.getStatus())
         .collect(Collectors.toList());
   }
 

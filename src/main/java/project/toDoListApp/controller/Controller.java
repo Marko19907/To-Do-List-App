@@ -276,7 +276,7 @@ public class Controller {
     this.updateObservableList();
 
     if (this.getCurrentlySelectedTask() != null) {
-      if (this.getHideCompleteMode() && this.getCurrentlySelectedTask().isStatus()) {
+      if (this.getHideCompleteMode() && this.getCurrentlySelectedTask().getStatus()) {
         // The selected Task should not be shown in the current mode ->
         // save it, disable the editor (centerPane) and clear the selection
         this.saveTaskToRegister(toDoListAppGUI.getTaskTitleTextField(),

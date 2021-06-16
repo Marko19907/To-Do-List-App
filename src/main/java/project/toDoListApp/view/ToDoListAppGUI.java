@@ -274,10 +274,10 @@ public class ToDoListAppGUI extends Application {
 
     statusColumn.setCellFactory(col -> new CheckBoxTableCell<>(index -> {
       BooleanProperty active = new SimpleBooleanProperty(
-          this.getTaskTableView().getItems().get(index).isStatus());
+          this.getTaskTableView().getItems().get(index).getStatus());
       active.addListener((obs, wasActive, isNowActive) -> {
         Task task = this.getTaskTableView().getItems().get(index);
-        task.setStatus(isNowActive);
+        task.setActiveStatus(isNowActive);
 
         // Extra checks if the hide completed Tasks mode is turned on
         this.controller.checkTaskVisibility(task, this);
@@ -363,8 +363,8 @@ public class ToDoListAppGUI extends Application {
     MenuItem markAsComplete = new MenuItem("Mark as complete");
     markAsComplete.setOnAction(e -> {
       Task task = this.controller.getCurrentlySelectedTask();
-      if ((task != null) && !task.isStatus()) {
-        task.setStatus(true);
+      if ((task != null) && !task.getStatus()) {
+        task.setActiveStatus(true);
         this.controller.checkTaskVisibility(task, this);
       }
     });
@@ -372,7 +372,7 @@ public class ToDoListAppGUI extends Application {
     BooleanBinding taskCompletedBinding = Bindings.createBooleanBinding(() -> {
       boolean buttonDisabled = false;
       Task task = this.getTaskTableView().getSelectionModel().getSelectedItem();
-      if ((task == null) || task.isStatus()) {
+      if ((task == null) || task.getStatus()) {
         buttonDisabled = true;
       }
       return buttonDisabled;
@@ -382,8 +382,8 @@ public class ToDoListAppGUI extends Application {
     MenuItem markAsIncomplete = new MenuItem("Mark as incomplete");
     markAsIncomplete.setOnAction(e -> {
       Task task = this.controller.getCurrentlySelectedTask();
-      if ((task != null) && task.isStatus()) {
-        task.setStatus(false);
+      if ((task != null) && task.getStatus()) {
+        task.setActiveStatus(false);
         this.controller.checkTaskVisibility(task, this);
       }
     });
@@ -391,7 +391,7 @@ public class ToDoListAppGUI extends Application {
     BooleanBinding taskNotCompletedBinding = Bindings.createBooleanBinding(() -> {
       boolean buttonDisabled = false;
       Task task = this.getTaskTableView().getSelectionModel().getSelectedItem();
-      if ((task == null) || !task.isStatus()) {
+      if ((task == null) || !task.getStatus()) {
         buttonDisabled = true;
       }
       return buttonDisabled;

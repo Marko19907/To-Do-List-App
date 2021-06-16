@@ -25,7 +25,7 @@ class TaskTest
         assertEquals("Test title", task.getTaskName());
         assertEquals("Test description", task.getDescription());
         assertEquals("None", task.getCategory());
-        assertFalse(task.isStatus());
+        assertFalse(task.getStatus());
         assertEquals(endDate, task.getDueDate());
         assertEquals(dateCreated, task.getDateAdded());
     }
@@ -234,9 +234,9 @@ class TaskTest
         Task task = new Task("Test title", "Test description",
                 "None", endDate);
 
-        task.setStatus(false);
+        task.setActiveStatus(false);
 
-        assertFalse(task.isStatus());
+        assertFalse(task.getStatus());
     }
 
     @Test
@@ -247,9 +247,9 @@ class TaskTest
         Task task = new Task("Test title", "Test description",
                 "None", endDate);
 
-        task.setStatus(true);
+        task.setActiveStatus(true);
 
-        assertTrue(task.isStatus());
+        assertTrue(task.getStatus());
     }
 
     /**

@@ -178,16 +178,17 @@ public class Task implements Serializable {
    *
    * @return True if the task is complete, false otherwise
    */
-  public boolean isStatus() {
+  public boolean getStatus() {
     return this.status;
   }
 
   /**
-   * Sets the status of the task.
+   * Sets the status of the task,
+   * true if the task is complete, false otherwise.
    *
    * @param status The status to set
    */
-  public void setStatus(boolean status) {
+  public void setActiveStatus(boolean status) {
     this.status = status;
   }
 

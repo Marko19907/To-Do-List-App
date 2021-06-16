@@ -134,7 +134,7 @@ class TaskRegisterTest
         TaskRegister taskRegister = new TaskRegister();
         Task task1 = new Task("Test title", "Test description",
             "None", endDate);
-        task1.setStatus(true);
+        task1.setActiveStatus(true);
         Task task2 = new Task("Test title 2", "Test description 2",
             "None 2", endDate);
 
@@ -154,10 +154,10 @@ class TaskRegisterTest
         TaskRegister taskRegister = new TaskRegister();
         Task task1 = new Task("Test title", "Test description",
             "None", endDate);
-        task1.setStatus(true);
+        task1.setActiveStatus(true);
         Task task2 = new Task("Test title 2", "Test description 2",
             "None 2", endDate);
-        task2.setStatus(true);
+        task2.setActiveStatus(true);
 
         taskRegister.addTask(task1);
         taskRegister.addTask(task2);
