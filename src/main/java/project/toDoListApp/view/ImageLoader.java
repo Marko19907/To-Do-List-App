@@ -1,5 +1,6 @@
 package project.toDoListApp.view;
 
+import java.util.Objects;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -11,8 +12,20 @@ import java.util.logging.Logger;
  * It is responsible for loading and returning images from the disk.
  */
 public class ImageLoader {
+  /**
+   * The single instance of the ImageLoader.
+   */
   private static volatile ImageLoader instance;
+
+  /**
+   * The logger.
+   */
   private final Logger logger;
+
+  /**
+   * The program's icon.
+   */
+  private final Image icon;
 
   /**
    * ImageLoader constructor.
@@ -20,6 +33,8 @@ public class ImageLoader {
    */
   private ImageLoader() {
     this.logger = Logger.getLogger(this.getClass().getSimpleName());
+    this.icon = new Image(Objects.requireNonNull(this.getClass()
+        .getResourceAsStream("/to-do-list icon.png")));
   }
 
   /**
@@ -64,5 +79,13 @@ public class ImageLoader {
     }
 
     return toReturn;
+  }
+
+  /**
+   * Returns the program's icon as an Image.
+   * @return The program's icon as an Image
+   */
+  public Image getIcon() {
+    return this.icon;
   }
 }

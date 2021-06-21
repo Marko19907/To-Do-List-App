@@ -1,7 +1,6 @@
 package project.toDoListApp.view;
 
 import java.util.Arrays;
-import java.util.Objects;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -31,7 +30,6 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
@@ -48,8 +46,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.web.HTMLEditor;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
-import project.toDoListApp.model.Task;
 import project.toDoListApp.controller.Controller;
+import project.toDoListApp.model.Task;
 import project.toDoListApp.utility.PriorityComparator;
 
 /**
@@ -57,7 +55,7 @@ import project.toDoListApp.utility.PriorityComparator;
  */
 public class ToDoListAppGUI extends Application {
   /**
-   * The width of the left TableView and the bottom left Buttons
+   * The width of the left TableView and the bottom left Buttons.
    */
   private static final int LEFT_PANE_WIDTH = 200;
 
@@ -100,9 +98,7 @@ public class ToDoListAppGUI extends Application {
     this.root.setCenter(this.setupCenter());
 
     stage.setTitle("To-Do List App");
-    stage.getIcons().add(new Image(Objects
-            .requireNonNull(ToDoListAppGUI.class
-            .getResourceAsStream("/to-do-list icon.png"))));
+    stage.getIcons().add(ImageLoader.getInstance().getIcon());
     stage.setMinWidth(818);
     stage.setMinHeight(500);
     stage.setOnCloseRequest(e ->

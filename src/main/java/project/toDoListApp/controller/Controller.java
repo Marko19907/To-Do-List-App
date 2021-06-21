@@ -26,10 +26,12 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.web.HTMLEditor;
 import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import project.toDoListApp.model.Task;
 import project.toDoListApp.model.TaskRegister;
 import project.toDoListApp.utility.FileUtility;
+import project.toDoListApp.view.ImageLoader;
 import project.toDoListApp.view.ToDoListAppGUI;
 
 /**
@@ -315,6 +317,7 @@ public class Controller {
    */
   public void showAboutDialog() {
     Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    this.addIconToDialog(alert);
     alert.setTitle("About");
     alert.setHeaderText("To-Do List App");
     alert.setContentText("An application created by" + "\n"
@@ -332,6 +335,7 @@ public class Controller {
    */
   private void doShowSaveSuccessfulDialog() {
     Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    this.addIconToDialog(alert);
     alert.setTitle("Information");
     alert.setHeaderText("Successfully saved");
     alert.setContentText("The tasks were successfully saved to disk");
@@ -343,6 +347,7 @@ public class Controller {
    */
   private void doShowSaveUnsuccessfulDialog() {
     Alert alert = new Alert(Alert.AlertType.WARNING);
+    this.addIconToDialog(alert);
     alert.setTitle("Warning");
     alert.setHeaderText("Not saved");
     alert.setContentText("The tasks were not saved to disk");
@@ -354,6 +359,7 @@ public class Controller {
    */
   public void quit(Event event, TextField taskTitle, HTMLEditor editor) {
     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+    this.addIconToDialog(alert);
     alert.setTitle("Confirm close");
     alert.setHeaderText("Exit this application?");
     alert.setContentText("Are you sure you want to exit the application?" + "\n"
@@ -379,6 +385,7 @@ public class Controller {
   public void showNewReminderDialog() {
     Dialog<Task> newReminderDialog = new Dialog<>();
 
+    this.addIconToDialog(newReminderDialog);
     newReminderDialog.setTitle("Reminder Details");
     newReminderDialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
@@ -446,6 +453,7 @@ public class Controller {
    */
   private void showPleaseSelectItemDialog() {
     Alert alert = new Alert(Alert.AlertType.WARNING);
+    this.addIconToDialog(alert);
     alert.setTitle("Information");
     alert.setHeaderText("No items selected");
     alert.setContentText("No item is selected from the table.\n"
@@ -464,6 +472,7 @@ public class Controller {
     boolean deleteConfirmed = false;
 
     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+    this.addIconToDialog(alert);
     alert.setTitle("Delete confirmation");
     alert.setHeaderText("Delete confirmation");
     alert.setContentText("Are you sure you want to delete this reminder?");
@@ -485,6 +494,7 @@ public class Controller {
    */
   private LocalDate doGetEndDateDialog() {
     Dialog<LocalDate> dialog = new Dialog<>();
+    this.addIconToDialog(dialog);
     dialog.setTitle("Date picker");
     dialog.getDialogPane().setPrefWidth(275);
 
@@ -586,6 +596,17 @@ public class Controller {
     });
 
     return datePicker;
+  }
+
+  /**
+   * Adds an icon to the title bar of the given Dialog.
+   * @param dialog The dialog to set the icon to, not null
+   */
+  private void addIconToDialog(Dialog<?> dialog) {
+    if (dialog != null) {
+      Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+      stage.getIcons().add(ImageLoader.getInstance().getIcon());
+    }
   }
 
   // -----------------------------------------------------------
