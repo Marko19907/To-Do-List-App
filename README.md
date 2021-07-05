@@ -1,9 +1,13 @@
-<h3 align="center">To-Do List App</h3>
-
 <p align="center">
-<a href="https://github.com/Marko19907/To-Do-List-App">
-<img src="src/main/resources/to-do-list icon - vector.svg" alt="Logo" width="50" height="50">
-</a>
+<a href="https://github.com/Marko19907/To-Do-List-App"><img src="src/main/resources/to-do-list icon - vector.svg?raw=true" alt="Logo" width="110" height="110"></a>
+<br/>
+<br/>
+<a href="https://github.com/Marko19907/To-Do-List-App/releases"><img src="https://img.shields.io/github/downloads/Marko19907/To-Do-List-App/total?label=Total%20downloads&style=flat-square" alt="GitHub releases"></a>
+<a href="https://github.com/Marko19907/To-Do-List-App/actions/workflows/maven.yml"><img src="https://github.com/Marko19907/To-Do-List-App/actions/workflows/maven.yml/badge.svg" alt="Build status"></a>
+</p>
+
+
+# To-Do List App
 
 A to-do-list application written in Java
 <br />
@@ -13,11 +17,8 @@ A to-do-list application written in Java
 <a href="https://github.com/Marko19907/To-Do-List-App/issues/new">Report a Bug</a>
 ·
 <a href="https://github.com/Marko19907/To-Do-List-App/discussions/new">Request a Feature</a>
-</p>
 
 The project counts towards 100% of the final grade in the subject "System development".
-
-[![build status](https://github.com/Marko19907/To-Do-List-App/actions/workflows/maven.yml/badge.svg)](https://github.com/Marko19907/To-Do-List-App/actions/workflows/maven.yml)
 
 ### Built With
 * [Java 11](https://www.java.com)
@@ -63,7 +64,7 @@ This is a list of things you need to use this software.
    expand the javafx tab and then double-click the javafx:run option.
    <br>
    Options in other IDEs may vary.
-   
+
 ## Task requirements:
 * [x] Use the Maven build system to build the application.
 * [x] The application must be made as a standalone Java application.
