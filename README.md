@@ -2,7 +2,7 @@
 
 <p align="center">
 <a href="https://github.com/Marko19907/To-Do-List-App">
-<img src="src/main/resources/to-do-list icon.png" alt="Logo" width="50" height="50">
+<img src="src/main/resources/to-do-list icon - vector.svg" alt="Logo" width="50" height="50">
 </a>
 
 A to-do-list application written in Java
